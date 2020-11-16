@@ -14,10 +14,10 @@ public class AppController {
 	@GetMapping("/")
 	public List<String> home() {
 		List<String> el = new ArrayList();
-		el.add("element 1");
-		el.add("element 2");
-		el.add("element 3");
-		el.add("element 4");
+		el.add("iPhone 12");
+		el.add("Dell XPS 13");
+		el.add("HP OfficeJet 6700");
+		el.add("Samsung Galaxy Fold 2");
 		return el;
 	}
 
