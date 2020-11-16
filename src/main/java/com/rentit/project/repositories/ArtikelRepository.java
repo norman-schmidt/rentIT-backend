@@ -6,6 +6,6 @@ import org.springframework.stereotype.Repository;
 import com.rentit.project.models.Artikel;
 
 @Repository
-public interface ArtikleRepository extends JpaRepository<Artikel, Long> {
+public interface ArtikelRepository extends JpaRepository<Artikel, Long> {
 
 }
