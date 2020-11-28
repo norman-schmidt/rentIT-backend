@@ -1,6 +1,7 @@
 package com.rentit.project.models;
 
 import java.util.Date;
+import java.util.List;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -9,6 +10,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 
@@ -20,36 +22,30 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class UserEntity {
+public class RentalEntity {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(name = "userId")
-	private long userId;
+	@Column(name = "rentalId")
+	private long rentalId;
 
-	@Column(name = "email")
-	private String email;
+	@Column(name = "rentDate")
+	private Date rentDate;
 
-	@Column(name = "password")
-	private String password;
+	@Column(name = "returnDate")
+	private Date returnDate;
 
-	@Column(name = "lastname")
-	private String lastname;
+	@Column(name = "amount")
+	private long amount;
 
-	@Column(name = "firstname")
-	private String firstname;
+	@ManyToOne(fetch = FetchType.EAGER)
+	private List<UserEntity> users;
 
-	@Column(name = "address")
-	private String address;
+	@OneToMany(mappedBy = "rental", fetch = FetchType.EAGER) // cascade or not
+	private List<ArticleEntity> articles;
 
-	@Column(name = "birthday")
-	private Date birthday;
-
-	@OneToMany(mappedBy = "users", fetch = FetchType.EAGER)
-	private RentalEntity rental;
-
-	@OneToOne(mappedBy = "user")
-	@JoinColumn(name = "image_id")
-	private UserEntity image;
+	@OneToOne(mappedBy = "rental")
+	@JoinColumn(name = "invoice_id")
+	private InvoiceEntity invoice;
 
 }

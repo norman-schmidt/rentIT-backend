@@ -1,14 +1,13 @@
 package com.rentit.project.models;
 
-import java.util.List;
+import java.util.Date;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -18,16 +17,20 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class CategoryEntity {
+public class InvoiceEntity {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private long categoryId;
+	@Column(name = "invoiceId")
+	private long invoiceId;
 
-	@Column(name = "name")
-	private String name;
+	@Column(name = "invoiceNumber")
+	private int invoiceNumber;
 
-	@OneToMany(mappedBy = "category", fetch = FetchType.EAGER) // cascade or not
-	private List<ArticleEntity> articles;
+	@Column(name = "invoiceDate")
+	private Date invoiceDate;
+
+	@OneToOne(mappedBy = "invoice")
+	private RentalEntity rental;
 
 }
