@@ -1,5 +1,6 @@
 package com.rentit.project.models;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -13,20 +14,25 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class ArtikelEntity {
+public class ArticleEntity {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private long articleId;
 
+	@Column(name="name")
 	private String name;
 
+	@Column(name="serialNumber")
 	private String serialNumber;
 
+	@Column(name="model")
 	private String model;
 
+	@Column(name="stockLevel")
 	private int stockLevel;
 
+	@Column(name="price")
 	private double price;
 
 }
