@@ -1,16 +1,24 @@
 package com.rentit.project.models;
 
-import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
 @Entity
-public class Artikel {
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+public class CategoryEntity {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(name="id")
-	long id;
+	private long categoryId;
+
+	private String name;
+
 }
