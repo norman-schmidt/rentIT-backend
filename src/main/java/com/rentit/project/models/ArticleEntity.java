@@ -2,6 +2,7 @@ package com.rentit.project.models;
 
 import java.util.List;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -43,14 +44,14 @@ public class ArticleEntity {
 	@Column(name = "price")
 	private double price;
 
-	@OneToOne(mappedBy = "article", fetch = FetchType.LAZY )
+	@OneToOne(mappedBy = "article", fetch = FetchType.LAZY, cascade = {CascadeType.ALL} )
 	private PropertiesEntity propreties;
 
-	@ManyToOne
+	@ManyToOne(cascade = {CascadeType.ALL})
 	@JoinColumn(name = "rentalId")
 	private RentalEntity rental;
 
-	@ManyToOne
+	@ManyToOne(cascade = {CascadeType.ALL})
 	@JoinColumn(name = "categoryId")
 	private CategoryEntity category;
 
