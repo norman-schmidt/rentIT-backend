@@ -16,24 +16,24 @@ public class CategoryService {
 	@Autowired
 	private CategoryRepository categoryRepository;
 	
-	public CategoryEntity addCategry(CategoryEntity category) {
+	public CategoryEntity addCategory(CategoryEntity category) {
 		return categoryRepository.save(category);
 	}
 
-	public CategoryEntity getCategry(Long id) {
+	public CategoryEntity getCategory(Long id) {
 		return categoryRepository.findById(id).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
 	}
 
-	public List<CategoryEntity> getAllCategrys() {
+	public List<CategoryEntity> getAllCategories() {
 		return categoryRepository.findAll();
 	}
 
 	public void deleteCategry(Long id) {
-		CategoryEntity category = getCategry(id);
+		CategoryEntity category = getCategory(id);
 		categoryRepository.delete(category);
 	}
 
-	public CategoryEntity updateCategry(CategoryEntity category) {
+	public CategoryEntity updateCategory(CategoryEntity category) {
 		return categoryRepository.save(category);
 	}
 

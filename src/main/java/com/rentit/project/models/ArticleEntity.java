@@ -14,6 +14,9 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -22,6 +25,7 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
+@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "articleId")
 public class ArticleEntity {
 
 	@Id
@@ -44,18 +48,18 @@ public class ArticleEntity {
 	@Column(name = "price")
 	private double price;
 
-	@OneToOne(mappedBy = "article", fetch = FetchType.LAZY, cascade = {CascadeType.ALL} )
+	@OneToOne(mappedBy = "article", fetch = FetchType.LAZY, cascade = { CascadeType.ALL })
 	private PropertiesEntity propreties;
 
-	@ManyToOne(cascade = {CascadeType.ALL})
+	@ManyToOne(cascade = { CascadeType.ALL })
 	@JoinColumn(name = "rentalId")
 	private RentalEntity rental;
 
-	@ManyToOne(cascade = {CascadeType.ALL})
+	@ManyToOne(cascade = { CascadeType.ALL })
 	@JoinColumn(name = "categoryId")
 	private CategoryEntity category;
 
-	@OneToMany(mappedBy = "article", fetch = FetchType.LAZY )
+	@OneToMany(mappedBy = "article", fetch = FetchType.LAZY)
 	private List<ImageEntity> images;
 
 }

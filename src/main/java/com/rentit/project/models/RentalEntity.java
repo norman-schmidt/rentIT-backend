@@ -14,6 +14,9 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -22,6 +25,7 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
+@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "rentalId")
 public class RentalEntity {
 
 	@Id
@@ -42,6 +46,7 @@ public class RentalEntity {
 	@JoinColumn(name = "userId")
 	private UserEntity users;
 
+	
 	@OneToMany(mappedBy = "rental", fetch = FetchType.LAZY ) // cascade or not
 	private List<ArticleEntity> articles;
 

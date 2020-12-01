@@ -17,6 +17,9 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.rentit.project.models.ArticleEntity;
 import com.rentit.project.services.ArticleService;
+import com.rentit.project.services.CategoryService;
+import com.rentit.project.services.PropertiesService;
+import com.rentit.project.services.RentalService;
 
 @RestController
 @RequestMapping("/api/articles/")
@@ -24,6 +27,15 @@ public class ArticleController {
 
 	@Autowired
 	private ArticleService articleService;
+
+	@Autowired
+	private RentalService rentalService;
+
+	@Autowired
+	private CategoryService categoryService;
+
+	@Autowired
+	private PropertiesService propertiesService;
 
 	@GetMapping("all")
 	public List<ArticleEntity> getAllArticle() {
@@ -40,9 +52,9 @@ public class ArticleController {
 		return articleService.addArticle(articleEntity);
 	}
 
-	@PutMapping("add/{id}")
-	public ArticleEntity addArticleWithId(@RequestBody ArticleEntity articleEntity, @PathVariable long id) {
-		
+	@PutMapping("update/{id}")
+	public ArticleEntity updateArticle(@RequestBody ArticleEntity articleEntity, @PathVariable long id) {
+
 		ArticleEntity _articleEntity = articleService.getArticle(id);
 
 		_articleEntity.setName(articleEntity.getName());
@@ -50,9 +62,9 @@ public class ArticleController {
 		_articleEntity.setModel(articleEntity.getModel());
 		_articleEntity.setStockLevel(articleEntity.getStockLevel());
 		_articleEntity.setPrice(articleEntity.getPrice());
-		_articleEntity.setPropreties(articleEntity.getPropreties());
-		_articleEntity.setRental(articleEntity.getRental());
-		_articleEntity.setCategory(articleEntity.getCategory());
+		_articleEntity.setPropreties(propertiesService.updateProperties(_articleEntity.getPropreties()));
+		_articleEntity.setRental(rentalService.updateRental(_articleEntity.getRental()));
+		_articleEntity.setCategory(categoryService.updateCategory(_articleEntity.getCategory()));
 		_articleEntity.setImages(articleEntity.getImages());
 
 		return articleService.updateArticle(_articleEntity);
