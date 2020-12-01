@@ -29,13 +29,12 @@ public class ImageEntity {
 
 	@Column(name = "imageType")
 	private String imageType;
-	
-	
+
 	@OneToOne(mappedBy = "image")
 	private UserEntity user;
 
 	@ManyToOne
-	@JoinColumn(name = "image_Id")
-	private  ArticleEntity article;
+	@JoinColumn(name = "articleId")
+	private ArticleEntity article;
 
 }

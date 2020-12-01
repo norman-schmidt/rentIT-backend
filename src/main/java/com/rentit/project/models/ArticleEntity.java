@@ -47,11 +47,11 @@ public class ArticleEntity {
 	private PropertiesEntity propreties;
 
 	@ManyToOne
-	@JoinColumn(name = "rental_Id")
+	@JoinColumn(name = "rentalId")
 	private RentalEntity rental;
 
 	@ManyToOne
-	@JoinColumn(name = "category_Id")
+	@JoinColumn(name = "categoryId")
 	private CategoryEntity category;
 
 	@OneToMany(mappedBy = "article", fetch = FetchType.EAGER)

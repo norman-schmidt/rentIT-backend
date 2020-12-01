@@ -40,7 +40,7 @@ public class PropertiesEntity {
 	private String manifacturer;
 
 	@OneToOne(fetch = FetchType.EAGER)
-	@JoinColumn(name = "article_Id")
+	@JoinColumn(name = "articleId")
 	private ArticleEntity article;
 
 }

@@ -48,8 +48,8 @@ public class UserEntity {
 	@OneToMany(mappedBy = "users", fetch = FetchType.EAGER)
 	private RentalEntity rental;
 
-	@OneToOne(mappedBy = "user")
-	@JoinColumn(name = "image_id")
+	@OneToOne
+	@JoinColumn(name = "imageId")
 	private UserEntity image;
 
 }

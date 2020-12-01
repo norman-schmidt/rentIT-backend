@@ -39,13 +39,14 @@ public class RentalEntity {
 	private long amount;
 
 	@ManyToOne(fetch = FetchType.EAGER)
+	@JoinColumn(name = "userId")
 	private List<UserEntity> users;
 
 	@OneToMany(mappedBy = "rental", fetch = FetchType.EAGER) // cascade or not
 	private List<ArticleEntity> articles;
 
-	@OneToOne(mappedBy = "rental")
-	@JoinColumn(name = "invoice_id")
+	@OneToOne
+	@JoinColumn(name = "invoiceId")
 	private InvoiceEntity invoice;
 
 }
