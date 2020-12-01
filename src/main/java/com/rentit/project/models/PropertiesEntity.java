@@ -39,7 +39,7 @@ public class PropertiesEntity {
 	@Column(name = "manifacturer")
 	private String manifacturer;
 
-	@OneToOne(fetch = FetchType.EAGER)
+	@OneToOne(fetch = FetchType.LAZY )
 	@JoinColumn(name = "articleId")
 	private ArticleEntity article;
 

@@ -1,6 +1,7 @@
 package com.rentit.project.models;
 
 import java.util.Date;
+import java.util.List;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -46,7 +47,7 @@ public class UserEntity {
 	private Date birthday;
 
 	@OneToMany(mappedBy = "users", fetch = FetchType.EAGER)
-	private RentalEntity rental;
+	private List<RentalEntity> rental;
 
 	@OneToOne
 	@JoinColumn(name = "imageId")

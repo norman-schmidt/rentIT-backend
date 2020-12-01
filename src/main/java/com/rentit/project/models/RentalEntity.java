@@ -38,11 +38,11 @@ public class RentalEntity {
 	@Column(name = "amount")
 	private long amount;
 
-	@ManyToOne(fetch = FetchType.EAGER)
+	@ManyToOne(fetch = FetchType.LAZY )
 	@JoinColumn(name = "userId")
-	private List<UserEntity> users;
+	private UserEntity users;
 
-	@OneToMany(mappedBy = "rental", fetch = FetchType.EAGER) // cascade or not
+	@OneToMany(mappedBy = "rental", fetch = FetchType.LAZY ) // cascade or not
 	private List<ArticleEntity> articles;
 
 	@OneToOne

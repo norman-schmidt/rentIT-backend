@@ -27,7 +27,7 @@ public class CategoryEntity {
 	@Column(name = "name")
 	private String name;
 
-	@OneToMany(mappedBy = "category", fetch = FetchType.EAGER) // cascade or not
+	@OneToMany(mappedBy = "category", fetch = FetchType.LAZY ) // cascade or not
 	private List<ArticleEntity> articles;
 
 }

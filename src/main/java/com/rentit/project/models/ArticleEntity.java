@@ -43,7 +43,7 @@ public class ArticleEntity {
 	@Column(name = "price")
 	private double price;
 
-	@OneToOne(mappedBy = "article", fetch = FetchType.EAGER)
+	@OneToOne(mappedBy = "article", fetch = FetchType.LAZY )
 	private PropertiesEntity propreties;
 
 	@ManyToOne
@@ -54,7 +54,7 @@ public class ArticleEntity {
 	@JoinColumn(name = "categoryId")
 	private CategoryEntity category;
 
-	@OneToMany(mappedBy = "article", fetch = FetchType.EAGER)
+	@OneToMany(mappedBy = "article", fetch = FetchType.LAZY )
 	private List<ImageEntity> images;
 
 }
