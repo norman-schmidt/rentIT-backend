@@ -40,7 +40,7 @@ public class ArticleController {
 	public ArticleEntity addArticleWithId(@RequestBody ArticleEntity articleEntity, @PathVariable long id) {
 		ArticleEntity _articleEntity = articleService.getArticle(id);
 		
-		_articleEntity.setName("articleEntity.getName()");
+		_articleEntity.setName(articleEntity.getName());
 		
 		//return articleService.addArticle(_articleEntity);
 	}
