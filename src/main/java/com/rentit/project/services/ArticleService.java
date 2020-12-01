@@ -11,7 +11,7 @@ import com.rentit.project.models.ArticleEntity;
 import com.rentit.project.repositories.ArticleRepository;
 
 @Service
-public class ArtikelService {
+public class ArticleService {
 
 	@Autowired
 	private ArticleRepository articleRepository;
