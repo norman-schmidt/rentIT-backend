@@ -1,8 +1,12 @@
 package com.rentit.project.controllers;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -38,33 +42,30 @@ public class ArticleController {
 
 	@PutMapping("add/{id}")
 	public ArticleEntity addArticleWithId(@RequestBody ArticleEntity articleEntity, @PathVariable long id) {
+		
 		ArticleEntity _articleEntity = articleService.getArticle(id);
-		
+
 		_articleEntity.setName(articleEntity.getName());
-		
-		//return articleService.addArticle(_articleEntity);
+		_articleEntity.setSerialNumber(articleEntity.getSerialNumber());
+		_articleEntity.setModel(articleEntity.getModel());
+		_articleEntity.setStockLevel(articleEntity.getStockLevel());
+		_articleEntity.setPrice(articleEntity.getPrice());
+		_articleEntity.setPropreties(articleEntity.getPropreties());
+		_articleEntity.setRental(articleEntity.getRental());
+		_articleEntity.setCategory(articleEntity.getCategory());
+		_articleEntity.setImages(articleEntity.getImages());
+
+		return articleService.updateArticle(_articleEntity);
 	}
-	
-	/*
-	 * @PutMapping("employee/{id}/{id_v}") public ResponseEntity<EmployeeEntity>
-	 * updateEmployee(@PathVariable Long id, @PathVariable Long id_v, @RequestBody
-	 * EmployeeEntity employeeToUpload) { EmployeeEntity employee =
-	 * employeeService.getEmployeeById(id); VehicleEntity vehicle =
-	 * vehicleService.getVehicleById(id_v);
-	 * 
-	 * vehicles.add(vehicle);
-	 * 
-	 * employee.setFirstName(employeeToUpload.getFirstName());
-	 * employee.setLastName(employeeToUpload.getLastName());
-	 * employee.setEmailId(employeeToUpload.getEmailId());
-	 * employee.setVehicles(vehicles);
-	 * 
-	 * 
-	 * EmployeeEntity uploadedEmployee = employeeService.createEmp(employee);
-	 * 
-	 * 
-	 * 
-	 * return ResponseEntity.ok(uploadedEmployee); }
-	 */
+
+	@DeleteMapping("remove/{id}")
+	public ResponseEntity<Map<String, Boolean>> removeArticle(@PathVariable Long id) {
+
+		articleService.deleteArticle(id);
+
+		Map<String, Boolean> response = new HashMap<>();
+		response.put("Successfully deleted", Boolean.TRUE);
+		return ResponseEntity.ok(response);
+	}
 
 }
