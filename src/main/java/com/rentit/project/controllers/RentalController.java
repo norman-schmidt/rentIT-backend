@@ -68,7 +68,7 @@ public class RentalController {
 		return rentalService.updateRental(_rentalEntity);
 	}
 
-	@PutMapping("update/{id_rental}/{id_user}")
+	@PutMapping("update/{id_rental}/user/{id_user}")
 	public RentalEntity setRentalUser(@PathVariable long id_rental, @PathVariable long id_user) {
 		UserEntity user = userService.getUser(id_user);
 		RentalEntity rent = rentalService.getRental(id_rental);
