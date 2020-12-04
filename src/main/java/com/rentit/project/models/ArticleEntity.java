@@ -48,7 +48,7 @@ public class ArticleEntity {
 	@Column(name = "price")
 	private double price;
 
-	@OneToOne(mappedBy = "article", fetch = FetchType.LAZY, cascade = { CascadeType.ALL })
+	@OneToOne(cascade = CascadeType.ALL)
 	private PropertiesEntity propreties;
 
 	@ManyToOne(cascade = { CascadeType.ALL })
