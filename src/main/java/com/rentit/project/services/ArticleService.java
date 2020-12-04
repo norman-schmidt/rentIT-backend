@@ -37,4 +37,8 @@ public class ArticleService {
 		return articleRepository.save(article);
 	}
 
+	public List<ArticleEntity> updateArticle(List<ArticleEntity> article) {
+		return articleRepository.saveAll(article);
+	}
+
 }
