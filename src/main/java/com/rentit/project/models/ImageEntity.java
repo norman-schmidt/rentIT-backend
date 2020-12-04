@@ -1,5 +1,6 @@
 package com.rentit.project.models;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -34,7 +35,7 @@ public class ImageEntity {
 	@Column(name = "imageType")
 	private String imageType;
 
-	@OneToOne(mappedBy = "image")
+	@OneToOne(cascade = CascadeType.ALL)
 	private UserEntity user;
 
 	@ManyToOne
