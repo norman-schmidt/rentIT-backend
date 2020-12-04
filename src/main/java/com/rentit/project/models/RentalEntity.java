@@ -3,6 +3,7 @@ package com.rentit.project.models;
 import java.util.Date;
 import java.util.List;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -50,8 +51,7 @@ public class RentalEntity {
 	@OneToMany(mappedBy = "rental", fetch = FetchType.LAZY ) // cascade or not
 	private List<ArticleEntity> articles;
 
-	@OneToOne
-	@JoinColumn(name = "invoiceId")
+	@OneToOne(mappedBy = "rental")
 	private InvoiceEntity invoice;
 
 }

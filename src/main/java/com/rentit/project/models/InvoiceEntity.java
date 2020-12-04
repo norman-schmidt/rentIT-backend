@@ -2,6 +2,7 @@ package com.rentit.project.models;
 
 import java.util.Date;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -34,7 +35,7 @@ public class InvoiceEntity {
 	@Column(name = "invoiceDate")
 	private Date invoiceDate;
 
-	@OneToOne(mappedBy = "invoice")
+	@OneToOne(cascade = CascadeType.ALL)
 	private RentalEntity rental;
 
 }
