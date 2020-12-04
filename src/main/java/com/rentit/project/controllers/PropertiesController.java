@@ -61,9 +61,10 @@ public class PropertiesController {
 	}
 	
 	@PutMapping("update/{ip_property}/{id_article}")
-	public PropertiesEntity setPropertyEntity(@RequestBody ArticleEntity articleEntity, @PathVariable long ip_property, @PathVariable long id_article) {
+	public PropertiesEntity setPropertyEntity( @PathVariable long ip_property, @PathVariable long id_article) {
 		ArticleEntity art = articleService.getArticle(id_article);
 		PropertiesEntity ent = propertiesService.getProperties(ip_property);
+		art.setPropreties(ent);
 		ent.setArticle(art);
 		return ent;
 	}
