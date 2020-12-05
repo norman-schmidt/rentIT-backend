@@ -23,7 +23,7 @@ import com.rentit.project.services.PropertiesService;
 @RestController
 @RequestMapping("/api/properties")
 public class PropertiesController {
-	
+
 	@Autowired
 	private ArticleService articleService;
 
@@ -59,16 +59,6 @@ public class PropertiesController {
 
 		return propertiesService.updateProperties(_propertiesEntity);
 	}
-	
-	@PutMapping("update/{ip_property}/article/{id_article}")
-	public PropertiesEntity setPropertyEntity( @PathVariable long ip_property, @PathVariable long id_article) {
-		ArticleEntity art = articleService.getArticle(id_article);
-		PropertiesEntity ent = propertiesService.getProperties(ip_property);
-		art.setPropreties(ent);
-		ent.setArticle(art);
-		return ent;
-	}
-	
 
 	@DeleteMapping("remove/{id}")
 	public ResponseEntity<Map<String, Boolean>> removeProperties(@PathVariable Long id) {
@@ -78,6 +68,17 @@ public class PropertiesController {
 		Map<String, Boolean> response = new HashMap<>();
 		response.put("Successfully deleted", Boolean.TRUE);
 		return ResponseEntity.ok(response);
+	}
+
+	@PutMapping("update/{ip_property}/article/{id_article}")
+	public PropertiesEntity setPropertyArticle(@PathVariable long ip_property, @PathVariable long id_article) {
+		ArticleEntity art = articleService.getArticle(id_article);
+		PropertiesEntity ent = propertiesService.getProperties(ip_property);
+		art.setPropreties(ent);
+		ent.setArticle(art);
+		articleService.updateArticle(art);
+		propertiesService.updateProperties(ent);
+		return ent;
 	}
 
 }

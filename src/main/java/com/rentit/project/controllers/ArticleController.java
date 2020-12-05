@@ -16,8 +16,13 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.rentit.project.models.ArticleEntity;
+import com.rentit.project.models.CategoryEntity;
+import com.rentit.project.models.ImageEntity;
+import com.rentit.project.models.PropertiesEntity;
+import com.rentit.project.models.RentalEntity;
 import com.rentit.project.services.ArticleService;
 import com.rentit.project.services.CategoryService;
+import com.rentit.project.services.ImageService;
 import com.rentit.project.services.PropertiesService;
 import com.rentit.project.services.RentalService;
 
@@ -36,6 +41,9 @@ public class ArticleController {
 
 	@Autowired
 	private PropertiesService propertiesService;
+
+	@Autowired
+	private ImageService imageService;
 
 	@GetMapping("all")
 	public List<ArticleEntity> getAllArticle() {
@@ -65,7 +73,7 @@ public class ArticleController {
 		_articleEntity.setPropreties(propertiesService.updateProperties(_articleEntity.getPropreties()));
 		_articleEntity.setRental(rentalService.updateRental(_articleEntity.getRental()));
 		_articleEntity.setCategory(categoryService.updateCategory(_articleEntity.getCategory()));
-		_articleEntity.setImages(articleEntity.getImages());
+		_articleEntity.setImages(imageService.updateImage(_articleEntity.getImages()));
 
 		return articleService.updateArticle(_articleEntity);
 	}
@@ -78,6 +86,96 @@ public class ArticleController {
 		Map<String, Boolean> response = new HashMap<>();
 		response.put("Successfully deleted", Boolean.TRUE);
 		return ResponseEntity.ok(response);
+	}
+
+	@PutMapping("update/{id_article}/property/{id_property}")
+	public ArticleEntity setArticleProperty(@PathVariable long id_article, @PathVariable long id_property) {
+		ArticleEntity art = articleService.getArticle(id_article);
+		PropertiesEntity ent = propertiesService.getProperties(id_property);
+		art.setPropreties(ent);
+		ent.setArticle(art);
+		articleService.updateArticle(art);
+		propertiesService.updateProperties(ent);
+		return art;
+	}
+
+//	@PutMapping("update/{id_article}/rental/{id_rental}")
+//	public ArticleEntity setArticleRental(@PathVariable long id_article, @PathVariable long id_rental) {
+//		ArticleEntity art = articleService.getArticle(id_article);
+//		RentalEntity rent = rentalService.getRental(id_rental);
+//		List<ArticleEntity> list = new ArrayList<ArticleEntity>();
+//		list.add(art);
+//		art.setRental(rent);
+//		rent.setArticles(list);
+//		articleService.updateArticle(art);
+//		rentalService.updateRental(rent);
+//		return art;
+//	}
+
+	@PutMapping("update/{id_article}/rental/{id_rental}/add")
+	public ArticleEntity addArticleRental(@PathVariable long id_article, @PathVariable long id_rental) {
+		ArticleEntity art = articleService.getArticle(id_article);
+		RentalEntity rent = rentalService.getRental(id_rental);
+		art.setRental(rent);
+		rent.getArticles().add(art);
+		articleService.updateArticle(art);
+		rentalService.updateRental(rent);
+		return art;
+	}
+
+	@PutMapping("update/{id_article}/caterory/{id_category}/add")
+	public ArticleEntity addArticleCategory(@PathVariable long id_article, @PathVariable long id_category) {
+		ArticleEntity art = articleService.getArticle(id_article);
+		CategoryEntity cat = categoryService.getCategory(id_category);
+		art.setCategory(cat);
+		cat.getArticles().add(art);
+		articleService.updateArticle(art);
+		categoryService.updateCategory(cat);
+		return art;
+	}
+	
+	@PutMapping("update/{id_article}/caterory/{id_category}/remove")
+	public ArticleEntity removeArticleCategory(@PathVariable long id_article, @PathVariable long id_category) {
+		ArticleEntity art = articleService.getArticle(id_article);
+		CategoryEntity cat = categoryService.getCategory(id_category);
+		art.setCategory(cat);
+		cat.getArticles().remove(art);
+		articleService.updateArticle(art);
+		categoryService.updateCategory(cat);
+		return art;
+	}
+
+//	@PutMapping("update/{id_article}/image/{id_image}")
+//	public ArticleEntity setArticleImage(@PathVariable long id_article, @PathVariable long id_image) {
+//		ArticleEntity art = articleService.getArticle(id_article);
+//		ImageEntity image = imageService.getImage(id_image);
+//		List<ImageEntity> list = new ArrayList<ImageEntity>();
+//		list.add(image);
+//		art.setImages(list);
+//		image.setArticle(art);
+//		return art;
+//	}
+
+	@PutMapping("update/{id_article}/image/{id_image}/add")
+	public ArticleEntity addArticleImage(@PathVariable long id_article, @PathVariable long id_image) {
+		ArticleEntity art = articleService.getArticle(id_article);
+		ImageEntity image = imageService.getImage(id_image);
+		art.getImages().add(image);
+		image.setArticle(art);
+		articleService.updateArticle(art);
+		imageService.updateImage(image);
+		return art;
+	}
+
+	@PutMapping("update/{id_article}/image/{id_image}/remove")
+	public ArticleEntity removeArticleImage(@PathVariable long id_article, @PathVariable long id_image) {
+		ArticleEntity art = articleService.getArticle(id_article);
+		ImageEntity image = imageService.getImage(id_image);
+		art.getImages().remove(image);
+		image.setArticle(null);
+		articleService.updateArticle(art);
+		imageService.updateImage(image);
+		return art;
 	}
 
 }

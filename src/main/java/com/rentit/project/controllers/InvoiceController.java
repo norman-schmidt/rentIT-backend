@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.rentit.project.models.InvoiceEntity;
+import com.rentit.project.models.RentalEntity;
 import com.rentit.project.services.InvoiceService;
 import com.rentit.project.services.RentalService;
 
@@ -65,6 +66,17 @@ public class InvoiceController {
 		Map<String, Boolean> response = new HashMap<>();
 		response.put("Successfully deleted", Boolean.TRUE);
 		return ResponseEntity.ok(response);
+	}
+
+	@PutMapping("update/{id_invoice}/rental/{id_rental}")
+	public InvoiceEntity setInvoiceRental(@PathVariable long id_invoice, @PathVariable long id_rental) {
+		InvoiceEntity invoice = invoiceService.getInvoice(id_invoice);
+		RentalEntity rental = rentalService.getRental(id_rental);
+		invoice.setRental(rental);
+		rental.setInvoice(invoice);
+		invoiceService.updateInvoice(invoice);
+		rentalService.updateRental(rental);
+		return invoice;
 	}
 
 }

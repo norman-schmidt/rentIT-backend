@@ -3,7 +3,6 @@ package com.rentit.project.models;
 import java.util.Date;
 import java.util.List;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -43,12 +42,11 @@ public class RentalEntity {
 	@Column(name = "amount")
 	private long amount;
 
-	@ManyToOne(fetch = FetchType.LAZY )
+	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "userId")
 	private UserEntity users;
 
-	
-	@OneToMany(mappedBy = "rental", fetch = FetchType.LAZY ) // cascade or not
+	@OneToMany(mappedBy = "rental", fetch = FetchType.LAZY) // cascade or not
 	private List<ArticleEntity> articles;
 
 	@OneToOne(mappedBy = "rental")

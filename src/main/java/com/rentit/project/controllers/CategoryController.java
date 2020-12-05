@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.rentit.project.models.ArticleEntity;
 import com.rentit.project.models.CategoryEntity;
 import com.rentit.project.services.ArticleService;
 import com.rentit.project.services.CategoryService;
@@ -63,6 +64,28 @@ public class CategoryController {
 		Map<String, Boolean> response = new HashMap<>();
 		response.put("Successfully deleted", Boolean.TRUE);
 		return ResponseEntity.ok(response);
+	}
+
+	@PutMapping("update/{id_category}/article/{id_article}/add")
+	public CategoryEntity addCategoryImage(@PathVariable long id_category, @PathVariable long id_article) {
+		ArticleEntity art = articleService.getArticle(id_article);
+		CategoryEntity cat = categoryService.getCategory(id_category);
+		cat.getArticles().add(art);
+		art.setCategory(cat);
+		articleService.updateArticle(art);
+		categoryService.updateCategory(cat);
+		return cat;
+	}
+
+	@PutMapping("update/{id_category}/article/{id_article}/remove")
+	public CategoryEntity removeCategoryImage(@PathVariable long id_category, @PathVariable long id_article) {
+		ArticleEntity art = articleService.getArticle(id_article);
+		CategoryEntity cat = categoryService.getCategory(id_category);
+		cat.getArticles().remove(art);
+		art.setCategory(null);
+		articleService.updateArticle(art);
+		categoryService.updateCategory(cat);
+		return cat;
 	}
 
 }
