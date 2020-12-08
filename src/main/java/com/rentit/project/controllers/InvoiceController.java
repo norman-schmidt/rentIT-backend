@@ -40,12 +40,12 @@ public class InvoiceController {
 		return invoiceService.getInvoice(id);
 	}
 
-	@PostMapping("add")
+	@PostMapping("")
 	public InvoiceEntity addInvoice(@RequestBody InvoiceEntity invoiceEntity) {
 		return invoiceService.addInvoice(invoiceEntity);
 	}
 
-	@PutMapping("update/{id}")
+	@PutMapping("{id}")
 	public InvoiceEntity updateInvoice(@RequestBody InvoiceEntity invoiceEntity, @PathVariable long id) {
 
 		InvoiceEntity _invoiceEntity = invoiceService.getInvoice(id);
@@ -58,7 +58,7 @@ public class InvoiceController {
 		return invoiceService.updateInvoice(_invoiceEntity);
 	}
 
-	@DeleteMapping("remove/{id}")
+	@DeleteMapping("{id}")
 	public ResponseEntity<Map<String, Boolean>> removeInvoice(@PathVariable Long id) {
 
 		invoiceService.deleteInvoice(id);
@@ -68,7 +68,7 @@ public class InvoiceController {
 		return ResponseEntity.ok(response);
 	}
 
-	@PutMapping("update/{id_invoice}/rental/{id_rental}")
+	@PutMapping("{id_invoice}/rental/{id_rental}")
 	public InvoiceEntity setInvoiceRental(@PathVariable long id_invoice, @PathVariable long id_rental) {
 		InvoiceEntity invoice = invoiceService.getInvoice(id_invoice);
 		RentalEntity rental = rentalService.getRental(id_rental);

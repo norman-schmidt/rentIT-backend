@@ -48,7 +48,7 @@ public class ArticleEntity {
 	@Column(name = "price")
 	private double price;
 
-	@OneToOne(cascade = CascadeType.ALL)
+	@OneToOne
 	private PropertiesEntity propreties;
 
 	@ManyToOne(cascade = { CascadeType.ALL })

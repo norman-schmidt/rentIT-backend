@@ -50,12 +50,12 @@ public class RentalController {
 		return rentalService.getRental(id);
 	}
 
-	@PostMapping("add")
+	@PostMapping("")
 	public RentalEntity addRental(@RequestBody RentalEntity rentalEntity) {
 		return rentalService.addRental(rentalEntity);
 	}
 
-	@PutMapping("update/{id}")
+	@PutMapping("{id}")
 	public RentalEntity updateRental(@RequestBody RentalEntity rentalEntity, @PathVariable long id) {
 
 		RentalEntity _rentalEntity = rentalService.getRental(id);
@@ -69,7 +69,7 @@ public class RentalController {
 		return rentalService.updateRental(_rentalEntity);
 	}
 
-	@DeleteMapping("remove/{id}")
+	@DeleteMapping("{id}")
 	public ResponseEntity<Map<String, Boolean>> removeRental(@PathVariable Long id) {
 
 		rentalService.deleteRental(id);
@@ -79,21 +79,7 @@ public class RentalController {
 		return ResponseEntity.ok(response);
 	}
 
-//	@PutMapping("update/{id_rental}/user/{id_user}")
-//	public RentalEntity setRentalUser(@PathVariable long id_rental, @PathVariable long id_user) {
-//		UserEntity user = userService.getUser(id_user);
-//		RentalEntity rent = rentalService.getRental(id_rental);
-//		List<RentalEntity> list = new ArrayList<RentalEntity>();
-//		list.add(rent);
-//		rent.setUsers(user);
-//		user.setRental(list);
-//		userService.updateUser(user);
-//		rentalService.updateRental(rent);
-//
-//		return rent;
-//	}
-
-	@PutMapping("update/{id_rental}/user/{id_user}/add")
+	@PutMapping("{id_rental}/user/{id_user}/add")
 	public RentalEntity addRentalUser(@PathVariable long id_rental, @PathVariable long id_user) {
 		UserEntity user = userService.getUser(id_user);
 		RentalEntity rent = rentalService.getRental(id_rental);
@@ -105,7 +91,7 @@ public class RentalController {
 		return rent;
 	}
 
-	@PutMapping("update/{id_rental}/user/{id_user}/remove")
+	@PutMapping("{id_rental}/user/{id_user}/remove")
 	public RentalEntity removeRentalUser(@PathVariable long id_rental, @PathVariable long id_user) {
 		UserEntity user = userService.getUser(id_user);
 		RentalEntity rent = rentalService.getRental(id_rental);
@@ -117,21 +103,7 @@ public class RentalController {
 		return rent;
 	}
 
-//	@PutMapping("update/{id_rental}/article/{id_article}")
-//	public RentalEntity setRentalArticle(@PathVariable long id_rental, @PathVariable long id_article) {
-//		RentalEntity rent = rentalService.getRental(id_rental);
-//		ArticleEntity article = articleService.getArticle(id_article);
-//		List<ArticleEntity> list = new ArrayList<ArticleEntity>();
-//		list.add(article);
-//		rent.setArticles(list);
-//		article.setRental(rent);
-//		rentalService.updateRental(rent);
-//		articleService.updateArticle(article);
-//		
-//		return rent;
-//	}
-
-	@PutMapping("update/{id_rental}/article/{id_article}/add")
+	@PutMapping("{id_rental}/article/{id_article}/add")
 	public RentalEntity addRentalArticle(@PathVariable long id_rental, @PathVariable long id_article) {
 		RentalEntity rent = rentalService.getRental(id_rental);
 		ArticleEntity article = articleService.getArticle(id_article);
@@ -142,7 +114,7 @@ public class RentalController {
 		return rent;
 	}
 
-	@PutMapping("update/{id_rental}/article/{id_article}/remove")
+	@PutMapping("{id_rental}/article/{id_article}/remove")
 	public RentalEntity removeRentalArticle(@PathVariable long id_rental, @PathVariable long id_article) {
 		RentalEntity rent = rentalService.getRental(id_rental);
 		ArticleEntity article = articleService.getArticle(id_article);
@@ -153,7 +125,7 @@ public class RentalController {
 		return rent;
 	}
 
-	@PutMapping("update/{id_rental}/invoice/{id_invoice}")
+	@PutMapping("{id_rental}/invoice/{id_invoice}")
 	public RentalEntity addRentalInvoice(@PathVariable long id_rental, @PathVariable long id_invoice) {
 		RentalEntity rent = rentalService.getRental(id_rental);
 		InvoiceEntity invoice = invoiceService.getInvoice(id_invoice);

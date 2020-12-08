@@ -35,7 +35,7 @@ public class ImageController {
 	@Autowired
 	private ImageService imageService;
 
-	@GetMapping("all")
+	@GetMapping("")
 	public List<ImageEntity> getAllImage() {
 		return imageService.getAllImages();
 	}
@@ -50,7 +50,7 @@ public class ImageController {
 		return imageService.addImage(imageEntity);
 	}
 
-	@PutMapping("update/{id}")
+	@PutMapping("{id}")
 	public ImageEntity updateImage(@RequestBody ImageEntity imageEntity, @PathVariable long id) {
 
 		ImageEntity _imageEntity = imageService.getImage(id);
@@ -63,7 +63,7 @@ public class ImageController {
 		return imageService.updateImage(_imageEntity);
 	}
 
-	@DeleteMapping("remove/{id}")
+	@DeleteMapping("{id}")
 	public ResponseEntity<Map<String, Boolean>> removeImage(@PathVariable Long id) {
 
 		imageService.deleteImage(id);
@@ -73,7 +73,7 @@ public class ImageController {
 		return ResponseEntity.ok(response);
 	}
 
-	@PutMapping("update/{id_image}/user/{id_user}")
+	@PutMapping("{id_image}/user/{id_user}")
 	public ImageEntity setImageUser(@PathVariable long id_image, @PathVariable long id_user) {
 		ImageEntity image = imageService.getImage(id_image);
 		UserEntity user = userService.getUser(id_user);
@@ -84,20 +84,7 @@ public class ImageController {
 		return image;
 	}
 
-//	@PutMapping("update/{id_image}/article/{id_article}")
-//	public ImageEntity setImageArticle(@PathVariable long id_image, @PathVariable long id_article) {
-//		ImageEntity image = imageService.getImage(id_image);
-//		ArticleEntity article = articleService.getArticle(id_article);
-//		List<ImageEntity> list = new ArrayList<ImageEntity>();
-//		list.add(image);
-//		image.setArticle(article);
-//		article.setImages(list);
-//		imageService.updateImage(image);
-//		articleService.updateArticle(article);
-//		return image;
-//	}
-
-	@PutMapping("update/{id_image}/article/{id_article}/add")
+	@PutMapping("{id_image}/article/{id_article}/add")
 	public ImageEntity addImageArticle(@PathVariable long id_image, @PathVariable long id_article) {
 		ImageEntity image = imageService.getImage(id_image);
 		ArticleEntity article = articleService.getArticle(id_article);
@@ -108,7 +95,7 @@ public class ImageController {
 		return image;
 	}
 
-	@PutMapping("update/{id_image}/article/{id_article}/remove")
+	@PutMapping("{id_image}/article/{id_article}/remove")
 	public ImageEntity removeImageArticle(@PathVariable long id_image, @PathVariable long id_article) {
 		ImageEntity image = imageService.getImage(id_image);
 		ArticleEntity article = articleService.getArticle(id_article);

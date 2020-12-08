@@ -55,12 +55,12 @@ public class ArticleController {
 		return articleService.getArticle(id);
 	}
 
-	@PostMapping("add")
+	@PostMapping("")
 	public ArticleEntity addArticle(@RequestBody ArticleEntity articleEntity) {
 		return articleService.addArticle(articleEntity);
 	}
 
-	@PutMapping("update/{id}")
+	@PutMapping("{id}")
 	public ArticleEntity updateArticle(@RequestBody ArticleEntity articleEntity, @PathVariable long id) {
 
 		ArticleEntity _articleEntity = articleService.getArticle(id);
@@ -78,7 +78,7 @@ public class ArticleController {
 		return articleService.updateArticle(_articleEntity);
 	}
 
-	@DeleteMapping("remove/{id}")
+	@DeleteMapping("{id}")
 	public ResponseEntity<Map<String, Boolean>> removeArticle(@PathVariable Long id) {
 
 		articleService.deleteArticle(id);
@@ -88,7 +88,7 @@ public class ArticleController {
 		return ResponseEntity.ok(response);
 	}
 
-	@PutMapping("update/{id_article}/property/{id_property}")
+	@PutMapping("{id_article}/property/{id_property}")
 	public ArticleEntity setArticleProperty(@PathVariable long id_article, @PathVariable long id_property) {
 		ArticleEntity art = articleService.getArticle(id_article);
 		PropertiesEntity ent = propertiesService.getProperties(id_property);
@@ -99,20 +99,7 @@ public class ArticleController {
 		return art;
 	}
 
-//	@PutMapping("update/{id_article}/rental/{id_rental}")
-//	public ArticleEntity setArticleRental(@PathVariable long id_article, @PathVariable long id_rental) {
-//		ArticleEntity art = articleService.getArticle(id_article);
-//		RentalEntity rent = rentalService.getRental(id_rental);
-//		List<ArticleEntity> list = new ArrayList<ArticleEntity>();
-//		list.add(art);
-//		art.setRental(rent);
-//		rent.setArticles(list);
-//		articleService.updateArticle(art);
-//		rentalService.updateRental(rent);
-//		return art;
-//	}
-
-	@PutMapping("update/{id_article}/rental/{id_rental}/add")
+	@PutMapping("{id_article}/rental/{id_rental}/add")
 	public ArticleEntity addArticleRental(@PathVariable long id_article, @PathVariable long id_rental) {
 		ArticleEntity art = articleService.getArticle(id_article);
 		RentalEntity rent = rentalService.getRental(id_rental);
@@ -123,18 +110,18 @@ public class ArticleController {
 		return art;
 	}
 
-	@PutMapping("update/{id_article}/caterory/{id_category}/add")
+	@PutMapping("{id_article}/category/{id_category}/add")
 	public ArticleEntity addArticleCategory(@PathVariable long id_article, @PathVariable long id_category) {
 		ArticleEntity art = articleService.getArticle(id_article);
 		CategoryEntity cat = categoryService.getCategory(id_category);
-		art.setCategory(cat);
 		cat.getArticles().add(art);
+		art.setCategory(cat);
 		articleService.updateArticle(art);
 		categoryService.updateCategory(cat);
 		return art;
 	}
-	
-	@PutMapping("update/{id_article}/caterory/{id_category}/remove")
+
+	@PutMapping("{id_article}/category/{id_category}/remove")
 	public ArticleEntity removeArticleCategory(@PathVariable long id_article, @PathVariable long id_category) {
 		ArticleEntity art = articleService.getArticle(id_article);
 		CategoryEntity cat = categoryService.getCategory(id_category);
@@ -145,18 +132,7 @@ public class ArticleController {
 		return art;
 	}
 
-//	@PutMapping("update/{id_article}/image/{id_image}")
-//	public ArticleEntity setArticleImage(@PathVariable long id_article, @PathVariable long id_image) {
-//		ArticleEntity art = articleService.getArticle(id_article);
-//		ImageEntity image = imageService.getImage(id_image);
-//		List<ImageEntity> list = new ArrayList<ImageEntity>();
-//		list.add(image);
-//		art.setImages(list);
-//		image.setArticle(art);
-//		return art;
-//	}
-
-	@PutMapping("update/{id_article}/image/{id_image}/add")
+	@PutMapping("{id_article}/image/{id_image}/add")
 	public ArticleEntity addArticleImage(@PathVariable long id_article, @PathVariable long id_image) {
 		ArticleEntity art = articleService.getArticle(id_article);
 		ImageEntity image = imageService.getImage(id_image);
@@ -167,7 +143,7 @@ public class ArticleController {
 		return art;
 	}
 
-	@PutMapping("update/{id_article}/image/{id_image}/remove")
+	@PutMapping("{id_article}/image/{id_image}/remove")
 	public ArticleEntity removeArticleImage(@PathVariable long id_article, @PathVariable long id_image) {
 		ArticleEntity art = articleService.getArticle(id_article);
 		ImageEntity image = imageService.getImage(id_image);

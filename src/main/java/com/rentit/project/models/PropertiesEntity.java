@@ -1,5 +1,6 @@
 package com.rentit.project.models;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -38,10 +39,10 @@ public class PropertiesEntity {
 	@Column(name = "specialFeature")
 	private String specialFeature;
 
-	@Column(name = "manifacturer")
-	private String manifacturer;
+	@Column(name = "manufacturer")
+	private String manufacturer;
 
-	@OneToOne(mappedBy = "propreties")
+	@OneToOne(mappedBy = "propreties", cascade = CascadeType.ALL)
 	private ArticleEntity article;
 
 }

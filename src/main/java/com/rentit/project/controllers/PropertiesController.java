@@ -40,12 +40,12 @@ public class PropertiesController {
 		return propertiesService.getProperties(id);
 	}
 
-	@PostMapping("add")
+	@PostMapping("")
 	public PropertiesEntity addProperties(@RequestBody PropertiesEntity propertiesEntity) {
 		return propertiesService.addProperties(propertiesEntity);
 	}
 
-	@PutMapping("update/{id}")
+	@PutMapping("{id}")
 	public PropertiesEntity updateProperties(@RequestBody PropertiesEntity propertiesEntity, @PathVariable long id) {
 
 		PropertiesEntity _propertiesEntity = propertiesService.getProperties(id);
@@ -54,13 +54,13 @@ public class PropertiesController {
 		_propertiesEntity.setOperatingSystem(propertiesEntity.getOperatingSystem());
 		_propertiesEntity.setColor(propertiesEntity.getColor());
 		_propertiesEntity.setSpecialFeature(propertiesEntity.getSpecialFeature());
-		_propertiesEntity.setManifacturer(propertiesEntity.getManifacturer());
+		_propertiesEntity.setManufacturer(propertiesEntity.getManufacturer());
 		_propertiesEntity.setArticle(articleService.updateArticle(_propertiesEntity.getArticle()));
 
 		return propertiesService.updateProperties(_propertiesEntity);
 	}
 
-	@DeleteMapping("remove/{id}")
+	@DeleteMapping("{id}")
 	public ResponseEntity<Map<String, Boolean>> removeProperties(@PathVariable Long id) {
 
 		propertiesService.deleteProperties(id);
@@ -70,10 +70,10 @@ public class PropertiesController {
 		return ResponseEntity.ok(response);
 	}
 
-	@PutMapping("update/{ip_property}/article/{id_article}")
-	public PropertiesEntity setPropertyArticle(@PathVariable long ip_property, @PathVariable long id_article) {
+	@PutMapping("{id_property}/article/{id_article}")
+	public PropertiesEntity setPropertyArticle(@PathVariable long id_property, @PathVariable long id_article) {
 		ArticleEntity art = articleService.getArticle(id_article);
-		PropertiesEntity ent = propertiesService.getProperties(ip_property);
+		PropertiesEntity ent = propertiesService.getProperties(id_property);
 		art.setPropreties(ent);
 		ent.setArticle(art);
 		articleService.updateArticle(art);

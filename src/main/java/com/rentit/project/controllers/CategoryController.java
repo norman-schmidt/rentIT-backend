@@ -40,12 +40,12 @@ public class CategoryController {
 		return categoryService.getCategory(id);
 	}
 
-	@PostMapping("add")
+	@PostMapping("")
 	public CategoryEntity addCategory(@RequestBody CategoryEntity categoryEntity) {
 		return categoryService.addCategory(categoryEntity);
 	}
 
-	@PutMapping("update/{id}")
+	@PutMapping("{id}")
 	public CategoryEntity updateCategory(@RequestBody CategoryEntity categoryEntity, @PathVariable long id) {
 
 		CategoryEntity _categoryEntity = categoryService.getCategory(id);
@@ -56,7 +56,7 @@ public class CategoryController {
 		return categoryService.updateCategory(_categoryEntity);
 	}
 
-	@DeleteMapping("remove/{id}")
+	@DeleteMapping("{id}")
 	public ResponseEntity<Map<String, Boolean>> removeCategory(@PathVariable Long id) {
 
 		categoryService.deleteCategry(id);
@@ -66,7 +66,7 @@ public class CategoryController {
 		return ResponseEntity.ok(response);
 	}
 
-	@PutMapping("update/{id_category}/article/{id_article}/add")
+	@PutMapping("{id_category}/article/{id_article}/add")
 	public CategoryEntity addCategoryImage(@PathVariable long id_category, @PathVariable long id_article) {
 		ArticleEntity art = articleService.getArticle(id_article);
 		CategoryEntity cat = categoryService.getCategory(id_category);
@@ -77,7 +77,7 @@ public class CategoryController {
 		return cat;
 	}
 
-	@PutMapping("update/{id_category}/article/{id_article}/remove")
+	@PutMapping("{id_category}/article/{id_article}/remove")
 	public CategoryEntity removeCategoryImage(@PathVariable long id_category, @PathVariable long id_article) {
 		ArticleEntity art = articleService.getArticle(id_article);
 		CategoryEntity cat = categoryService.getCategory(id_category);
