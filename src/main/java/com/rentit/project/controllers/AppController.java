@@ -10,10 +10,10 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("")
 public class AppController {
-	
+
 	@GetMapping("/")
 	public List<String> home() {
-		List<String> el = new ArrayList();
+		List<String> el = new ArrayList<String>();
 		el.add("iPhone 12");
 		el.add("Dell XPS 13");
 		el.add("HP OfficeJet 6700");
