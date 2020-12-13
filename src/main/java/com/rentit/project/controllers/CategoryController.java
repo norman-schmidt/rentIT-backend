@@ -30,7 +30,7 @@ public class CategoryController {
 	@Autowired
 	private CategoryService categoryService;
 
-	@GetMapping("all")
+	@GetMapping("")
 	public List<CategoryEntity> getAllCategory() {
 		return categoryService.getAllCategories();
 	}

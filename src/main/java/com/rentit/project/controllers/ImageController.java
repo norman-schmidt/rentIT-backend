@@ -45,7 +45,7 @@ public class ImageController {
 		return imageService.getImage(id);
 	}
 
-	@PostMapping("add")
+	@PostMapping("")
 	public ImageEntity addImage(@RequestBody ImageEntity imageEntity) {
 		return imageService.addImage(imageEntity);
 	}

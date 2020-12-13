@@ -39,7 +39,7 @@ public class RentalController {
 	@Autowired
 	private RentalService rentalService;
 
-	@GetMapping("all")
+	@GetMapping("")
 	public List<RentalEntity> getAllRental() {
 		return rentalService.getAllRentals();
 	}

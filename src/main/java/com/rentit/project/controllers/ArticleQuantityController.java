@@ -29,7 +29,7 @@ public class ArticleQuantityController {
 	@Autowired
 	private ArticleQuantityService quantityService;
 
-	@GetMapping("all")
+	@GetMapping("")
 	public List<ArticleQuantityEntity> getAllQuantity() {
 		return quantityService.getAllArticleQuantitys();
 	}

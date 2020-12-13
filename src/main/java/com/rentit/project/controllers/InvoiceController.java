@@ -30,7 +30,7 @@ public class InvoiceController {
 	@Autowired
 	private InvoiceService invoiceService;
 
-	@GetMapping("all")
+	@GetMapping("")
 	public List<InvoiceEntity> getAllInvoice() {
 		return invoiceService.getAllInvoices();
 	}

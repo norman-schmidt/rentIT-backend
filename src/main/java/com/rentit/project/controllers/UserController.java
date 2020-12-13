@@ -35,7 +35,7 @@ public class UserController {
 	@Autowired
 	private ImageService imageService;
 
-	@GetMapping("all")
+	@GetMapping("")
 	public List<UserEntity> getAllUsers() {
 		return userService.getAllUsers();
 	}

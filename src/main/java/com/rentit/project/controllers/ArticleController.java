@@ -48,7 +48,7 @@ public class ArticleController {
 	@Autowired
 	private ImageService imageService;
 
-	@GetMapping("all")
+	@GetMapping("")
 	public List<ArticleEntity> getAllArticle() {
 		return articleService.getAllArticles();
 	}

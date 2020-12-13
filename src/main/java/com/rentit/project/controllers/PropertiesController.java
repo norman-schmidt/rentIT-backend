@@ -30,7 +30,7 @@ public class PropertiesController {
 	@Autowired
 	private PropertiesService propertiesService;
 
-	@GetMapping("all")
+	@GetMapping("")
 	public List<PropertiesEntity> getAllProperties() {
 		return propertiesService.getAllPropertiess();
 	}
