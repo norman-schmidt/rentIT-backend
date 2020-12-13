@@ -19,7 +19,7 @@ import com.rentit.project.models.ArticleEntity;
 import com.rentit.project.models.CategoryEntity;
 import com.rentit.project.models.ImageEntity;
 import com.rentit.project.models.PropertiesEntity;
-import com.rentit.project.models.RentalEntity;
+import com.rentit.project.services.ArticleQuantityService;
 import com.rentit.project.services.ArticleService;
 import com.rentit.project.services.CategoryService;
 import com.rentit.project.services.ImageService;
@@ -41,6 +41,9 @@ public class ArticleController {
 
 	@Autowired
 	private PropertiesService propertiesService;
+
+	@Autowired
+	private ArticleQuantityService articleQuatityService;
 
 	@Autowired
 	private ImageService imageService;
@@ -71,7 +74,8 @@ public class ArticleController {
 		_articleEntity.setStockLevel(articleEntity.getStockLevel());
 		_articleEntity.setPrice(articleEntity.getPrice());
 		_articleEntity.setPropreties(propertiesService.updateProperties(_articleEntity.getPropreties()));
-		_articleEntity.setRental(rentalService.updateRental(_articleEntity.getRental()));
+		_articleEntity.setArticleQuantityEntities(
+				(articleQuatityService.updateArticleQuantities(_articleEntity.getArticleQuantityEntities())));
 		_articleEntity.setCategory(categoryService.updateCategory(_articleEntity.getCategory()));
 		_articleEntity.setImages(imageService.updateImage(_articleEntity.getImages()));
 
@@ -96,17 +100,6 @@ public class ArticleController {
 		ent.setArticle(art);
 		articleService.updateArticle(art);
 		propertiesService.updateProperties(ent);
-		return art;
-	}
-
-	@PutMapping("{id_article}/rental/{id_rental}/add")
-	public ArticleEntity addArticleRental(@PathVariable long id_article, @PathVariable long id_rental) {
-		ArticleEntity art = articleService.getArticle(id_article);
-		RentalEntity rent = rentalService.getRental(id_rental);
-		art.setRental(rent);
-		rent.getArticles().add(art);
-		articleService.updateArticle(art);
-		rentalService.updateRental(rent);
 		return art;
 	}
 

@@ -39,15 +39,15 @@ public class RentalEntity {
 	@Column(name = "returnDate")
 	private Date returnDate;
 
-	@Column(name = "amount")
-	private long amount;
+	@Column(name = "totalPrice")
+	private long totalPrice;
 
-	@ManyToOne(fetch = FetchType.LAZY)
+	@ManyToOne(fetch = FetchType.EAGER)
 	@JoinColumn(name = "userId")
 	private UserEntity users;
 
-	@OneToMany(mappedBy = "rental", fetch = FetchType.LAZY) // cascade or not
-	private List<ArticleEntity> articles;
+	@OneToMany(mappedBy = "rental", fetch = FetchType.LAZY)
+	private List<ArticleQuantityEntity> articleQuantityEntities;
 
 	@OneToOne(mappedBy = "rental")
 	private InvoiceEntity invoice;

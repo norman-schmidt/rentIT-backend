@@ -3,6 +3,7 @@ package com.rentit.project.models;
 import java.util.Date;
 import java.util.List;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -49,10 +50,10 @@ public class UserEntity {
 	@Column(name = "birthday")
 	private Date birthday;
 
-	@OneToMany(mappedBy = "users", fetch = FetchType.EAGER)
+	@OneToMany(mappedBy = "users", fetch = FetchType.LAZY)
 	private List<RentalEntity> rental;
 
-	@OneToOne(mappedBy = "user")
+	@OneToOne(mappedBy = "user", cascade = { CascadeType.ALL })
 	private ImageEntity image;
 
 }

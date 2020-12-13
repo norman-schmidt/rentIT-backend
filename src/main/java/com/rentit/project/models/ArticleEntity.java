@@ -48,12 +48,14 @@ public class ArticleEntity {
 	@Column(name = "price")
 	private double price;
 
-	@OneToOne
+	@Column(name = "description")
+	private String description;
+
+	@OneToOne(cascade = { CascadeType.ALL })
 	private PropertiesEntity propreties;
 
-	@ManyToOne(cascade = { CascadeType.ALL })
-	@JoinColumn(name = "rentalId")
-	private RentalEntity rental;
+	@OneToMany(mappedBy = "articles", fetch = FetchType.LAZY, cascade = { CascadeType.MERGE})
+	private List<ArticleQuantityEntity> articleQuantityEntities;
 
 	@ManyToOne(cascade = { CascadeType.ALL })
 	@JoinColumn(name = "categoryId")

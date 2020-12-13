@@ -15,7 +15,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.rentit.project.models.ArticleEntity;
 import com.rentit.project.models.InvoiceEntity;
 import com.rentit.project.models.RentalEntity;
 import com.rentit.project.models.UserEntity;
@@ -62,9 +61,8 @@ public class RentalController {
 
 		_rentalEntity.setRentDate(rentalEntity.getRentDate());
 		_rentalEntity.setReturnDate(rentalEntity.getReturnDate());
-		_rentalEntity.setAmount(rentalEntity.getAmount());
+		_rentalEntity.setTotalPrice((rentalEntity.getTotalPrice()));
 		_rentalEntity.setUsers(userService.updateUser(_rentalEntity.getUsers()));
-		_rentalEntity.setArticles(articleService.updateArticle(_rentalEntity.getArticles()));
 		_rentalEntity.setInvoice(invoiceService.updateInvoice(_rentalEntity.getInvoice()));
 		return rentalService.updateRental(_rentalEntity);
 	}
@@ -100,28 +98,6 @@ public class RentalController {
 		userService.updateUser(user);
 		rentalService.updateRental(rent);
 
-		return rent;
-	}
-
-	@PutMapping("{id_rental}/article/{id_article}/add")
-	public RentalEntity addRentalArticle(@PathVariable long id_rental, @PathVariable long id_article) {
-		RentalEntity rent = rentalService.getRental(id_rental);
-		ArticleEntity article = articleService.getArticle(id_article);
-		rent.getArticles().add(article);
-		article.setRental(rent);
-		rentalService.updateRental(rent);
-		articleService.updateArticle(article);
-		return rent;
-	}
-
-	@PutMapping("{id_rental}/article/{id_article}/remove")
-	public RentalEntity removeRentalArticle(@PathVariable long id_rental, @PathVariable long id_article) {
-		RentalEntity rent = rentalService.getRental(id_rental);
-		ArticleEntity article = articleService.getArticle(id_article);
-		rent.getArticles().remove(article);
-		article.setRental(rent);
-		rentalService.updateRental(rent);
-		articleService.updateArticle(article);
 		return rent;
 	}
 

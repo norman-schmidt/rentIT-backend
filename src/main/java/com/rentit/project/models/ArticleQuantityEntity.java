@@ -1,6 +1,7 @@
 package com.rentit.project.models;
 
 import java.util.Date;
+import java.util.List;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -8,7 +9,8 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.OneToOne;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
@@ -21,21 +23,25 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "invoiceId")
-public class InvoiceEntity {
+@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "articleQuantityId")
+public class ArticleQuantityEntity {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(name = "invoiceId")
-	private long invoiceId;
+	@Column(name = "articleQuantityId")
+	private long articleQuantityId;
 
-	@Column(name = "invoiceNumber")
-	private int invoiceNumber;
+	private int quantity;
 
-	@Column(name = "invoiceDate")
-	private Date invoiceDate;
+	@Column(name = "articleReturnedDate")
+	private Date articleReturnedDate;
 
-	@OneToOne(cascade = CascadeType.MERGE)
+	@ManyToOne
+	@JoinColumn(name="articleId")
+	private ArticleEntity articles;
+
+	@ManyToOne
+	@JoinColumn(name = "rentalId")
 	private RentalEntity rental;
 
 }

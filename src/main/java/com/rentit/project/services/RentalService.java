@@ -7,6 +7,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
+import com.rentit.project.models.ArticleEntity;
 import com.rentit.project.models.RentalEntity;
 import com.rentit.project.repositories.RentalRepository;
 
@@ -35,6 +36,10 @@ public class RentalService {
 
 	public RentalEntity updateRental(RentalEntity rental) {
 		return rentalRepository.save(rental);
+	}
+	
+	public List<RentalEntity> updateRental(List<RentalEntity> rental) {
+		return rentalRepository.saveAll(rental);
 	}
 
 }
