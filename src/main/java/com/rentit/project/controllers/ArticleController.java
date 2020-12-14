@@ -73,6 +73,7 @@ public class ArticleController {
 		_articleEntity.setModel(articleEntity.getModel());
 		_articleEntity.setStockLevel(articleEntity.getStockLevel());
 		_articleEntity.setPrice(articleEntity.getPrice());
+		_articleEntity.setDescription(articleEntity.getDescription());
 		_articleEntity.setPropreties(propertiesService.updateProperties(_articleEntity.getPropreties()));
 		_articleEntity.setArticleQuantityEntities(
 				(articleQuatityService.updateArticleQuantities(_articleEntity.getArticleQuantityEntities())));
