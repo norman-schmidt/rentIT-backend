@@ -47,10 +47,10 @@ public class UserController {
 		return userService.getUser(id);
 	}
 
-	@PostMapping("")
-	public UserEntity addUser(@RequestBody UserEntity userEntity) {
-		return userService.addUser(userEntity);
-	}
+//	@PostMapping("")
+//	public UserEntity addUser(@RequestBody UserEntity userEntity) {
+//		return userService.addUser(userEntity);
+//	}
 
 	@PutMapping("{id}")
 	public UserEntity updateUser(@RequestBody UserEntity userEntity, @PathVariable long id) {
