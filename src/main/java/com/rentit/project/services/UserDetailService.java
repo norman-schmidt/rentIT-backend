@@ -8,7 +8,6 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
-import com.rentit.project.models.User;
 import com.rentit.project.models.UserEntity;
 import com.rentit.project.repositories.UserRepository;
 
