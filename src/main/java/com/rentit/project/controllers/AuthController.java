@@ -23,7 +23,6 @@ import org.springframework.web.bind.annotation.RestController;
 import com.rentit.project.jwt.JwtUtils;
 import com.rentit.project.models.ERole;
 import com.rentit.project.models.Role;
-import com.rentit.project.models.User;
 import com.rentit.project.models.UserEntity;
 import com.rentit.project.pojo.request.LoginRequest;
 import com.rentit.project.pojo.request.SignupRequest;
