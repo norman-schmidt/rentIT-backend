@@ -21,6 +21,7 @@ import com.rentit.project.models.ArticleQuantityEntity;
 import com.rentit.project.models.InvoiceEntity;
 import com.rentit.project.models.RentalEntity;
 import com.rentit.project.services.ArticleQuantityService;
+import com.rentit.project.services.ArticleService;
 import com.rentit.project.services.InvoiceService;
 import com.rentit.project.services.RentalService;
 
@@ -31,7 +32,10 @@ public class ArticleQuantityController {
 
 	@Autowired
 	private RentalService rentalService;
-	
+
+	@Autowired
+	private ArticleService articleService;
+
 	@Autowired
 	private InvoiceService invoiceService;
 
@@ -50,32 +54,34 @@ public class ArticleQuantityController {
 
 	@PostMapping("")
 	public ArticleQuantityEntity addQuantity(@RequestBody ArticleQuantityEntity quantityEntity) {
-		/*Date date;
-		InvoiceEntity InvoiceEntity = new InvoiceEntity( int, null,null );//RentalEntity
-		RentalEntity rentalEntity = new RentalEntity(long, null, null, 0, null, InvoiceEntity, null)*/
-		
+		/*
+		 * Date date; InvoiceEntity InvoiceEntity = new InvoiceEntity( int, null,null
+		 * );//RentalEntity RentalEntity rentalEntity = new RentalEntity(long, null,
+		 * null, 0, null, InvoiceEntity, null)
+		 */
+
 		// invoiceEntity
-		InvoiceEntity invoiceEntity = new InvoiceEntity();	
+		InvoiceEntity invoiceEntity = new InvoiceEntity();
 		invoiceEntity.setInvoiceDate(null);
 		invoiceEntity.setInvoiceNumber(0);
 		// invoiceEntity.setRental(rental);
 		invoiceService.addInvoice(invoiceEntity);
-		
+
 		// rentalEntity
 		RentalEntity rentalEntity = new RentalEntity();
 		rentalEntity.setInvoice(invoiceEntity);
 		rentalEntity.setRentDate(null);
 		rentalEntity.setReturnDate(null);
-		double totalPrice = 10;//= quantityEntity.getQuantity() * quantityEntity.getArticle().getPrice();
-		System.out.println(totalPrice);
+		// hole ArticleId von quantityEntity
+		// hole article
+		// hole price
+		double totalPrice = quantityEntity.getQuantity()
+				* articleService.getArticle(quantityEntity.getArticle().getArticleId()).getPrice();
 		rentalEntity.setTotalPrice(totalPrice);
-		// rentalEntity.setUsers(users);
 		rentalService.addRental(rentalEntity);
-		
-		
+
 		quantityEntity.setRental(rentalEntity);
-		
-		
+
 		return quantityService.addArticleQuantity(quantityEntity);
 	}
 
