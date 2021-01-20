@@ -66,22 +66,27 @@ public class UserEntity {
 	@Column(name = "birthday")
 	private Date birthday;
 
-	@OneToMany(mappedBy = "users", fetch = FetchType.LAZY)
+	// @OneToMany(mappedBy = "users", fetch = FetchType.LAZY)
+	// private List<RentalEntity> rental;
+
+	@OneToMany(mappedBy = "users", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
 	private List<RentalEntity> rental;
 
-	@OneToOne(mappedBy = "user", cascade = { CascadeType.ALL })
+	// @OneToOne(mappedBy = "user", cascade = { CascadeType.ALL })
+	// private ImageEntity image;
+
+	@OneToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+	@JoinColumn(name = "image_Id")
 	private ImageEntity image;
 
 	@ManyToMany(fetch = FetchType.LAZY)
-	@JoinTable(name = "user_roles", 
-	joinColumns = @JoinColumn(name = "user_id", referencedColumnName = "userId"), 
-	inverseJoinColumns = @JoinColumn(name = "role_id", referencedColumnName = "id"))
+	@JoinTable(name = "user_roles", joinColumns = @JoinColumn(name = "user_id", referencedColumnName = "userId"), inverseJoinColumns = @JoinColumn(name = "role_id", referencedColumnName = "id"))
 	private Set<Role> roles = new HashSet<>();
 
 	public UserEntity(@NotBlank @Size(max = 50) @Email String email, @NotBlank @Size(max = 20) String username,
 			@NotBlank @Size(max = 120) String password, String lastname, String firstname, String address,
 			Date birthday, List<RentalEntity> rental, ImageEntity image) {
-	
+
 		this.email = email;
 		this.username = username;
 		this.password = password;
@@ -92,7 +97,5 @@ public class UserEntity {
 		this.rental = rental;
 		this.image = image;
 	}
-	
-	
 
 }

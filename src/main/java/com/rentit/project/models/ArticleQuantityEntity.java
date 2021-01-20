@@ -1,11 +1,10 @@
 package com.rentit.project.models;
 
 import java.util.Date;
-import java.util.List;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -31,17 +30,18 @@ public class ArticleQuantityEntity {
 	@Column(name = "articleQuantityId")
 	private long articleQuantityId;
 
+	@ManyToOne(fetch = FetchType.EAGER)
+	@JoinColumn(name = "article_id")
+	private ArticleEntity article;
+
+	@ManyToOne(fetch = FetchType.EAGER)
+	@JoinColumn(name = "rental_id")
+	private RentalEntity rental;
+
+	@Column(name = "quantity")
 	private int quantity;
 
 	@Column(name = "articleReturnedDate")
 	private Date articleReturnedDate;
-
-	@ManyToOne
-	@JoinColumn(name="articleId")
-	private ArticleEntity articles;
-
-	@ManyToOne
-	@JoinColumn(name = "rentalId")
-	private RentalEntity rental;
 
 }

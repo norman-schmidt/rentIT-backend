@@ -2,9 +2,9 @@ package com.rentit.project.models;
 
 import java.util.Date;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -35,7 +35,7 @@ public class InvoiceEntity {
 	@Column(name = "invoiceDate")
 	private Date invoiceDate;
 
-	@OneToOne(cascade = CascadeType.MERGE)
+	@OneToOne(mappedBy = "invoice", fetch = FetchType.EAGER)
 	private RentalEntity rental;
 
 }

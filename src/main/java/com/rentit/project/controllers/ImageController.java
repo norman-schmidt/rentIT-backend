@@ -60,7 +60,7 @@ public class ImageController {
 		_imageEntity.setImageLink(imageEntity.getImageLink());
 		_imageEntity.setImageType(imageEntity.getImageType());
 		_imageEntity.setUser(userService.updateUser(_imageEntity.getUser()));
-		_imageEntity.setArticle(articleService.updateArticle(_imageEntity.getArticle()));
+		_imageEntity.setArt(articleService.updateArticle(_imageEntity.getArt()));
 
 		return imageService.updateImage(_imageEntity);
 	}
@@ -90,7 +90,7 @@ public class ImageController {
 	public ImageEntity addImageArticle(@PathVariable long id_image, @PathVariable long id_article) {
 		ImageEntity image = imageService.getImage(id_image);
 		ArticleEntity article = articleService.getArticle(id_article);
-		image.setArticle(article);
+		image.setArt(article);
 		article.getImages().add(image);
 		imageService.updateImage(image);
 		articleService.updateArticle(article);
@@ -101,7 +101,7 @@ public class ImageController {
 	public ImageEntity removeImageArticle(@PathVariable long id_image, @PathVariable long id_article) {
 		ImageEntity image = imageService.getImage(id_image);
 		ArticleEntity article = articleService.getArticle(id_article);
-		image.setArticle(article);
+		image.setArt(article);
 		article.getImages().remove(image);
 		imageService.updateImage(image);
 		articleService.updateArticle(article);

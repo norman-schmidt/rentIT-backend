@@ -62,6 +62,8 @@ public class ArticleController {
 
 	@PostMapping("")
 	public ArticleEntity addArticle(@RequestBody ArticleEntity articleEntity) {
+		CategoryEntity category = categoryService.getCategory(articleEntity.getCategory().getCategoryId());
+		articleEntity.setCategory(category);
 		return articleService.addArticle(articleEntity);
 	}
 
@@ -77,8 +79,8 @@ public class ArticleController {
 		_articleEntity.setPrice(articleEntity.getPrice());
 		_articleEntity.setDescription(articleEntity.getDescription());
 		_articleEntity.setPropreties(propertiesService.updateProperties(_articleEntity.getPropreties()));
-		_articleEntity.setArticleQuantityEntities(
-				(articleQuatityService.updateArticleQuantities(_articleEntity.getArticleQuantityEntities())));
+		_articleEntity.setArticleQuantity(
+				(articleQuatityService.updateArticleQuantities(_articleEntity.getArticleQuantity())));
 		_articleEntity.setCategory(categoryService.updateCategory(_articleEntity.getCategory()));
 		_articleEntity.setImages(imageService.updateImage(_articleEntity.getImages()));
 
@@ -133,7 +135,7 @@ public class ArticleController {
 		ArticleEntity art = articleService.getArticle(id_article);
 		ImageEntity image = imageService.getImage(id_image);
 		art.getImages().add(image);
-		image.setArticle(art);
+		image.setArt(art);
 		articleService.updateArticle(art);
 		imageService.updateImage(image);
 		return art;
@@ -144,7 +146,7 @@ public class ArticleController {
 		ArticleEntity art = articleService.getArticle(id_article);
 		ImageEntity image = imageService.getImage(id_image);
 		art.getImages().remove(image);
-		image.setArticle(null);
+		image.setArt(null);
 		articleService.updateArticle(art);
 		imageService.updateImage(image);
 		return art;
