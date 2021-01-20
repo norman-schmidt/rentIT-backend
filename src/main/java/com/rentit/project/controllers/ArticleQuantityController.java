@@ -1,5 +1,6 @@
 package com.rentit.project.controllers;
 
+import java.sql.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -17,7 +18,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.rentit.project.models.ArticleQuantityEntity;
+import com.rentit.project.models.InvoiceEntity;
+import com.rentit.project.models.RentalEntity;
 import com.rentit.project.services.ArticleQuantityService;
+import com.rentit.project.services.InvoiceService;
 import com.rentit.project.services.RentalService;
 
 @RestController
@@ -27,6 +31,9 @@ public class ArticleQuantityController {
 
 	@Autowired
 	private RentalService rentalService;
+	
+	@Autowired
+	private InvoiceService invoiceService;
 
 	@Autowired
 	private ArticleQuantityService quantityService;
@@ -43,6 +50,32 @@ public class ArticleQuantityController {
 
 	@PostMapping("")
 	public ArticleQuantityEntity addQuantity(@RequestBody ArticleQuantityEntity quantityEntity) {
+		/*Date date;
+		InvoiceEntity InvoiceEntity = new InvoiceEntity( int, null,null );//RentalEntity
+		RentalEntity rentalEntity = new RentalEntity(long, null, null, 0, null, InvoiceEntity, null)*/
+		
+		// invoiceEntity
+		InvoiceEntity invoiceEntity = new InvoiceEntity();	
+		invoiceEntity.setInvoiceDate(null);
+		invoiceEntity.setInvoiceNumber(0);
+		// invoiceEntity.setRental(rental);
+		invoiceService.addInvoice(invoiceEntity);
+		
+		// rentalEntity
+		RentalEntity rentalEntity = new RentalEntity();
+		rentalEntity.setInvoice(invoiceEntity);
+		rentalEntity.setRentDate(null);
+		rentalEntity.setReturnDate(null);
+		double totalPrice = 10;//= quantityEntity.getQuantity() * quantityEntity.getArticle().getPrice();
+		System.out.println(totalPrice);
+		rentalEntity.setTotalPrice(totalPrice);
+		// rentalEntity.setUsers(users);
+		rentalService.addRental(rentalEntity);
+		
+		
+		quantityEntity.setRental(rentalEntity);
+		
+		
 		return quantityService.addArticleQuantity(quantityEntity);
 	}
 
@@ -54,9 +87,7 @@ public class ArticleQuantityController {
 
 		_quantityEntity.setQuantity(quantityEntity.getQuantity());
 		_quantityEntity.setArticleReturnedDate(quantityEntity.getArticleReturnedDate());
-
 		_quantityEntity.setArticle(quantityEntity.getArticle());
-
 		_quantityEntity.setRental(rentalService.updateRental(_quantityEntity.getRental()));
 
 		return quantityService.updateArticleQuantities(_quantityEntity);
