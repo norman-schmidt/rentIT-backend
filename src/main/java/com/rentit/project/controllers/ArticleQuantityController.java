@@ -1,10 +1,13 @@
 package com.rentit.project.controllers;
 
-import java.sql.Date;
+import java.time.Duration;
+import java.time.Instant;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.hibernate.internal.build.AllowSysOut;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -54,24 +57,24 @@ public class ArticleQuantityController {
 
 	@PostMapping("")
 	public ArticleQuantityEntity addQuantity(@RequestBody ArticleQuantityEntity quantityEntity) {
-		/*
-		 * Date date; InvoiceEntity InvoiceEntity = new InvoiceEntity( int, null,null
-		 * );//RentalEntity RentalEntity rentalEntity = new RentalEntity(long, null,
-		 * null, 0, null, InvoiceEntity, null)
-		 */
+
+		Date date = new Date(System.currentTimeMillis());
+		Date dateReturn = new Date(System.currentTimeMillis() + (30L * 24 * 60 * 60 * 1000)); // 1 month
 
 		// invoiceEntity
 		InvoiceEntity invoiceEntity = new InvoiceEntity();
-		invoiceEntity.setInvoiceDate(null);
-		invoiceEntity.setInvoiceNumber(0);
-		// invoiceEntity.setRental(rental);
+		invoiceEntity.setInvoiceDate(date);
+		invoiceEntity.setInvoiceNumber(1);
 		invoiceService.addInvoice(invoiceEntity);
 
 		// rentalEntity
 		RentalEntity rentalEntity = new RentalEntity();
 		rentalEntity.setInvoice(invoiceEntity);
-		rentalEntity.setRentDate(null);
-		rentalEntity.setReturnDate(null);
+		rentalEntity.setRentDate(date);
+		rentalEntity.setReturnDate(dateReturn);
+
+		// rentalEntity.setUsers(users);
+
 		// hole ArticleId von quantityEntity
 		// hole article
 		// hole price
