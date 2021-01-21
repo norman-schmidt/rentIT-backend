@@ -37,6 +37,9 @@ public class ArticleQuantityEntity {
 	@ManyToOne(fetch = FetchType.EAGER)
 	@JoinColumn(name = "rental_id")
 	private RentalEntity rental;
+	
+	@Column(name = "subTotal")
+	private double subTotal;
 
 	@Column(name = "quantity")
 	private int quantity;

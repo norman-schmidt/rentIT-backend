@@ -19,7 +19,6 @@ import org.springframework.web.bind.annotation.RestController;
 import com.rentit.project.models.InvoiceEntity;
 import com.rentit.project.models.RentalEntity;
 import com.rentit.project.models.UserEntity;
-import com.rentit.project.services.ArticleService;
 import com.rentit.project.services.InvoiceService;
 import com.rentit.project.services.RentalService;
 import com.rentit.project.services.UserService;
@@ -31,9 +30,6 @@ public class RentalController {
 
 	@Autowired
 	private UserService userService;
-
-	@Autowired
-	private ArticleService articleService;
 
 	@Autowired
 	private InvoiceService invoiceService;
@@ -53,6 +49,29 @@ public class RentalController {
 
 	@PostMapping("")
 	public RentalEntity addRental(@RequestBody RentalEntity rentalEntity) {
+
+		/*
+		 * RentalEntity rentalEntity_ = rentalEntity;
+		 * rentalEntity_.setArticleQuantity(null);
+		 * rentalService.addRental(rentalEntity_);
+		 * 
+		 * List<ArticleQuantityEntity> quantityEntity =
+		 * rentalEntity.getArticleQuantity();
+		 * quantityService.addArticleQuantity(quantityEntity.get(0));
+		 * 
+		 * rentalEntity_.setArticleQuantity(quantityEntity);
+		 * rentalService.addRental(rentalEntity_);
+		 * 
+		 * Date date = new Date(System.currentTimeMillis()); // invoiceEntity
+		 * InvoiceEntity invoiceEntity = new InvoiceEntity();
+		 * invoiceEntity.setInvoiceDate(date); invoiceEntity.setInvoiceNumber(1);//!?
+		 * invoiceService.addInvoice(invoiceEntity);
+		 * 
+		 * rentalEntity.setInvoice(invoiceEntity); List<ArticleQuantityEntity>
+		 * quantityEntity = rentalEntity.getArticleQuantity();
+		 * quantityService.addArticleQuantity(quantityEntity.get(0));
+		 */
+
 		return rentalService.addRental(rentalEntity);
 	}
 

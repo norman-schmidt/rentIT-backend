@@ -1,13 +1,10 @@
 package com.rentit.project.controllers;
 
-import java.time.Duration;
-import java.time.Instant;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.hibernate.internal.build.AllowSysOut;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -56,8 +53,9 @@ public class ArticleQuantityController {
 	}
 
 	@PostMapping("")
-	public ArticleQuantityEntity addQuantity(@RequestBody ArticleQuantityEntity quantityEntity) {
-
+	// public ArticleQuantityEntity addQuantity(@RequestBody
+	// List<ArticleQuantityEntity> quantityEntity) {
+	public ResponseEntity<Map<String, Boolean>> addQuantity(@RequestBody List<ArticleQuantityEntity> quantityEntity) {
 		Date date = new Date(System.currentTimeMillis());
 		Date dateReturn = new Date(System.currentTimeMillis() + (30L * 24 * 60 * 60 * 1000)); // 1 month
 
@@ -73,19 +71,35 @@ public class ArticleQuantityController {
 		rentalEntity.setRentDate(date);
 		rentalEntity.setReturnDate(dateReturn);
 
-		// rentalEntity.setUsers(users);
+		// rentalEntity.setUsers(users); ??
 
 		// hole ArticleId von quantityEntity
 		// hole article
 		// hole price
-		double totalPrice = quantityEntity.getQuantity()
-				* articleService.getArticle(quantityEntity.getArticle().getArticleId()).getPrice();
+		double subTotal = 0.0;
+		for (int i = 0; i < quantityEntity.size(); i++) {
+			subTotal = quantityEntity.get(i).getQuantity()
+					* articleService.getArticle(quantityEntity.get(i).getArticle().getArticleId()).getPrice();
+			quantityEntity.get(i).setSubTotal(subTotal);
+		}
+
+		double totalPrice = 0.0;
+		for (int i = 0; i < quantityEntity.size(); i++) {
+			totalPrice += quantityEntity.get(i).getSubTotal();
+		}
+
 		rentalEntity.setTotalPrice(totalPrice);
 		rentalService.addRental(rentalEntity);
 
-		quantityEntity.setRental(rentalEntity);
+		// update quantityEntity
+		for (int i = 0; i < quantityEntity.size(); i++) {
+			quantityEntity.get(i).setRental(rentalEntity);
+			quantityService.addArticleQuantity(quantityEntity.get(i));
+		}
 
-		return quantityService.addArticleQuantity(quantityEntity);
+		Map<String, Boolean> response = new HashMap<>();
+		response.put("Successfully Added", Boolean.TRUE);
+		return ResponseEntity.ok(response);
 	}
 
 	@PutMapping("{id}")

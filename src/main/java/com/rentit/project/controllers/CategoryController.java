@@ -1,8 +1,6 @@
 package com.rentit.project.controllers;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -18,6 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.rentit.project.models.ArticleEntity;
 import com.rentit.project.models.CategoryEntity;
+import com.rentit.project.pojo.response.MessageResponse;
 import com.rentit.project.services.ArticleService;
 import com.rentit.project.services.CategoryService;
 
@@ -59,13 +58,14 @@ public class CategoryController {
 	}
 
 	@DeleteMapping("{id}")
-	public ResponseEntity<Map<String, Boolean>> removeCategory(@PathVariable Long id) {
-
-		categoryService.deleteCategry(id);
-
-		Map<String, Boolean> response = new HashMap<>();
-		response.put("Successfully deleted", Boolean.TRUE);
-		return ResponseEntity.ok(response);
+	public ResponseEntity<MessageResponse> removeCategory(@PathVariable Long id) {
+		try {
+			categoryService.deleteCategry(id);
+			return ResponseEntity.ok().body(new MessageResponse("Successfully deleted"));
+		} catch (Exception e) {
+			System.out.println(e.getMessage());
+			return ResponseEntity.badRequest().body(new MessageResponse("Error: Can't delete this category"));
+		}
 	}
 
 	@PutMapping("{id_category}/article/{id_article}/add")
