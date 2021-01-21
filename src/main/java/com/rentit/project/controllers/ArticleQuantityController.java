@@ -58,6 +58,8 @@ public class ArticleQuantityController {
 	public ResponseEntity<Map<String, Boolean>> addQuantity(@RequestBody List<ArticleQuantityEntity> quantityEntity) {
 		Date date = new Date(System.currentTimeMillis());
 		Date dateReturn = new Date(System.currentTimeMillis() + (30L * 24 * 60 * 60 * 1000)); // 1 month
+		double subTotal = 0.0; // subTotal for quantityEntity
+		double totalPrice = 0.0; // totalPrice for rental
 
 		// invoiceEntity
 		InvoiceEntity invoiceEntity = new InvoiceEntity();
@@ -74,18 +76,14 @@ public class ArticleQuantityController {
 		// rentalEntity.setUsers(users); ??
 
 		// hole ArticleId von quantityEntity
-		// hole article
-		// hole price
-		double subTotal = 0.0;
+		// hole article and price
+		// Rechnung totalPrice und subTotal
 		for (int i = 0; i < quantityEntity.size(); i++) {
 			subTotal = quantityEntity.get(i).getQuantity()
 					* articleService.getArticle(quantityEntity.get(i).getArticle().getArticleId()).getPrice();
 			quantityEntity.get(i).setSubTotal(subTotal);
-		}
-
-		double totalPrice = 0.0;
-		for (int i = 0; i < quantityEntity.size(); i++) {
-			totalPrice += quantityEntity.get(i).getSubTotal();
+			// total
+			totalPrice += subTotal;
 		}
 
 		rentalEntity.setTotalPrice(totalPrice);
