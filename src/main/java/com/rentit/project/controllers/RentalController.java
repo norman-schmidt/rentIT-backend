@@ -81,7 +81,6 @@ public class RentalController {
 		RentalEntity _rentalEntity = rentalService.getRental(id);
 
 		_rentalEntity.setRentDate(rentalEntity.getRentDate());
-		_rentalEntity.setReturnDate(rentalEntity.getReturnDate());
 		_rentalEntity.setTotalPrice((rentalEntity.getTotalPrice()));
 		_rentalEntity.setUsers(userService.updateUser(_rentalEntity.getUsers()));
 		_rentalEntity.setInvoice(invoiceService.updateInvoice(_rentalEntity.getInvoice()));

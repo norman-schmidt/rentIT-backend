@@ -41,6 +41,18 @@ public class CategoryController {
 		return categoryService.getCategory(id);
 	}
 
+	// Return the Category and its articles
+	@GetMapping("name/{name}")
+	public List<CategoryEntity> getCategoryByName(@PathVariable("name") String name) {
+		return categoryService.getByName(name);
+	}
+
+	// List Name of Category
+	@GetMapping("name")
+	public List<String> getAllCategoryName() {
+		return categoryService.getAllName();
+	}
+
 	@PostMapping("")
 	public CategoryEntity addCategory(@RequestBody CategoryEntity categoryEntity) {
 		return categoryService.addCategory(categoryEntity);

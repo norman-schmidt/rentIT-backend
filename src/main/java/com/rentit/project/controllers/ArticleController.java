@@ -25,7 +25,6 @@ import com.rentit.project.services.ArticleService;
 import com.rentit.project.services.CategoryService;
 import com.rentit.project.services.ImageService;
 import com.rentit.project.services.PropertiesService;
-import com.rentit.project.services.RentalService;
 
 @RestController
 @RequestMapping("/api/articles/")
@@ -34,9 +33,6 @@ public class ArticleController {
 
 	@Autowired
 	private ArticleService articleService;
-
-	@Autowired
-	private RentalService rentalService;
 
 	@Autowired
 	private CategoryService categoryService;
@@ -59,6 +55,16 @@ public class ArticleController {
 	public ArticleEntity getArticleById(@PathVariable long id) {
 		return articleService.getArticle(id);
 	}
+
+	@GetMapping("name/{name}")
+	public List<ArticleEntity> getArticleById(@PathVariable("name") String name) {
+		return articleService.getArticleByName(name);
+	}
+
+//	@GetMapping("category/{category}")
+//	public List<ArticleEntity> getArticleByCategory(@PathVariable("category") String category) {
+//		return articleService.getArticleByCategory(category);
+//	}
 
 	@PostMapping("")
 	public ArticleEntity addArticle(@RequestBody ArticleEntity articleEntity) {

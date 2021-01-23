@@ -43,6 +43,9 @@ public class ArticleQuantityEntity {
 
 	@Column(name = "quantity")
 	private int quantity;
+	
+	@Column(name = "returnDate")
+	private Date returnDate;
 
 	@Column(name = "articleReturnedDate")
 	private Date articleReturnedDate;

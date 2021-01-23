@@ -37,9 +37,6 @@ public class RentalEntity {
 	@Column(name = "rentDate")
 	private Date rentDate;
 
-	@Column(name = "returnDate")
-	private Date returnDate;
-
 	@Column(name = "totalPrice")
 	private double totalPrice;
 

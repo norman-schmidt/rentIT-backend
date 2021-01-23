@@ -1,20 +1,7 @@
 package com.rentit.project;
 
-import java.util.Date;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-
-import com.rentit.project.models.ArticleEntity;
-import com.rentit.project.models.ImageEntity;
-import com.rentit.project.models.InvoiceEntity;
-import com.rentit.project.models.UserEntity;
-import com.rentit.project.repositories.ArticleRepository;
-import com.rentit.project.repositories.ImageRepository;
-import com.rentit.project.repositories.InvoiceRepository;
-import com.rentit.project.repositories.UserRepository;
 
 import springfox.documentation.swagger2.annotations.EnableSwagger2;
 
@@ -42,7 +29,6 @@ public class RentItApplication {
 
 //	@Override
 //	public void run(String... args) throws Exception {
-//		// TODO Auto-generated method stub
 //		ArticleEntity art = new ArticleEntity(1, "IPhone x", "DEG542DF", "v12", 12, 900, "Description", null , null, null, null);
 //		articleRepository.save(art);
 //

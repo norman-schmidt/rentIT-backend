@@ -71,7 +71,6 @@ public class ArticleQuantityController {
 		RentalEntity rentalEntity = new RentalEntity();
 		rentalEntity.setInvoice(invoiceEntity);
 		rentalEntity.setRentDate(date);
-		rentalEntity.setReturnDate(dateReturn);
 
 		// rentalEntity.setUsers(users); ??
 
@@ -92,6 +91,7 @@ public class ArticleQuantityController {
 		// update quantityEntity
 		for (int i = 0; i < quantityEntity.size(); i++) {
 			quantityEntity.get(i).setRental(rentalEntity);
+			quantityEntity.get(i).setReturnDate(dateReturn);
 			quantityService.addArticleQuantity(quantityEntity.get(i));
 		}
 
@@ -109,6 +109,7 @@ public class ArticleQuantityController {
 		_quantityEntity.setQuantity(quantityEntity.getQuantity());
 		_quantityEntity.setArticleReturnedDate(quantityEntity.getArticleReturnedDate());
 		_quantityEntity.setArticle(quantityEntity.getArticle());
+		_quantityEntity.setReturnDate(quantityEntity.getReturnDate());
 		_quantityEntity.setRental(rentalService.updateRental(_quantityEntity.getRental()));
 
 		return quantityService.updateArticleQuantities(_quantityEntity);
