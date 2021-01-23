@@ -11,14 +11,14 @@ import com.rentit.project.models.ArticleEntity;
 @Repository
 public interface ArticleRepository extends JpaRepository<ArticleEntity, Long> {
 
-	// Name
+	// Names
 	@Query("SELECT a FROM ArticleEntity a WHERE a.name like %?1%")
 	List<ArticleEntity> findByName(String name);
 
 	// Category
 	//@Query("SELECT a FROM ArticleEntity a, CategoryEntity c WHERE a.category = c.categoryId and c.name like %?1%")
 	//List<ArticleEntity> findByCategory(String category);
-
+	/*
 	// Price von min to max
 	@Query("SELECT a FROM ArticleEntity a ORDER BY a.price asc")
 	List<ArticleEntity> PriceMinToMax();
@@ -37,5 +37,5 @@ public interface ArticleRepository extends JpaRepository<ArticleEntity, Long> {
 
 	// Properties
 	// @Query("SELECT c FROM ArticleEntity c WHERE c.name like %?1%")
-	// List<ArticleEntity> findCategoryByName(String categoryName);
+	// List<ArticleEntity> findCategoryByName(String categoryName);*/
 }

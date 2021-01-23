@@ -26,7 +26,7 @@ public class ArticleService {
 	}
 
 	@Transactional
-	public List<ArticleEntity> getArticleByName(String name) {
+	public List<ArticleEntity> getByName(String name) {
 		return articleRepository.findByName(name);
 	}
 
@@ -34,7 +34,7 @@ public class ArticleService {
 //	public List<ArticleEntity> getArticleByCategory(String category) {
 //		return articleRepository.findByCategory(category);
 //	}
-
+	/*
 	@Transactional
 	public List<ArticleEntity> getByPriceAsc() {
 		return articleRepository.PriceMinToMax();
@@ -53,7 +53,7 @@ public class ArticleService {
 	@Transactional
 	public List<ArticleEntity> getByPriceDescCategory() {
 		return articleRepository.PriceMaxToMinCategory();
-	}
+	}*/
 
 	public List<ArticleEntity> getAllArticles() {
 		return articleRepository.findAll();

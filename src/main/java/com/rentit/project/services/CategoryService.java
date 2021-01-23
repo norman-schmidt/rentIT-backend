@@ -39,7 +39,7 @@ public class CategoryService {
 	}
 
 	@Transactional
-	public List<CategoryEntity> getByName(String name) {
+	public CategoryEntity getByName(String name) {
 		return categoryRepository.findByName(name);
 	}
 

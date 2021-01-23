@@ -43,7 +43,7 @@ public class CategoryController {
 
 	// Return the Category and its articles
 	@GetMapping("name/{name}")
-	public List<CategoryEntity> getCategoryByName(@PathVariable("name") String name) {
+	public CategoryEntity getCategoryByName(@PathVariable("name") String name) {
 		return categoryService.getByName(name);
 	}
 

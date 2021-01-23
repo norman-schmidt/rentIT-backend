@@ -13,7 +13,7 @@ public interface CategoryRepository extends JpaRepository<CategoryEntity, Long> 
 
 	// Name
 	@Query("SELECT c FROM CategoryEntity c WHERE c.name like %?1%")
-	List<CategoryEntity> findByName(String name);
+	CategoryEntity findByName(String name);
 
 	// findAllName
 	@Query("SELECT c.name FROM CategoryEntity c")

@@ -58,7 +58,7 @@ public class ArticleController {
 
 	@GetMapping("name/{name}")
 	public List<ArticleEntity> getArticleById(@PathVariable("name") String name) {
-		return articleService.getArticleByName(name);
+		return articleService.getByName(name);
 	}
 
 //	@GetMapping("category/{category}")
