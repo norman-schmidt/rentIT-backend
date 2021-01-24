@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.rentit.project.dto.CustomArticle;
 import com.rentit.project.models.ArticleEntity;
 import com.rentit.project.models.CategoryEntity;
 import com.rentit.project.models.ImageEntity;
@@ -56,8 +57,9 @@ public class ArticleController {
 		return articleService.getArticle(id);
 	}
 
+	//
 	@GetMapping("name/{name}")
-	public List<ArticleEntity> getArticleById(@PathVariable("name") String name) {
+	public List<CustomArticle> getArticleById(@PathVariable("name") String name) {
 		return articleService.getByName(name);
 	}
 

@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 
+import com.rentit.project.dto.CustomArticle;
 import com.rentit.project.models.ArticleEntity;
 import com.rentit.project.repositories.ArticleRepository;
 
@@ -26,7 +27,7 @@ public class ArticleService {
 	}
 
 	@Transactional
-	public List<ArticleEntity> getByName(String name) {
+	public List<CustomArticle> getByName(String name) {
 		return articleRepository.findByName(name);
 	}
 

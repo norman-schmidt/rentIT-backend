@@ -32,6 +32,7 @@ public class ImageEntity {
 	@Column(name = "imageLink")
 	private String imageLink;
 
+	// Titelbild oder Bechreibung-Bild oder vom Kunde
 	@Column(name = "imageType")
 	private String imageType;
 
