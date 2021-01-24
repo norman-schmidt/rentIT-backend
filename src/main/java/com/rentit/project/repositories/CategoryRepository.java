@@ -13,7 +13,7 @@ import com.rentit.project.pojo.category.Category;
 public interface CategoryRepository extends JpaRepository<CategoryEntity, Long> {
 
 	// Name
-	@Query("SELECT new com.rentit.project.dto.CustomCategory(a.name, a.description, a.stockLevel, a.price, im.imageLink) "
+	@Query("SELECT new com.rentit.project.pojo.category.Category(a.name, a.description, a.stockLevel, a.price, im.imageLink) "
 			+ "FROM ArticleEntity a, ImageEntity im, CategoryEntity ca "
 			+ "WHERE im.art = a.articleId and a.category = ca.categoryId"
 			+ " and im.imageType = 'titel' and ca.name like %?1%")
