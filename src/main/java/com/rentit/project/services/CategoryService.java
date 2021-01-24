@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 
+import com.rentit.project.dto.CustomCategory;
 import com.rentit.project.models.CategoryEntity;
 import com.rentit.project.repositories.CategoryRepository;
 
@@ -39,7 +40,7 @@ public class CategoryService {
 	}
 
 	@Transactional
-	public List<CategoryEntity> getByName(String name) {
+	public List<CustomCategory> getByName(String name) {
 		return categoryRepository.findByName(name);
 	}
 
