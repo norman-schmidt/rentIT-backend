@@ -59,7 +59,6 @@ public class ArticleController {
 	}
 
 	// findByIDS
-	@SuppressWarnings("null")
 	@GetMapping("articlesByIds/")
 	public List<CustomArticle> getArticleByIds(@RequestBody Map<String, ArrayList<Long>> data) {
 
