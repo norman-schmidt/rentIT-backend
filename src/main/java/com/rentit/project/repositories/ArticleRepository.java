@@ -12,10 +12,16 @@ import com.rentit.project.models.ArticleEntity;
 @Repository
 public interface ArticleRepository extends JpaRepository<ArticleEntity, Long> {
 
-	// Names
+	// Name
 	@Query("SELECT new com.rentit.project.dto.CustomArticle(a.name, a.description, a.stockLevel, a.price, im.imageLink) "
 			+ "FROM ArticleEntity a, ImageEntity im WHERE im.art = a.articleId and im.imageType = 'titel' and a.name like %?1%")
 	List<CustomArticle> findByName(String name);
+
+	// Price
+	@Query("SELECT new com.rentit.project.dto.CustomArticle(a.name, a.description, a.stockLevel, a.price, im.imageLink) "
+			+ "FROM ArticleEntity a, ImageEntity im WHERE im.art = a.articleId "
+			+ "and im.imageType = 'titel' and a.name like %?1% and a.price between ?2 and ?3")
+	List<CustomArticle> filterWithNamePrice(String name, double min, double max);
 
 	// Category
 	// @Query("SELECT a FROM ArticleEntity a, CategoryEntity c WHERE a.category =

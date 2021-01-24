@@ -31,30 +31,10 @@ public class ArticleService {
 		return articleRepository.findByName(name);
 	}
 
-//	@Transactional
-//	public List<ArticleEntity> getArticleByCategory(String category) {
-//		return articleRepository.findByCategory(category);
-//	}
-	/*
 	@Transactional
-	public List<ArticleEntity> getByPriceAsc() {
-		return articleRepository.PriceMinToMax();
+	public List<CustomArticle> filterNamePrice(String name, double min, double max) {
+		return articleRepository.filterWithNamePrice(name, min, max);
 	}
-
-	@Transactional
-	public List<ArticleEntity> getByPriceDesc() {
-		return articleRepository.PriceMaxToMin();
-	}
-
-	@Transactional
-	public List<ArticleEntity> getByPriceAscCategory() {
-		return articleRepository.PriceMinToMaxCategory();
-	}
-
-	@Transactional
-	public List<ArticleEntity> getByPriceDescCategory() {
-		return articleRepository.PriceMaxToMinCategory();
-	}*/
 
 	public List<ArticleEntity> getAllArticles() {
 		return articleRepository.findAll();

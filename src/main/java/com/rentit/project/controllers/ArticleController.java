@@ -57,16 +57,18 @@ public class ArticleController {
 		return articleService.getArticle(id);
 	}
 
-	//
+	// findByName
 	@GetMapping("name/{name}")
 	public List<CustomArticle> getArticleById(@PathVariable("name") String name) {
 		return articleService.getByName(name);
 	}
 
-//	@GetMapping("category/{category}")
-//	public List<ArticleEntity> getArticleByCategory(@PathVariable("category") String category) {
-//		return articleService.getArticleByCategory(category);
-//	}
+	// findByName
+	@GetMapping("{name}/{min}/{max}")
+	public List<CustomArticle> filterMinMaxPrice(@PathVariable("name") String name, @PathVariable("min") double min,
+			@PathVariable("max") double max) {
+		return articleService.filterNamePrice(name, min, max);
+	}
 
 	@PostMapping("")
 	public ArticleEntity addArticle(@RequestBody ArticleEntity articleEntity) {
