@@ -3,6 +3,7 @@ package com.rentit.project.controllers;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.List;
+import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -60,7 +61,7 @@ public class ArticleQuantityController {
 		// invoiceEntity
 		InvoiceEntity invoiceEntity = new InvoiceEntity();
 		invoiceEntity.setInvoiceDate(LocalDateTime.now());
-		invoiceEntity.setInvoiceNumber(1); // Mit Datum vielleicht !?
+		invoiceEntity.setInvoiceNumber(Integer.parseInt(UUID.randomUUID().toString()));
 		invoiceService.addInvoice(invoiceEntity);
 
 		// rentalEntity
@@ -75,11 +76,11 @@ public class ArticleQuantityController {
 		for (int i = 0; i < quantityEntity.size(); i++) {
 			// Difference Date-Days
 			long diffDay = ChronoUnit.DAYS.between(LocalDateTime.now(), quantityEntity.get(i).getReturnDate());
-			
+
 			subTotal = quantityEntity.get(i).getQuantity()
 					* articleService.getArticle(quantityEntity.get(i).getArticle().getArticleId()).getPrice();
 			quantityEntity.get(i).setSubTotal(subTotal);
-			
+
 			// rabatt
 			if (diffDay >= 7) {
 				subTotal -= subTotal * 0.1;
@@ -88,10 +89,10 @@ public class ArticleQuantityController {
 			} else if (diffDay > 14) {
 				subTotal -= subTotal * 0.2;
 			}
-			
+
 			// subTotal
 			quantityEntity.get(i).setSubTotal(subTotal);
-			
+
 			// total
 			totalPrice += subTotal;
 		}

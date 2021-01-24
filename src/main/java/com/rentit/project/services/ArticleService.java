@@ -8,8 +8,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 
-import com.rentit.project.dto.CustomArticle;
 import com.rentit.project.models.ArticleEntity;
+import com.rentit.project.pojo.article.Article;
 import com.rentit.project.repositories.ArticleRepository;
 
 @Service
@@ -27,17 +27,17 @@ public class ArticleService {
 	}
 	
 	@Transactional
-	public CustomArticle getByIds(Long id) {
+	public Article getByIds(Long id) {
 		return articleRepository.findByIds(id);
 	}
 
 	@Transactional
-	public List<CustomArticle> getByName(String name) {
+	public List<Article> getByName(String name) {
 		return articleRepository.findByName(name);
 	}
 
 	@Transactional
-	public List<CustomArticle> filterNamePrice(String name, double min, double max) {
+	public List<Article> filterNamePrice(String name, double min, double max) {
 		return articleRepository.filterWithNamePrice(name, min, max);
 	}
 

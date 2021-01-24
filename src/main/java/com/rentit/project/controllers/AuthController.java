@@ -64,8 +64,8 @@ public class AuthController {
 		List<String> roles = userDetails.getAuthorities().stream().map(item -> item.getAuthority())
 				.collect(Collectors.toList());
 
-		return ResponseEntity.ok(
-				new JwtResponse(jwt, userDetails.getId(), userDetails.getUsername(), userDetails.getEmail(), roles));
+		return ResponseEntity.ok(new JwtResponse(jwt, userDetails.getId(), userDetails.getUsername(),
+				userDetails.getEmail(), userDetails.getLastname(), userDetails.getFirstname(), roles));
 	}
 
 	@PostMapping("/signup")
@@ -79,15 +79,9 @@ public class AuthController {
 		}
 
 		// Create new user's account
-		UserEntity user = new UserEntity(
-				signUpRequest.getEmail(), 
-				signUpRequest.getUsername(),
-				encoder.encode(signUpRequest.getPassword()),
-				signUpRequest.getLastname(), 
-				signUpRequest.getFirstname(),
-				signUpRequest.getAddress(), 
-				signUpRequest.getBirthday(), 
-				signUpRequest.getRental(),
+		UserEntity user = new UserEntity(signUpRequest.getEmail(), signUpRequest.getUsername(),
+				encoder.encode(signUpRequest.getPassword()), signUpRequest.getLastname(), signUpRequest.getFirstname(),
+				signUpRequest.getAddress(), signUpRequest.getBirthday(), signUpRequest.getRental(),
 				signUpRequest.getImage()
 
 		);
