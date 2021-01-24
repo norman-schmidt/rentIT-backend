@@ -1,9 +1,8 @@
 package com.rentit.project.controllers;
 
-import java.util.Date;
-import java.util.HashMap;
+import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
 import java.util.List;
-import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -55,31 +54,44 @@ public class ArticleQuantityController {
 
 	@PostMapping("")
 	public ResponseEntity<MessageResponse> addQuantity(@RequestBody List<ArticleQuantityEntity> quantityEntity) {
-		Date date = new Date(System.currentTimeMillis());
-		Date dateReturn = new Date(System.currentTimeMillis() + (30L * 24 * 60 * 60 * 1000)); // 1 month
 		double subTotal = 0.0; // subTotal for quantityEntity
 		double totalPrice = 0.0; // totalPrice for rental
 
 		// invoiceEntity
 		InvoiceEntity invoiceEntity = new InvoiceEntity();
-		invoiceEntity.setInvoiceDate(date);
-		invoiceEntity.setInvoiceNumber(1);
+		invoiceEntity.setInvoiceDate(LocalDateTime.now());
+		invoiceEntity.setInvoiceNumber(1); // Mit Datum vielleicht !?
 		invoiceService.addInvoice(invoiceEntity);
 
 		// rentalEntity
 		RentalEntity rentalEntity = new RentalEntity();
 		rentalEntity.setInvoice(invoiceEntity);
-		rentalEntity.setRentDate(date);
-
+		rentalEntity.setRentDate(LocalDateTime.now());
 		// rentalEntity.setUsers(users); ??
 
 		// hole ArticleId von quantityEntity
 		// hole article and price
 		// Rechnung totalPrice und subTotal
 		for (int i = 0; i < quantityEntity.size(); i++) {
+			// Difference Date-Days
+			long diffDay = ChronoUnit.DAYS.between(LocalDateTime.now(), quantityEntity.get(i).getReturnDate());
+			
 			subTotal = quantityEntity.get(i).getQuantity()
 					* articleService.getArticle(quantityEntity.get(i).getArticle().getArticleId()).getPrice();
 			quantityEntity.get(i).setSubTotal(subTotal);
+			
+			// rabatt
+			if (diffDay >= 7) {
+				subTotal -= subTotal * 0.1;
+			} else if (diffDay >= 7 && diffDay <= 14) {
+				subTotal -= subTotal * 0.15;
+			} else if (diffDay > 14) {
+				subTotal -= subTotal * 0.2;
+			}
+			
+			// subTotal
+			quantityEntity.get(i).setSubTotal(subTotal);
+			
 			// total
 			totalPrice += subTotal;
 		}
@@ -90,7 +102,6 @@ public class ArticleQuantityController {
 		// update quantityEntity
 		for (int i = 0; i < quantityEntity.size(); i++) {
 			quantityEntity.get(i).setRental(rentalEntity);
-			quantityEntity.get(i).setReturnDate(dateReturn);
 			quantityService.addArticleQuantity(quantityEntity.get(i));
 		}
 
@@ -113,13 +124,9 @@ public class ArticleQuantityController {
 	}
 
 	@DeleteMapping("{id}")
-	public ResponseEntity<Map<String, Boolean>> removeQuantity(@PathVariable Long id) {
-
+	public ResponseEntity<MessageResponse> removeQuantity(@PathVariable Long id) {
 		quantityService.deleteArticleQuantity(id);
-
-		Map<String, Boolean> response = new HashMap<>();
-		response.put("Successfully deleted", Boolean.TRUE);
-		return ResponseEntity.ok(response);
+		return ResponseEntity.ok().body(new MessageResponse("Successfully deleted"));
 	}
 
 }

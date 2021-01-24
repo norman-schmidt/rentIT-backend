@@ -1,6 +1,6 @@
 package com.rentit.project.models;
 
-import java.util.Date;
+import java.time.LocalDateTime;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -11,6 +11,9 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 
+import org.springframework.format.annotation.DateTimeFormat;
+
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 
@@ -45,10 +48,13 @@ public class ArticleQuantityEntity {
 	private int quantity;
 	
 	@Column(name = "returnDate")
-	private Date returnDate;
+	@DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
+	@JsonFormat(pattern = "yyyy-MM-dd HH:mm")
+	private LocalDateTime returnDate;
 
 	@Column(name = "ReturnedDate")
-	private Date 
-	ReturnedDate;
+	@DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
+	@JsonFormat(pattern = "yyyy-MM-dd HH:mm")
+	private LocalDateTime ReturnedDate;
 
 }

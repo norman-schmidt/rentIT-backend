@@ -1,6 +1,6 @@
 package com.rentit.project.models;
 
-import java.util.Date;
+import java.time.LocalDateTime;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -10,6 +10,9 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToOne;
 
+import org.springframework.format.annotation.DateTimeFormat;
+
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 
@@ -33,7 +36,9 @@ public class InvoiceEntity {
 	private int invoiceNumber;
 
 	@Column(name = "invoiceDate")
-	private Date invoiceDate;
+	@DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
+	@JsonFormat(pattern = "yyyy-MM-dd HH:mm")
+	private LocalDateTime invoiceDate;
 
 	@OneToOne(mappedBy = "invoice", fetch = FetchType.EAGER)
 	private RentalEntity rental;
