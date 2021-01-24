@@ -1,7 +1,6 @@
 package com.rentit.project.pojo.response;
 
 import java.util.List;
-import java.util.UUID;
 
 public class JwtResponse {
 

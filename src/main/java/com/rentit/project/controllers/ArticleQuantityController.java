@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.rentit.project.models.ArticleQuantityEntity;
 import com.rentit.project.models.InvoiceEntity;
 import com.rentit.project.models.RentalEntity;
+import com.rentit.project.pojo.response.MessageResponse;
 import com.rentit.project.services.ArticleQuantityService;
 import com.rentit.project.services.ArticleService;
 import com.rentit.project.services.InvoiceService;
@@ -53,9 +54,7 @@ public class ArticleQuantityController {
 	}
 
 	@PostMapping("")
-	// public ArticleQuantityEntity addQuantity(@RequestBody
-	// List<ArticleQuantityEntity> quantityEntity) {
-	public ResponseEntity<Map<String, Boolean>> addQuantity(@RequestBody List<ArticleQuantityEntity> quantityEntity) {
+	public ResponseEntity<MessageResponse> addQuantity(@RequestBody List<ArticleQuantityEntity> quantityEntity) {
 		Date date = new Date(System.currentTimeMillis());
 		Date dateReturn = new Date(System.currentTimeMillis() + (30L * 24 * 60 * 60 * 1000)); // 1 month
 		double subTotal = 0.0; // subTotal for quantityEntity
@@ -95,9 +94,7 @@ public class ArticleQuantityController {
 			quantityService.addArticleQuantity(quantityEntity.get(i));
 		}
 
-		Map<String, Boolean> response = new HashMap<>();
-		response.put("Successfully Added", Boolean.TRUE);
-		return ResponseEntity.ok(response);
+		return ResponseEntity.ok().body(new MessageResponse("Successfully Added"));
 	}
 
 	@PutMapping("{id}")
@@ -107,7 +104,7 @@ public class ArticleQuantityController {
 		ArticleQuantityEntity _quantityEntity = quantityService.getArticleQuantity(id);
 
 		_quantityEntity.setQuantity(quantityEntity.getQuantity());
-		_quantityEntity.setArticleReturnedDate(quantityEntity.getArticleReturnedDate());
+		_quantityEntity.setReturnedDate(quantityEntity.getReturnedDate());
 		_quantityEntity.setArticle(quantityEntity.getArticle());
 		_quantityEntity.setReturnDate(quantityEntity.getReturnDate());
 		_quantityEntity.setRental(rentalService.updateRental(_quantityEntity.getRental()));
