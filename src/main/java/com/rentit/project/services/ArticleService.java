@@ -25,6 +25,11 @@ public class ArticleService {
 	public ArticleEntity getArticle(Long id) {
 		return articleRepository.findById(id).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
 	}
+	
+	@Transactional
+	public CustomArticle getByIds(Long id) {
+		return articleRepository.findByIds(id);
+	}
 
 	@Transactional
 	public List<CustomArticle> getByName(String name) {

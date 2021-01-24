@@ -1,5 +1,6 @@
 package com.rentit.project.controllers;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -55,6 +56,20 @@ public class ArticleController {
 	@GetMapping("{id}")
 	public ArticleEntity getArticleById(@PathVariable long id) {
 		return articleService.getArticle(id);
+	}
+
+	// findByIDS
+	@SuppressWarnings("null")
+	@GetMapping("articlesByIds/")
+	public List<CustomArticle> getArticleByIds(@RequestBody Map<String, ArrayList<Long>> data) {
+
+		ArrayList<Long> ids = data.get("ids");
+		List<CustomArticle> articles = new ArrayList<CustomArticle>();
+		for (Long id : ids) {
+			articles.add(articleService.getByIds((Long) id));
+		}
+		return articles;
+
 	}
 
 	// findByName
