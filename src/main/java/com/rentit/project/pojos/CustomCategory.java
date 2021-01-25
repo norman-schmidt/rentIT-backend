@@ -1,11 +1,11 @@
-package com.rentit.project.pojo.category;
+package com.rentit.project.pojos;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
 
 @Data
 @AllArgsConstructor
-public class Category {
+public class CustomCategory {
 
 	private String name;
 	private String description;

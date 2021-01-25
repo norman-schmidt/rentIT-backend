@@ -15,7 +15,7 @@ public class ImageService {
 
 	@Autowired
 	private ImageRepository imageRepository;
-	
+
 	public ImageEntity addImage(ImageEntity image) {
 		return imageRepository.save(image);
 	}
@@ -36,7 +36,7 @@ public class ImageService {
 	public ImageEntity updateImage(ImageEntity image) {
 		return imageRepository.save(image);
 	}
-	
+
 	public List<ImageEntity> updateImage(List<ImageEntity> image) {
 		return imageRepository.saveAll(image);
 	}

@@ -9,7 +9,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 
 import com.rentit.project.models.CategoryEntity;
-import com.rentit.project.pojo.category.Category;
+import com.rentit.project.pojos.CustomCategory;
 import com.rentit.project.repositories.CategoryRepository;
 
 @Service
@@ -40,7 +40,7 @@ public class CategoryService {
 	}
 
 	@Transactional
-	public List<Category> getByName(String name) {
+	public List<CustomCategory> getByName(String name) {
 		return categoryRepository.findByName(name);
 	}
 

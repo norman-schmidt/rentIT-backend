@@ -9,7 +9,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 
 import com.rentit.project.models.ArticleEntity;
-import com.rentit.project.pojo.article.Article;
+import com.rentit.project.pojos.CustomArticle;
 import com.rentit.project.repositories.ArticleRepository;
 
 @Service
@@ -27,17 +27,17 @@ public class ArticleService {
 	}
 	
 	@Transactional
-	public Article getByIds(Long id) {
+	public CustomArticle getByIds(Long id) {
 		return articleRepository.findByIds(id);
 	}
 
 	@Transactional
-	public List<Article> getByName(String name) {
+	public List<CustomArticle> getByName(String name) {
 		return articleRepository.findByName(name);
 	}
 
 	@Transactional
-	public List<Article> filterNamePrice(String name, double min, double max) {
+	public List<CustomArticle> filterNamePrice(String name, double min, double max) {
 		return articleRepository.filterWithNamePrice(name, min, max);
 	}
 

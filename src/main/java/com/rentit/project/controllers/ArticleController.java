@@ -21,7 +21,7 @@ import com.rentit.project.models.ArticleEntity;
 import com.rentit.project.models.CategoryEntity;
 import com.rentit.project.models.ImageEntity;
 import com.rentit.project.models.PropertiesEntity;
-import com.rentit.project.pojo.article.Article;
+import com.rentit.project.pojos.CustomArticle;
 import com.rentit.project.services.ArticleQuantityService;
 import com.rentit.project.services.ArticleService;
 import com.rentit.project.services.CategoryService;
@@ -60,10 +60,10 @@ public class ArticleController {
 
 	// findByIDS
 	@GetMapping("articlesByIds/")
-	public List<Article> getArticleByIds(@RequestBody Map<String, ArrayList<Long>> data) {
+	public List<CustomArticle> getArticleByIds(@RequestBody Map<String, ArrayList<Long>> data) {
 
 		ArrayList<Long> ids = data.get("ids");
-		List<Article> articles = new ArrayList<Article>();
+		List<CustomArticle> articles = new ArrayList<CustomArticle>();
 		for (Long id : ids) {
 			articles.add(articleService.getByIds((Long) id));
 		}
@@ -73,13 +73,13 @@ public class ArticleController {
 
 	// findByName
 	@GetMapping("name/{name}")
-	public List<Article> getArticleById(@PathVariable("name") String name) {
+	public List<CustomArticle> getArticleById(@PathVariable("name") String name) {
 		return articleService.getByName(name);
 	}
 
 	// findByName
 	@GetMapping("{name}/{min}/{max}")
-	public List<Article> filterMinMaxPrice(@PathVariable("name") String name, @PathVariable("min") double min,
+	public List<CustomArticle> filterMinMaxPrice(@PathVariable("name") String name, @PathVariable("min") double min,
 			@PathVariable("max") double max) {
 		return articleService.filterNamePrice(name, min, max);
 	}

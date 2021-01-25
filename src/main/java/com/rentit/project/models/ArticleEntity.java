@@ -57,7 +57,7 @@ public class ArticleEntity {
 	@JoinColumn(name = "propreties_id")
 	private PropertiesEntity propreties;
 
-	@ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+	@ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
 	@JoinColumn(name = "category_Id")
 	private CategoryEntity category;
 

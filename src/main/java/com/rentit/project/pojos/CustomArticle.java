@@ -1,11 +1,11 @@
-package com.rentit.project.pojo.article;
+package com.rentit.project.pojos;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
 
 @Data
 @AllArgsConstructor
-public class Article {
+public class CustomArticle {
 
 	private String name;
 	private String description;
