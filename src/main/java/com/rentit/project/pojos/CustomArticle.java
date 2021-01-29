@@ -7,6 +7,7 @@ import lombok.Data;
 @AllArgsConstructor
 public class CustomArticle {
 
+	private long id;
 	private String name;
 	private String description;
 	private int stockLevel;

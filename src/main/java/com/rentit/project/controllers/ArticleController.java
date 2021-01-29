@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.rentit.project.models.ArticleEntity;
@@ -58,19 +59,6 @@ public class ArticleController {
 		return articleService.getArticle(id);
 	}
 
-	// findByIDS
-	@GetMapping("articlesByIds/")
-	public List<CustomArticle> getArticleByIds(@RequestBody Map<String, ArrayList<Long>> data) {
-
-		ArrayList<Long> ids = data.get("ids");
-		List<CustomArticle> articles = new ArrayList<CustomArticle>();
-		for (Long id : ids) {
-			articles.add(articleService.getByIds((Long) id));
-		}
-		return articles;
-
-	}
-
 	// findByName
 	@GetMapping("name/{name}")
 	public List<CustomArticle> getArticleById(@PathVariable("name") String name) {
@@ -89,6 +77,30 @@ public class ArticleController {
 		CategoryEntity category = categoryService.getCategory(articleEntity.getCategory().getCategoryId());
 		articleEntity.setCategory(category);
 		return articleService.addArticle(articleEntity);
+	}
+
+	// findByIDS
+	@PostMapping("articlesByIds/")
+	public List<CustomArticle> getArticleByIds(@RequestBody Map<String, ArrayList<Long>> data) {
+
+		ArrayList<Long> ids = data.get("ids");
+		List<CustomArticle> articles = new ArrayList<CustomArticle>();
+		for (Long id : ids) {
+			articles.add(articleService.getByIds((Long) id));
+		}
+		return articles;
+
+	}
+
+	@PostMapping("search/")
+	List<CustomArticle> filterWithNameCategoryPrice(@RequestBody Map<String, String> json) {
+
+		List<CustomArticle> articles = new ArrayList<CustomArticle>();
+
+		articles.addAll(articleService.filterWithNameCategoryPrice(json.get("name"), json.get("category"),
+				Double.parseDouble(json.get("minPrice")), Double.parseDouble(json.get("maxPrice"))));
+
+		return articles;
 	}
 
 	@PutMapping("{id}")

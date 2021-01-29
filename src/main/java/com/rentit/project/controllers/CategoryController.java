@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.rentit.project.models.ArticleEntity;
 import com.rentit.project.models.CategoryEntity;
 import com.rentit.project.pojo.response.MessageResponse;
-import com.rentit.project.pojos.CustomCategory;
+import com.rentit.project.pojos.CustomArticle;
 import com.rentit.project.services.ArticleService;
 import com.rentit.project.services.CategoryService;
 
@@ -44,7 +44,7 @@ public class CategoryController {
 
 	// Return the Category and its articles
 	@GetMapping("name/{name}")
-	public List<CustomCategory> getCategoryByName(@PathVariable("name") String name) {
+	public List<CustomArticle> getCategoryByName(@PathVariable("name") String name) {
 		return categoryService.getByName(name);
 	}
 
