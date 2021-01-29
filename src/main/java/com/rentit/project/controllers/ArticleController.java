@@ -15,7 +15,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.rentit.project.models.ArticleEntity;
@@ -93,21 +92,16 @@ public class ArticleController {
 	}
 
 	@PostMapping("search/")
-	List<CustomArticle> filterWithNameCategoryPrice(@RequestBody Map<String, String> json) {
-
+	List<CustomArticle> filterWithNameCategoryPrice(@RequestBody Map<String, String> data) {
 		List<CustomArticle> articles = new ArrayList<CustomArticle>();
-
-		articles.addAll(articleService.filterWithNameCategoryPrice(json.get("name"), json.get("category"),
-				Double.parseDouble(json.get("minPrice")), Double.parseDouble(json.get("maxPrice"))));
-
+		articles.addAll(articleService.filterWithNameCategoryPrice(data.get("name"), data.get("category"),
+				Double.parseDouble(data.get("minPrice")), Double.parseDouble(data.get("maxPrice"))));
 		return articles;
 	}
 
 	@PutMapping("{id}")
 	public ArticleEntity updateArticle(@RequestBody ArticleEntity articleEntity, @PathVariable long id) {
-
 		ArticleEntity _articleEntity = articleService.getArticle(id);
-
 		_articleEntity.setName(articleEntity.getName());
 		_articleEntity.setSerialNumber(articleEntity.getSerialNumber());
 		_articleEntity.setModel(articleEntity.getModel());
@@ -119,15 +113,12 @@ public class ArticleController {
 				(articleQuatityService.updateArticleQuantities(_articleEntity.getArticleQuantity())));
 		_articleEntity.setCategory(categoryService.updateCategory(_articleEntity.getCategory()));
 		_articleEntity.setImages(imageService.updateImage(_articleEntity.getImages()));
-
 		return articleService.updateArticle(_articleEntity);
 	}
 
 	@DeleteMapping("{id}")
 	public ResponseEntity<Map<String, Boolean>> removeArticle(@PathVariable Long id) {
-
 		articleService.deleteArticle(id);
-
 		Map<String, Boolean> response = new HashMap<>();
 		response.put("Successfully deleted", Boolean.TRUE);
 		return ResponseEntity.ok(response);
