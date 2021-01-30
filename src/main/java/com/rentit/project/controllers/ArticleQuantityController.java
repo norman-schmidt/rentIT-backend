@@ -60,7 +60,7 @@ public class ArticleQuantityController {
 		// invoiceEntity
 		InvoiceEntity invoiceEntity = new InvoiceEntity();
 		invoiceEntity.setInvoiceDate(LocalDateTime.now());
-		//invoiceEntity.setInvoiceNumber(Integer.parseInt(UUID.randomUUID().toString()));
+		// invoiceEntity.setInvoiceNumber(Integer.parseInt(UUID.randomUUID().toString()));
 		invoiceService.addInvoice(invoiceEntity);
 
 		// rentalEntity
@@ -75,7 +75,6 @@ public class ArticleQuantityController {
 		for (int i = 0; i < quantityEntity.size(); i++) {
 			// Difference Date-Days
 			long diffDay = ChronoUnit.DAYS.between(LocalDateTime.now(), quantityEntity.get(i).getReturnDate());
-
 			subTotal = quantityEntity.get(i).getQuantity()
 					* articleService.getArticle(quantityEntity.get(i).getArticle().getArticleId()).getPrice();
 			quantityEntity.get(i).setSubTotal(subTotal);
@@ -102,24 +101,22 @@ public class ArticleQuantityController {
 		// update quantityEntity
 		for (int i = 0; i < quantityEntity.size(); i++) {
 			quantityEntity.get(i).setRental(rentalEntity);
+			quantityEntity.get(i).setReturned(false);
 			quantityService.addArticleQuantity(quantityEntity.get(i));
 		}
-
 		return ResponseEntity.ok().body(new MessageResponse("Successfully Added"));
 	}
 
 	@PutMapping("{id}")
 	public ArticleQuantityEntity updateQuantity(@RequestBody ArticleQuantityEntity quantityEntity,
 			@PathVariable long id) {
-
 		ArticleQuantityEntity _quantityEntity = quantityService.getArticleQuantity(id);
-
 		_quantityEntity.setQuantity(quantityEntity.getQuantity());
 		_quantityEntity.setReturnedDate(quantityEntity.getReturnedDate());
 		_quantityEntity.setArticle(quantityEntity.getArticle());
 		_quantityEntity.setReturnDate(quantityEntity.getReturnDate());
+		_quantityEntity.setReturned(quantityEntity.isReturned());
 		_quantityEntity.setRental(rentalService.updateRental(_quantityEntity.getRental()));
-
 		return quantityService.updateArticleQuantities(_quantityEntity);
 	}
 

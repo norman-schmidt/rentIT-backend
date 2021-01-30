@@ -47,6 +47,9 @@ public class ArticleQuantityEntity {
 	@Column(name = "quantity")
 	private int quantity;
 	
+	@Column(name = "returned")
+	private boolean returned;
+	
 	@Column(name = "returnDate")
 	@DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
 	@JsonFormat(pattern = "yyyy-MM-dd HH:mm")
