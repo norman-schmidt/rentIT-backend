@@ -19,10 +19,6 @@ public class SignupRequest {
 	private String email;
 
 	@NotBlank
-	@Size(min = 3, max = 20)
-	private String username;
-
-	@NotBlank
 	@Size(min = 6, max = 40)
 	private String password;
 
@@ -32,8 +28,16 @@ public class SignupRequest {
 	@Size(min = 3, max = 20)
 	private String firstname;
 
-	@Size(min = 3, max = 20)
-	private String address;
+	@Size(min = 1, max = 20)
+	private String street;
+
+	@Size(min = 1, max = 20)
+	private String hausNumber;
+
+	private int plz;
+
+	@Size(min = 1, max = 20)
+	private String ort;
 
 	private Date birthday;
 
@@ -42,14 +46,6 @@ public class SignupRequest {
 	private ImageEntity image;
 
 	private Set<String> role;
-
-	public String getUsername() {
-		return username;
-	}
-
-	public void setUsername(String username) {
-		this.username = username;
-	}
 
 	public String getEmail() {
 		return email;
@@ -91,12 +87,36 @@ public class SignupRequest {
 		this.firstname = firstname;
 	}
 
-	public String getAddress() {
-		return address;
+	public String getStreet() {
+		return street;
 	}
 
-	public void setAddress(String address) {
-		this.address = address;
+	public void setStreet(String street) {
+		this.street = street;
+	}
+
+	public String getHausNumber() {
+		return hausNumber;
+	}
+
+	public void setHausNumber(String hausNumber) {
+		this.hausNumber = hausNumber;
+	}
+
+	public int getPlz() {
+		return plz;
+	}
+
+	public void setPlz(int plz) {
+		this.plz = plz;
+	}
+
+	public String getOrt() {
+		return ort;
+	}
+
+	public void setOrt(String ort) {
+		this.ort = ort;
 	}
 
 	public Date getBirthday() {

@@ -59,8 +59,20 @@ public class UserEntity {
 	@Column(name = "firstname")
 	private String firstname;
 
-	@Column(name = "address")
-	private String address;
+	@Size(min = 1, max = 20)
+	@Column(name = "street")
+	private String street;
+
+	@Size(min = 1, max = 20)
+	@Column(name = "hausNumber")
+	private String hausNumber;
+
+	@Column(name = "plz")
+	private int plz;
+
+	@Size(min = 1, max = 20)
+	@Column(name = "ort")
+	private String ort;
 
 	@Column(name = "birthday")
 	private Date birthday;
@@ -82,16 +94,19 @@ public class UserEntity {
 	@JoinTable(name = "user_roles", joinColumns = @JoinColumn(name = "user_id", referencedColumnName = "userId"), inverseJoinColumns = @JoinColumn(name = "role_id", referencedColumnName = "id"))
 	private Set<Role> roles = new HashSet<>();
 
-	public UserEntity(@NotBlank @Size(max = 50) @Email String email, @NotBlank @Size(max = 20) String username,
-			@NotBlank @Size(max = 120) String password, String lastname, String firstname, String address,
-			Date birthday, List<RentalEntity> rental, ImageEntity image) {
+	public UserEntity(@NotBlank @Size(max = 50) @Email String email, @NotBlank @Size(max = 120) String password,
+			String lastname, String firstname, String street, String hausNumber, int plz, String ort, Date birthday,
+			List<RentalEntity> rental, ImageEntity image) {
 
 		this.email = email;
 		this.username = email;
 		this.password = password;
 		this.lastname = lastname;
 		this.firstname = firstname;
-		this.address = address;
+		this.street = street;
+		this.hausNumber = hausNumber;
+		this.plz = plz;
+		this.ort = ort;
 		this.birthday = birthday;
 		this.rental = rental;
 		this.image = image;

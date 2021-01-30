@@ -60,7 +60,10 @@ public class UserController {
 		_userEntity.setLastname(userEntity.getLastname());
 		_userEntity.setPassword(userEntity.getPassword());
 		_userEntity.setFirstname(userEntity.getFirstname());
-		_userEntity.setAddress(userEntity.getAddress());
+		_userEntity.setStreet(userEntity.getStreet());
+		_userEntity.setHausNumber(userEntity.getHausNumber());
+		_userEntity.setPlz(userEntity.getPlz());
+		_userEntity.setOrt(userEntity.getOrt());
 		_userEntity.setBirthday(userEntity.getBirthday());
 		_userEntity.setImage(imageService.updateImage(_userEntity.getImage()));
 
