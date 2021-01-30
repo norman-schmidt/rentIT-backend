@@ -87,7 +87,7 @@ public class UserEntity {
 			Date birthday, List<RentalEntity> rental, ImageEntity image) {
 
 		this.email = email;
-		this.username = username;
+		this.username = email;
 		this.password = password;
 		this.lastname = lastname;
 		this.firstname = firstname;
