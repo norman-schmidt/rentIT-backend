@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.rentit.project.models.ArticleEntity;
@@ -91,11 +92,14 @@ public class ArticleController {
 
 	}
 
-	@PostMapping("search/")
-	List<CustomArticle> filterWithNameCategoryPrice(@RequestBody Map<String, String> data) {
+	@GetMapping("search")
+	List<CustomArticle> filterWithNameCategoryPrice(@RequestParam("name") String name,
+			@RequestParam("category") String category, @RequestParam("minPrice") double minPrice,
+			@RequestParam("maxPrice") double maxPrice) {
+
 		List<CustomArticle> articles = new ArrayList<CustomArticle>();
-		articles.addAll(articleService.filterWithNameCategoryPrice(data.get("name"), data.get("category"),
-				Double.parseDouble(data.get("minPrice")), Double.parseDouble(data.get("maxPrice"))));
+		articles.addAll(articleService.filterWithNameCategoryPrice(name, category, minPrice, maxPrice));
+
 		return articles;
 	}
 
