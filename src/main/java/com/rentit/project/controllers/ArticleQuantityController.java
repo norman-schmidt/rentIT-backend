@@ -2,7 +2,9 @@ package com.rentit.project.controllers;
 
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -20,6 +22,8 @@ import com.rentit.project.models.ArticleQuantityEntity;
 import com.rentit.project.models.InvoiceEntity;
 import com.rentit.project.models.RentalEntity;
 import com.rentit.project.pojo.response.MessageResponse;
+import com.rentit.project.pojos.CustomArticle;
+import com.rentit.project.pojos.CustomPojoReturn;
 import com.rentit.project.services.ArticleQuantityService;
 import com.rentit.project.services.ArticleService;
 import com.rentit.project.services.InvoiceService;
@@ -50,6 +54,11 @@ public class ArticleQuantityController {
 	@GetMapping("{id}")
 	public ArticleQuantityEntity getQuantityById(@PathVariable long id) {
 		return quantityService.getArticleQuantity(id);
+	}
+
+	@GetMapping("listRental/{id}")
+	public List<CustomPojoReturn> getListRentalUser(@PathVariable long id) {
+		return quantityService.getListRentalUser(id);
 	}
 
 	@PostMapping("")
@@ -105,6 +114,20 @@ public class ArticleQuantityController {
 			quantityService.addArticleQuantity(quantityEntity.get(i));
 		}
 		return ResponseEntity.ok().body(new MessageResponse("Successfully Added"));
+	}
+
+	@PostMapping("return")
+	public ResponseEntity<MessageResponse> returnArticle(@RequestBody Map<String, ArrayList<Long>> data) {
+
+		ArrayList<Long> ids = data.get("ids");
+
+		for (Long id : ids) {
+			ArticleQuantityEntity articleQuantityEntity = quantityService.getArticleQuantity(id);
+			articleQuantityEntity.setReturned(true);
+			quantityService.addArticleQuantity(articleQuantityEntity);
+		}
+
+		return ResponseEntity.ok().body(new MessageResponse("Successfully returned"));
 	}
 
 	@PutMapping("{id}")
