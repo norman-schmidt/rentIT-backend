@@ -121,6 +121,7 @@ public class ArticleQuantityController {
 		for (Long id : ids) {
 			ArticleQuantityEntity articleQuantityEntity = quantityService.getArticleQuantity(id);
 			articleQuantityEntity.setReturned(true);
+			articleQuantityEntity.setReturnedDate(LocalDateTime.now());
 			quantityService.addArticleQuantity(articleQuantityEntity);
 		}
 		return ResponseEntity.ok().body(new MessageResponse("Successfully returned"));
