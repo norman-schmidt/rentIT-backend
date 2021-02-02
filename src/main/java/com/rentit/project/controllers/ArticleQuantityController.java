@@ -13,17 +13,21 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.rentit.project.jwt.JwtUtils;
 import com.rentit.project.models.ArticleQuantityEntity;
 import com.rentit.project.models.InvoiceEntity;
 import com.rentit.project.models.RentalEntity;
+import com.rentit.project.models.UserEntity;
 import com.rentit.project.pojo.response.MessageResponse;
 import com.rentit.project.services.ArticleQuantityService;
 import com.rentit.project.services.ArticleService;
 import com.rentit.project.services.InvoiceService;
 import com.rentit.project.services.RentalService;
+import com.rentit.project.services.UserService;
 
 @RestController
 @RequestMapping("/api/quantities")
@@ -42,6 +46,12 @@ public class ArticleQuantityController {
 	@Autowired
 	private ArticleQuantityService quantityService;
 
+	@Autowired
+	private JwtUtils jwtUtils;
+
+	@Autowired
+	private UserService userService;
+
 	@GetMapping("")
 	public List<ArticleQuantityEntity> getAllQuantity() {
 		return quantityService.getAllArticleQuantitys();
@@ -53,21 +63,31 @@ public class ArticleQuantityController {
 	}
 
 	@PostMapping("")
-	public ResponseEntity<MessageResponse> addQuantity(@RequestBody List<ArticleQuantityEntity> quantityEntity) {
+	public ResponseEntity<MessageResponse> addQuantity(@RequestBody List<ArticleQuantityEntity> quantityEntity,
+			@RequestHeader(value = "Authorization") String authHeader) {
+
+		String token = authHeader.substring(7, authHeader.length());
+		String email = null;
+		if (jwtUtils.validateJwtToken(token)) {
+			email = jwtUtils.getUserNameFromJwtToken(token);
+		}
+
+		UserEntity user = userService.findUserByEmail(email);
+
 		double subTotal = 0.0; // subTotal for quantityEntity
 		double totalPrice = 0.0; // totalPrice for rental
 
 		// invoiceEntity
 		InvoiceEntity invoiceEntity = new InvoiceEntity();
 		invoiceEntity.setInvoiceDate(LocalDateTime.now());
-		//invoiceEntity.setInvoiceNumber(Integer.parseInt(UUID.randomUUID().toString()));
+		// invoiceEntity.setInvoiceNumber(Integer.parseInt(UUID.randomUUID().toString()));
 		invoiceService.addInvoice(invoiceEntity);
 
 		// rentalEntity
 		RentalEntity rentalEntity = new RentalEntity();
 		rentalEntity.setInvoice(invoiceEntity);
 		rentalEntity.setRentDate(LocalDateTime.now());
-		// rentalEntity.setUsers(users); ??
+		rentalEntity.setUsers(user);
 
 		// hole ArticleId von quantityEntity
 		// hole article and price
