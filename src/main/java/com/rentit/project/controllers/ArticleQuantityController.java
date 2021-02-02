@@ -19,7 +19,6 @@ import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.rentit.project.jwt.JwtUtils;
 import com.rentit.project.models.ArticleQuantityEntity;
 import com.rentit.project.models.InvoiceEntity;
 import com.rentit.project.models.RentalEntity;
@@ -50,9 +49,6 @@ public class ArticleQuantityController {
 	private ArticleQuantityService quantityService;
 
 	@Autowired
-	private JwtUtils jwtUtils;
-
-	@Autowired
 	private UserService userService;
 
 	@GetMapping("")
@@ -65,22 +61,17 @@ public class ArticleQuantityController {
 		return quantityService.getArticleQuantity(id);
 	}
 
-	@GetMapping("listRental/{id}")
-	public List<CustomPojoReturn> getListRentalUser(@PathVariable long id) {
-		return quantityService.getListRentalUser(id);
+	@GetMapping("listRental")
+	public List<CustomPojoReturn> getListRentalUser(@RequestHeader(value = "Authorization") String authHeader) {
+		UserEntity user = userService.getUserFromToken(authHeader);
+		return quantityService.getListRentalUser(user.getUserId());
 	}
 
 	@PostMapping("")
 	public ResponseEntity<MessageResponse> addQuantity(@RequestBody List<ArticleQuantityEntity> quantityEntity,
 			@RequestHeader(value = "Authorization") String authHeader) {
 
-		String token = authHeader.substring(7, authHeader.length());
-		String email = null;
-		if (jwtUtils.validateJwtToken(token)) {
-			email = jwtUtils.getUserNameFromJwtToken(token);
-		}
-
-		UserEntity user = userService.findUserByEmail(email);
+		UserEntity user = userService.getUserFromToken(authHeader);
 
 		double subTotal = 0.0; // subTotal for quantityEntity
 		double totalPrice = 0.0; // totalPrice for rental
@@ -137,6 +128,7 @@ public class ArticleQuantityController {
 
 	@PostMapping("return")
 	public ResponseEntity<MessageResponse> returnArticle(@RequestBody Map<String, ArrayList<Long>> data) {
+
 		ArrayList<Long> ids = data.get("ids");
 		for (Long id : ids) {
 			ArticleQuantityEntity articleQuantityEntity = quantityService.getArticleQuantity(id);
