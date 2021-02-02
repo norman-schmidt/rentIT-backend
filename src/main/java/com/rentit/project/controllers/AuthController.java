@@ -17,7 +17,6 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -32,7 +31,6 @@ import com.rentit.project.pojo.response.MessageResponse;
 import com.rentit.project.repositories.RoleRepository;
 import com.rentit.project.repositories.UserRepository;
 import com.rentit.project.services.UserDetailsImpl;
-import com.rentit.project.services.UserService;
 
 @CrossOrigin(origins = "*", maxAge = 3600)
 @RestController
@@ -53,22 +51,8 @@ public class AuthController {
 	@Autowired
 	JwtUtils jwtUtils;
 
-	@Autowired
-	private UserService userService;
-
 	@PostMapping("/signin")
-	public ResponseEntity<?> authenticateUser(@Valid @RequestBody LoginRequest loginRequest,
-			@RequestHeader(value = "Authorization") String authHeader) {
-
-		String token = authHeader.substring(7, authHeader.length());
-		String username = null;
-		if (jwtUtils.validateJwtToken(token)) {
-			username = jwtUtils.getUserNameFromJwtToken(token);
-		}
-
-		UserEntity user = userService.findUserByEmail(username);
-
-		System.out.println(user);
+	public ResponseEntity<?> authenticateUser(@Valid @RequestBody LoginRequest loginRequest) {
 
 		Authentication authentication = authenticationManager.authenticate(
 				new UsernamePasswordAuthenticationToken(loginRequest.getEmail(), loginRequest.getPassword()));
