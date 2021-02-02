@@ -2,7 +2,9 @@ package com.rentit.project.controllers;
 
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -23,6 +25,7 @@ import com.rentit.project.models.InvoiceEntity;
 import com.rentit.project.models.RentalEntity;
 import com.rentit.project.models.UserEntity;
 import com.rentit.project.pojo.response.MessageResponse;
+import com.rentit.project.pojos.CustomPojoReturn;
 import com.rentit.project.services.ArticleQuantityService;
 import com.rentit.project.services.ArticleService;
 import com.rentit.project.services.InvoiceService;
@@ -62,6 +65,11 @@ public class ArticleQuantityController {
 		return quantityService.getArticleQuantity(id);
 	}
 
+	@GetMapping("listRental/{id}")
+	public List<CustomPojoReturn> getListRentalUser(@PathVariable long id) {
+		return quantityService.getListRentalUser(id);
+	}
+
 	@PostMapping("")
 	public ResponseEntity<MessageResponse> addQuantity(@RequestBody List<ArticleQuantityEntity> quantityEntity,
 			@RequestHeader(value = "Authorization") String authHeader) {
@@ -95,7 +103,6 @@ public class ArticleQuantityController {
 		for (int i = 0; i < quantityEntity.size(); i++) {
 			// Difference Date-Days
 			long diffDay = ChronoUnit.DAYS.between(LocalDateTime.now(), quantityEntity.get(i).getReturnDate());
-
 			subTotal = quantityEntity.get(i).getQuantity()
 					* articleService.getArticle(quantityEntity.get(i).getArticle().getArticleId()).getPrice();
 			quantityEntity.get(i).setSubTotal(subTotal);
@@ -122,24 +129,34 @@ public class ArticleQuantityController {
 		// update quantityEntity
 		for (int i = 0; i < quantityEntity.size(); i++) {
 			quantityEntity.get(i).setRental(rentalEntity);
+			quantityEntity.get(i).setReturned(false);
 			quantityService.addArticleQuantity(quantityEntity.get(i));
 		}
-
 		return ResponseEntity.ok().body(new MessageResponse("Successfully Added"));
+	}
+
+	@PostMapping("return")
+	public ResponseEntity<MessageResponse> returnArticle(@RequestBody Map<String, ArrayList<Long>> data) {
+		ArrayList<Long> ids = data.get("ids");
+		for (Long id : ids) {
+			ArticleQuantityEntity articleQuantityEntity = quantityService.getArticleQuantity(id);
+			articleQuantityEntity.setReturned(true);
+			articleQuantityEntity.setReturnedDate(LocalDateTime.now());
+			quantityService.addArticleQuantity(articleQuantityEntity);
+		}
+		return ResponseEntity.ok().body(new MessageResponse("Successfully returned"));
 	}
 
 	@PutMapping("{id}")
 	public ArticleQuantityEntity updateQuantity(@RequestBody ArticleQuantityEntity quantityEntity,
 			@PathVariable long id) {
-
 		ArticleQuantityEntity _quantityEntity = quantityService.getArticleQuantity(id);
-
 		_quantityEntity.setQuantity(quantityEntity.getQuantity());
 		_quantityEntity.setReturnedDate(quantityEntity.getReturnedDate());
 		_quantityEntity.setArticle(quantityEntity.getArticle());
 		_quantityEntity.setReturnDate(quantityEntity.getReturnDate());
+		_quantityEntity.setReturned(quantityEntity.isReturned());
 		_quantityEntity.setRental(rentalService.updateRental(_quantityEntity.getRental()));
-
 		return quantityService.updateArticleQuantities(_quantityEntity);
 	}
 
