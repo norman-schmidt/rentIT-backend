@@ -14,6 +14,7 @@ import org.springframework.format.annotation.DateTimeFormat;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonIdentityReference;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 
 import lombok.AllArgsConstructor;
@@ -40,6 +41,7 @@ public class InvoiceEntity {
 	@JsonFormat(pattern = "yyyy-MM-dd HH:mm")
 	private LocalDateTime invoiceDate;
 
+	@JsonIdentityReference(alwaysAsId = true)
 	@OneToOne(mappedBy = "invoice", fetch = FetchType.EAGER)
 	private RentalEntity rental;
 

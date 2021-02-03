@@ -11,6 +11,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
 
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 
 import lombok.AllArgsConstructor;
@@ -22,6 +23,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "imageId")
+@JsonIgnoreProperties({ "user", "art", "imageType" })
 public class ImageEntity {
 
 	@Id
@@ -36,9 +38,11 @@ public class ImageEntity {
 	@Column(name = "imageType")
 	private String imageType;
 
+	// @JsonIdentityReference(alwaysAsId = true)
 	@OneToOne(mappedBy = "image", fetch = FetchType.LAZY)
 	private UserEntity user;
 
+	// @JsonIdentityReference(alwaysAsId = true)
 	@ManyToOne(fetch = FetchType.EAGER)
 	@JoinColumn(name = "article_Id")
 	private ArticleEntity art;
