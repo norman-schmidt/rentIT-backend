@@ -10,6 +10,7 @@ import javax.persistence.Id;
 import javax.persistence.OneToOne;
 
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonIdentityReference;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 
 import lombok.AllArgsConstructor;
@@ -21,12 +22,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "propertiesId")
-public class PropertiesEntity {// implements Serializable
-
-	/**
-	 * 
-	 */
-	// private static final long serialVersionUID = 784834265734499445L;
+public class PropertiesEntity {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -48,6 +44,7 @@ public class PropertiesEntity {// implements Serializable
 	@Column(name = "manifacturer")
 	private String manifacturer;
 
+	@JsonIdentityReference(alwaysAsId = true)
 	@OneToOne(mappedBy = "propreties", fetch = FetchType.EAGER)
 	private ArticleEntity article;
 

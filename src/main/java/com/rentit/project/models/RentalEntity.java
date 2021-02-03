@@ -19,6 +19,7 @@ import org.springframework.format.annotation.DateTimeFormat;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonIdentityReference;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 
 import lombok.AllArgsConstructor;
@@ -45,20 +46,17 @@ public class RentalEntity {
 	@Column(name = "totalPrice")
 	private double totalPrice;
 
+	@JsonIdentityReference(alwaysAsId = true)
 	@ManyToOne(fetch = FetchType.EAGER)
 	@JoinColumn(name = "user_Id")
 	private UserEntity users;
 
-	// @OneToMany(mappedBy = "rental", fetch = FetchType.EAGER) // cascade or not
-	// private List<ArticleEntity> articles;
-
+	@JsonIdentityReference(alwaysAsId = true)
 	@OneToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
 	@JoinColumn(name = "invoice_Id")
 	private InvoiceEntity invoice;
-
-	// @ManyToMany(mappedBy = "rentals", fetch = FetchType.LAZY)
-	// private List<ArticleEntity> articles;
-
+	
+	@JsonIdentityReference(alwaysAsId = true)
 	@OneToMany(mappedBy = "rental", fetch = FetchType.EAGER)
 	private List<ArticleQuantityEntity> articleQuantity;
 
