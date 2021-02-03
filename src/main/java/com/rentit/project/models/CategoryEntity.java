@@ -13,6 +13,7 @@ import javax.persistence.Id;
 import javax.persistence.OneToMany;
 
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonIdentityReference;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 
 import lombok.AllArgsConstructor;
@@ -33,6 +34,7 @@ public class CategoryEntity {
 	@Column(name = "name")
 	private String name;
 
+	@JsonIdentityReference(alwaysAsId = true)
 	@OneToMany(mappedBy = "category", fetch = FetchType.EAGER)
 	private List<ArticleEntity> articles;
 

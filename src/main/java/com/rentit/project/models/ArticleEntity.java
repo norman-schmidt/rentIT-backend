@@ -16,6 +16,8 @@ import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonIdentityReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 
 import lombok.AllArgsConstructor;
@@ -53,10 +55,12 @@ public class ArticleEntity {
 	@Column(name = "price")
 	private double price;
 
+	//@JsonIdentityReference(alwaysAsId = true)
 	@OneToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
 	@JoinColumn(name = "propreties_id")
 	private PropertiesEntity propreties;
 
+	@JsonIdentityReference(alwaysAsId = true)
 	@ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
 	@JoinColumn(name = "category_Id")
 	private CategoryEntity category;
@@ -64,14 +68,8 @@ public class ArticleEntity {
 	@OneToMany(mappedBy = "art", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
 	private List<ImageEntity> images;
 
-	// @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-	// @JoinTable
-	// private List<ImageEntity> images;
-
-	// @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-	// @JoinTable
-	// private List<RentalEntity> rentals;
-
+	@JsonIgnore
+	@JsonIdentityReference(alwaysAsId = true)
 	@OneToMany(mappedBy = "article", fetch = FetchType.LAZY)
 	private List<ArticleQuantityEntity> articleQuantity;
 

@@ -15,6 +15,7 @@ import org.springframework.format.annotation.DateTimeFormat;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonIdentityReference;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 
 import lombok.AllArgsConstructor;
@@ -33,10 +34,12 @@ public class ArticleQuantityEntity {
 	@Column(name = "articleQuantityId")
 	private long articleQuantityId;
 
+	@JsonIdentityReference(alwaysAsId = true)
 	@ManyToOne(fetch = FetchType.EAGER)
 	@JoinColumn(name = "article_id")
 	private ArticleEntity article;
 
+	@JsonIdentityReference(alwaysAsId = true)
 	@ManyToOne(fetch = FetchType.EAGER)
 	@JoinColumn(name = "rental_id")
 	private RentalEntity rental;
