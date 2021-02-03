@@ -10,7 +10,6 @@ import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -61,7 +60,10 @@ public class UserController {
 		_userEntity.setLastname(userEntity.getLastname());
 		_userEntity.setPassword(userEntity.getPassword());
 		_userEntity.setFirstname(userEntity.getFirstname());
-		_userEntity.setAddress(userEntity.getAddress());
+		_userEntity.setStreet(userEntity.getStreet());
+		_userEntity.setHausNumber(userEntity.getHausNumber());
+		_userEntity.setPlz(userEntity.getPlz());
+		_userEntity.setOrt(userEntity.getOrt());
 		_userEntity.setBirthday(userEntity.getBirthday());
 		_userEntity.setImage(imageService.updateImage(_userEntity.getImage()));
 

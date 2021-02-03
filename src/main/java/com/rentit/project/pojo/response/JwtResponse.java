@@ -1,23 +1,25 @@
 package com.rentit.project.pojo.response;
 
 import java.util.List;
-import java.util.UUID;
 
 public class JwtResponse {
 
 	private String token;
 	private String type = "Bearer";
 	private long id;
-	private String username;
 	private String email;
 	private List<String> roles;
+	private String lastname;
+	private String firstname;
 
-	public JwtResponse(String accessToken, long id, String username, String email, List<String> roles) {
+	public JwtResponse(String accessToken, long id, String email, String lastname, String firstname,
+			List<String> roles) {
 		this.token = accessToken;
 		this.id = id;
-		this.username = username;
 		this.email = email;
 		this.roles = roles;
+		this.lastname = lastname;
+		this.firstname = firstname;
 	}
 
 	public String getAccessToken() {
@@ -52,12 +54,20 @@ public class JwtResponse {
 		this.email = email;
 	}
 
-	public String getUsername() {
-		return username;
+	public String getLastname() {
+		return lastname;
 	}
 
-	public void setUsername(String username) {
-		this.username = username;
+	public void setLastname(String lastname) {
+		this.lastname = lastname;
+	}
+
+	public String getFirstname() {
+		return firstname;
+	}
+
+	public void setFirstname(String firstname) {
+		this.firstname = firstname;
 	}
 
 	public List<String> getRoles() {

@@ -1,8 +1,9 @@
 package com.rentit.project.models;
 
-import javax.persistence.CascadeType;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -20,7 +21,12 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "propertiesId")
-public class PropertiesEntity {
+public class PropertiesEntity {// implements Serializable
+
+	/**
+	 * 
+	 */
+	// private static final long serialVersionUID = 784834265734499445L;
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -39,10 +45,10 @@ public class PropertiesEntity {
 	@Column(name = "specialFeature")
 	private String specialFeature;
 
-	@Column(name = "manufacturer")
-	private String manufacturer;
+	@Column(name = "manifacturer")
+	private String manifacturer;
 
-	@OneToOne(mappedBy = "propreties", cascade = CascadeType.ALL)
+	@OneToOne(mappedBy = "propreties", fetch = FetchType.EAGER)
 	private ArticleEntity article;
 
 }

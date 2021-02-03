@@ -1,8 +1,8 @@
 package com.rentit.project.models;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -32,14 +32,15 @@ public class ImageEntity {
 	@Column(name = "imageLink")
 	private String imageLink;
 
+	// Titelbild oder Bechreibung-Bild oder vom Kunde
 	@Column(name = "imageType")
 	private String imageType;
 
-	@OneToOne(cascade = CascadeType.ALL)
+	@OneToOne(mappedBy = "image", fetch = FetchType.LAZY)
 	private UserEntity user;
 
-	@ManyToOne
-	@JoinColumn(name = "articleId")
-	private ArticleEntity article;
+	@ManyToOne(fetch = FetchType.EAGER)
+	@JoinColumn(name = "article_Id")
+	private ArticleEntity art;
 
 }

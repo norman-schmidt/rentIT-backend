@@ -7,7 +7,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
-import com.rentit.project.models.ArticleEntity;
 import com.rentit.project.models.RentalEntity;
 import com.rentit.project.repositories.RentalRepository;
 

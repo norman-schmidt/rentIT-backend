@@ -1,5 +1,6 @@
 package com.rentit.project.controllers;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -14,18 +15,20 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.rentit.project.models.ArticleEntity;
 import com.rentit.project.models.CategoryEntity;
 import com.rentit.project.models.ImageEntity;
 import com.rentit.project.models.PropertiesEntity;
+import com.rentit.project.pojo.response.MessageResponse;
+import com.rentit.project.pojos.CustomArticle;
 import com.rentit.project.services.ArticleQuantityService;
 import com.rentit.project.services.ArticleService;
 import com.rentit.project.services.CategoryService;
 import com.rentit.project.services.ImageService;
 import com.rentit.project.services.PropertiesService;
-import com.rentit.project.services.RentalService;
 
 @RestController
 @RequestMapping("/api/articles/")
@@ -34,9 +37,6 @@ public class ArticleController {
 
 	@Autowired
 	private ArticleService articleService;
-
-	@Autowired
-	private RentalService rentalService;
 
 	@Autowired
 	private CategoryService categoryService;
@@ -60,16 +60,66 @@ public class ArticleController {
 		return articleService.getArticle(id);
 	}
 
+	// findByName
+	@GetMapping("name/{name}")
+	public List<CustomArticle> getArticleById(@PathVariable("name") String name) {
+		return articleService.getByName(name);
+	}
+
+	// findByName
+	@GetMapping("{name}/{min}/{max}")
+	public List<CustomArticle> filterMinMaxPrice(@PathVariable("name") String name, @PathVariable("min") double min,
+			@PathVariable("max") double max) {
+		return articleService.filterNamePrice(name, min, max);
+	}
+
 	@PostMapping("")
-	public ArticleEntity addArticle(@RequestBody ArticleEntity articleEntity) {
-		return articleService.addArticle(articleEntity);
+	public ResponseEntity<MessageResponse> addArticle(@RequestBody ArticleEntity articleEntity) {
+		CategoryEntity category = categoryService.getCategory(articleEntity.getCategory().getCategoryId());
+		articleEntity.setCategory(category);
+
+		// add article with the images
+		articleService.addArticle(articleEntity);
+
+		// get id of new article and set in help article obj
+		ArticleEntity articleEntity_ = new ArticleEntity();
+		articleEntity_.setArticleId(articleEntity.getArticleId());
+
+		// update images with the id of article
+		for (ImageEntity im : articleEntity.getImages()) {
+			im.setArt(articleEntity_);
+			imageService.addImage(im);
+		}
+
+		return ResponseEntity.ok().body(new MessageResponse("Successfully Added"));
+	}
+
+	// findByIDS
+	@PostMapping("articlesByIds/")
+	public List<CustomArticle> getArticleByIds(@RequestBody Map<String, ArrayList<Long>> data) {
+
+		ArrayList<Long> ids = data.get("ids");
+		List<CustomArticle> articles = new ArrayList<CustomArticle>();
+		for (Long id : ids) {
+			articles.add(articleService.getByIds((Long) id));
+		}
+		return articles;
+	}
+
+	@GetMapping("search")
+	List<CustomArticle> filterWithNameCategoryPrice(@RequestParam("name") String name,
+			@RequestParam("category") String category, @RequestParam("minPrice") double minPrice,
+			@RequestParam("maxPrice") double maxPrice) {
+
+		List<CustomArticle> articles = new ArrayList<CustomArticle>();
+		articles.addAll(articleService.filterWithNameCategoryPrice(name, category, minPrice, maxPrice));
+
+		return articles;
 	}
 
 	@PutMapping("{id}")
 	public ArticleEntity updateArticle(@RequestBody ArticleEntity articleEntity, @PathVariable long id) {
-
 		ArticleEntity _articleEntity = articleService.getArticle(id);
-
 		_articleEntity.setName(articleEntity.getName());
 		_articleEntity.setSerialNumber(articleEntity.getSerialNumber());
 		_articleEntity.setModel(articleEntity.getModel());
@@ -77,19 +127,16 @@ public class ArticleController {
 		_articleEntity.setPrice(articleEntity.getPrice());
 		_articleEntity.setDescription(articleEntity.getDescription());
 		_articleEntity.setPropreties(propertiesService.updateProperties(_articleEntity.getPropreties()));
-		_articleEntity.setArticleQuantityEntities(
-				(articleQuatityService.updateArticleQuantities(_articleEntity.getArticleQuantityEntities())));
+		_articleEntity.setArticleQuantity(
+				(articleQuatityService.updateArticleQuantities(_articleEntity.getArticleQuantity())));
 		_articleEntity.setCategory(categoryService.updateCategory(_articleEntity.getCategory()));
 		_articleEntity.setImages(imageService.updateImage(_articleEntity.getImages()));
-
 		return articleService.updateArticle(_articleEntity);
 	}
 
 	@DeleteMapping("{id}")
 	public ResponseEntity<Map<String, Boolean>> removeArticle(@PathVariable Long id) {
-
 		articleService.deleteArticle(id);
-
 		Map<String, Boolean> response = new HashMap<>();
 		response.put("Successfully deleted", Boolean.TRUE);
 		return ResponseEntity.ok(response);
@@ -133,7 +180,7 @@ public class ArticleController {
 		ArticleEntity art = articleService.getArticle(id_article);
 		ImageEntity image = imageService.getImage(id_image);
 		art.getImages().add(image);
-		image.setArticle(art);
+		image.setArt(art);
 		articleService.updateArticle(art);
 		imageService.updateImage(image);
 		return art;
@@ -144,7 +191,7 @@ public class ArticleController {
 		ArticleEntity art = articleService.getArticle(id_article);
 		ImageEntity image = imageService.getImage(id_image);
 		art.getImages().remove(image);
-		image.setArticle(null);
+		image.setArt(null);
 		articleService.updateArticle(art);
 		imageService.updateImage(image);
 		return art;

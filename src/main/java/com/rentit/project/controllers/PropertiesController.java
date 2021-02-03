@@ -56,7 +56,7 @@ public class PropertiesController {
 		_propertiesEntity.setOperatingSystem(propertiesEntity.getOperatingSystem());
 		_propertiesEntity.setColor(propertiesEntity.getColor());
 		_propertiesEntity.setSpecialFeature(propertiesEntity.getSpecialFeature());
-		_propertiesEntity.setManufacturer(propertiesEntity.getManufacturer());
+		_propertiesEntity.setManifacturer(propertiesEntity.getManifacturer());
 		_propertiesEntity.setArticle(articleService.updateArticle(_propertiesEntity.getArticle()));
 
 		return propertiesService.updateProperties(_propertiesEntity);

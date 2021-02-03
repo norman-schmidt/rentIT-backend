@@ -1,8 +1,9 @@
 package com.rentit.project.models;
 
-import java.util.Date;
+import java.time.LocalDateTime;
 import java.util.List;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -14,6 +15,9 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 
+import org.springframework.format.annotation.DateTimeFormat;
+
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 
@@ -34,22 +38,28 @@ public class RentalEntity {
 	private long rentalId;
 
 	@Column(name = "rentDate")
-	private Date rentDate;
-
-	@Column(name = "returnDate")
-	private Date returnDate;
+	@DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
+	@JsonFormat(pattern = "yyyy-MM-dd HH:mm")
+	private LocalDateTime rentDate;
 
 	@Column(name = "totalPrice")
-	private long totalPrice;
+	private double totalPrice;
 
 	@ManyToOne(fetch = FetchType.EAGER)
-	@JoinColumn(name = "userId")
+	@JoinColumn(name = "user_Id")
 	private UserEntity users;
 
-	@OneToMany(mappedBy = "rental", fetch = FetchType.LAZY)
-	private List<ArticleQuantityEntity> articleQuantityEntities;
+	// @OneToMany(mappedBy = "rental", fetch = FetchType.EAGER) // cascade or not
+	// private List<ArticleEntity> articles;
 
-	@OneToOne(mappedBy = "rental")
+	@OneToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+	@JoinColumn(name = "invoice_Id")
 	private InvoiceEntity invoice;
+
+	// @ManyToMany(mappedBy = "rentals", fetch = FetchType.LAZY)
+	// private List<ArticleEntity> articles;
+
+	@OneToMany(mappedBy = "rental", fetch = FetchType.EAGER)
+	private List<ArticleQuantityEntity> articleQuantity;
 
 }

@@ -10,6 +10,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.Lob;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
@@ -36,6 +37,10 @@ public class ArticleEntity {
 	@Column(name = "name")
 	private String name;
 
+	@Lob
+	@Column(name = "description")
+	private String description;
+
 	@Column(name = "serialNumber")
 	private String serialNumber;
 
@@ -48,20 +53,26 @@ public class ArticleEntity {
 	@Column(name = "price")
 	private double price;
 
-	@Column(name = "description")
-	private String description;
-
-	@OneToOne(cascade = { CascadeType.ALL })
+	@OneToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+	@JoinColumn(name = "propreties_id")
 	private PropertiesEntity propreties;
 
-	@OneToMany(mappedBy = "articles", fetch = FetchType.LAZY, cascade = { CascadeType.MERGE})
-	private List<ArticleQuantityEntity> articleQuantityEntities;
-
-	@ManyToOne(cascade = { CascadeType.ALL })
-	@JoinColumn(name = "categoryId")
+	@ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+	@JoinColumn(name = "category_Id")
 	private CategoryEntity category;
 
-	@OneToMany(mappedBy = "article", fetch = FetchType.LAZY)
+	@OneToMany(mappedBy = "art", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
 	private List<ImageEntity> images;
+
+	// @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+	// @JoinTable
+	// private List<ImageEntity> images;
+
+	// @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+	// @JoinTable
+	// private List<RentalEntity> rentals;
+
+	@OneToMany(mappedBy = "article", fetch = FetchType.LAZY)
+	private List<ArticleQuantityEntity> articleQuantity;
 
 }

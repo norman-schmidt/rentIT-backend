@@ -25,23 +25,29 @@ public class UserDetailsImpl implements UserDetails {
 	@JsonIgnore
 	private String password;
 
+	private String lastname;
+
+	private String firstname;
+
 	private Collection<? extends GrantedAuthority> authorities;
 
-	public UserDetailsImpl(long id, String username, String email, String password,
+	public UserDetailsImpl(long id, String username, String email, String lastname, String firstname, String password,
 			Collection<? extends GrantedAuthority> authorities) {
 		this.id = id;
 		this.username = username;
 		this.email = email;
 		this.password = password;
 		this.authorities = authorities;
+		this.lastname = lastname;
+		this.firstname = firstname;
 	}
 
 	public static UserDetailsImpl build(UserEntity user) {
 		List<GrantedAuthority> authorities = user.getRoles().stream()
 				.map(role -> new SimpleGrantedAuthority(role.getName().name())).collect(Collectors.toList());
 
-		return new UserDetailsImpl(user.getUserId(), user.getUsername(), user.getEmail(), user.getPassword(),
-				authorities);
+		return new UserDetailsImpl(user.getUserId(), user.getUsername(), user.getEmail(), user.getLastname(),
+				user.getFirstname(), user.getPassword(), authorities);
 	}
 
 	@Override
@@ -65,6 +71,22 @@ public class UserDetailsImpl implements UserDetails {
 	@Override
 	public String getUsername() {
 		return username;
+	}
+
+	public String getLastname() {
+		return lastname;
+	}
+
+	public void setLastname(String lastname) {
+		this.lastname = lastname;
+	}
+
+	public String getFirstname() {
+		return firstname;
+	}
+
+	public void setFirstname(String firstname) {
+		this.firstname = firstname;
 	}
 
 	@Override
