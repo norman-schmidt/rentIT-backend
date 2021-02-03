@@ -22,6 +22,7 @@ import com.rentit.project.models.ArticleEntity;
 import com.rentit.project.models.CategoryEntity;
 import com.rentit.project.models.ImageEntity;
 import com.rentit.project.models.PropertiesEntity;
+import com.rentit.project.pojo.response.MessageResponse;
 import com.rentit.project.pojos.CustomArticle;
 import com.rentit.project.services.ArticleQuantityService;
 import com.rentit.project.services.ArticleService;
@@ -73,10 +74,24 @@ public class ArticleController {
 	}
 
 	@PostMapping("")
-	public ArticleEntity addArticle(@RequestBody ArticleEntity articleEntity) {
+	public ResponseEntity<MessageResponse> addArticle(@RequestBody ArticleEntity articleEntity) {
 		CategoryEntity category = categoryService.getCategory(articleEntity.getCategory().getCategoryId());
 		articleEntity.setCategory(category);
-		return articleService.addArticle(articleEntity);
+
+		// add article with the images
+		articleService.addArticle(articleEntity);
+
+		// get id of new article and set in help article obj
+		ArticleEntity articleEntity_ = new ArticleEntity();
+		articleEntity_.setArticleId(articleEntity.getArticleId());
+
+		// update images with the id of article
+		for (ImageEntity im : articleEntity.getImages()) {
+			im.setArt(articleEntity_);
+			imageService.addImage(im);
+		}
+
+		return ResponseEntity.ok().body(new MessageResponse("Successfully Added"));
 	}
 
 	// findByIDS
@@ -89,7 +104,6 @@ public class ArticleController {
 			articles.add(articleService.getByIds((Long) id));
 		}
 		return articles;
-
 	}
 
 	@GetMapping("search")
