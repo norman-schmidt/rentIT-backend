@@ -78,7 +78,7 @@ public class ArticleController {
 		CategoryEntity category = categoryService.getCategory(articleEntity.getCategory().getCategoryId());
 		articleEntity.setCategory(category);
 
-		// add article with the images
+		// add article with the images (without article in image)
 		articleService.addArticle(articleEntity);
 
 		// get id of new article and set in help article obj
