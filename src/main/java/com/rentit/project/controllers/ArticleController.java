@@ -1,10 +1,8 @@
 package com.rentit.project.controllers;
 
-import java.text.DateFormatSymbols;
 import java.time.LocalDateTime;
 import java.time.YearMonth;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -125,7 +123,7 @@ public class ArticleController {
 	}
 
 	@GetMapping("availableQuantity")
-	public ArticleAvailable availableArticleQuantity(@RequestParam("id") Long id, @RequestParam("month") String month) {
+	public ArticleAvailable availableArticleQuantity(@RequestParam("id") Long id, @RequestParam("month") int month) {
 
 		ArticleAvailable articleAvailable = new ArticleAvailable();
 		articleAvailable.setArticelId(id);
@@ -133,44 +131,30 @@ public class ArticleController {
 
 		List<CustomAAvailableQuantity> CustomAAvailableQuantity = new ArrayList<CustomAAvailableQuantity>();
 
-		// DateFormatSymbols in default Locale
-		final DateFormatSymbols dfs = new DateFormatSymbols();
+		int daysInMonth = YearMonth.of(LocalDateTime.now().getYear(), month).lengthOfMonth();
 
-		// get list of Months
-		ArrayList<String> months = new ArrayList<String>(Arrays.asList(dfs.getMonths()));
-
-		// current year
-		int year = LocalDateTime.now().getYear();
-
-		if (months.contains(month)) {
-			// Get the number of days in that month
-			int monthInInt = months.indexOf(month) + 1;
-			YearMonth yearMonthObject = YearMonth.of(year, monthInInt);
-			int daysInMonth = yearMonthObject.lengthOfMonth();
-
-			int i = 1;
-			if (monthInInt == LocalDateTime.now().getMonthValue()) {
-				i = LocalDateTime.now().getDayOfMonth();
-			}
-
-			while (i <= daysInMonth) {
-				CustomAAvailableQuantity caq = new CustomAAvailableQuantity();
-				// von heute bis Ende des Monats
-				caq = articleService.getAAvailabityQuantity(id, LocalDateTime.now(),
-						LocalDateTime.of(year, monthInInt, (i), 23, 59));
-				// wenn noch keinen Ausleih gemacht wurde
-				if (caq == null) {
-					caq = new CustomAAvailableQuantity();
-					caq.setArticelId(id);
-					caq.setAvailable((long) articleService.getArticle(id).getStockLevel());
-				}
-
-				listQuanntity.add(caq.getAvailable());
-				CustomAAvailableQuantity.add(caq);
-				i++;
-			}
-			articleAvailable.setAvailable(listQuanntity.toArray(new Long[listQuanntity.size()]));
+		int i = 1;
+		if (month == LocalDateTime.now().getMonthValue()) {
+			i = LocalDateTime.now().getDayOfMonth();
 		}
+
+		while (i <= daysInMonth) {
+			CustomAAvailableQuantity caq = new CustomAAvailableQuantity();
+			// von heute bis Ende des Monats
+			caq = articleService.getAAvailabityQuantity(id, LocalDateTime.now(),
+					LocalDateTime.of(LocalDateTime.now().getYear(), month, (i), 23, 59));
+			// wenn noch keinen Ausleih gemacht wurde getStockLevel
+			if (caq == null) {
+				caq = new CustomAAvailableQuantity();
+				caq.setArticelId(id);
+				caq.setAvailable((long) articleService.getArticle(id).getStockLevel());
+			}
+
+			listQuanntity.add(caq.getAvailable());
+			CustomAAvailableQuantity.add(caq);
+			i++;
+		}
+		articleAvailable.setAvailable(listQuanntity.toArray(new Long[listQuanntity.size()]));
 		return articleAvailable;
 	}
 

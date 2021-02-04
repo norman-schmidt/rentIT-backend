@@ -1,7 +1,6 @@
 package com.rentit.project.controllers;
 
 import java.time.LocalDateTime;
-import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -99,19 +98,20 @@ public class ArticleQuantityController {
 		// Rechnung totalPrice und subTotal
 		for (int i = 0; i < quantityEntity.size(); i++) {
 			// Difference Date-Days
-			long diffDay = ChronoUnit.DAYS.between(LocalDateTime.now(), quantityEntity.get(i).getReturnDate());
+			// long diffDay = ChronoUnit.DAYS.between(LocalDateTime.now(),
+			// quantityEntity.get(i).getReturnDate());
 			subTotal = quantityEntity.get(i).getQuantity()
 					* articleService.getArticle(quantityEntity.get(i).getArticle().getArticleId()).getPrice();
 			quantityEntity.get(i).setSubTotal(subTotal);
 
 			// rabatt
-			if (diffDay >= 7) {
-				subTotal -= subTotal * 0.1;
-			} else if (diffDay >= 7 && diffDay <= 14) {
-				subTotal -= subTotal * 0.15;
-			} else if (diffDay > 14) {
-				subTotal -= subTotal * 0.2;
-			}
+			// if (diffDay >= 7) {
+			// subTotal -= subTotal * 0.1;
+			// } else if (diffDay >= 7 && diffDay <= 14) {
+			// subTotal -= subTotal * 0.15;
+			// } else if (diffDay > 14) {
+			// subTotal -= subTotal * 0.2;
+			// }
 
 			// subTotal
 			quantityEntity.get(i).setSubTotal(subTotal);
