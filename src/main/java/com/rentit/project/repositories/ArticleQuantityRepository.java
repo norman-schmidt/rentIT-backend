@@ -14,7 +14,7 @@ public interface ArticleQuantityRepository extends JpaRepository<ArticleQuantity
 
 	// Liste von ausgeliehenen Article eines Users
 	@Query("SELECT new com.rentit.project.pojo.query.CustomPojoReturn(aq.articleQuantityId, ar.articleId, ar.name, "
-			+ "ar.description, im.imageLink, aq.quantity, re.rentDate, aq.ReturnedDate) "
+			+ "ar.description, im.imageLink, aq.quantity, re.rentDate, aq.returnDate) "
 			+ "FROM ArticleEntity ar, ArticleQuantityEntity aq, ImageEntity im , RentalEntity re, UserEntity us "
 			+ "WHERE re.users = us.userId AND aq.rental = re.rentalId AND aq.article = ar.articleId "
 			+ "AND im.art = ar.articleId AND im.imageType = 'titel' AND aq.returned = false "
