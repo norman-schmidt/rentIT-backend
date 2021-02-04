@@ -139,7 +139,6 @@ public class ArticleController {
 		//}
 
 		while (i <= daysInMonth) {
-			System.out.println(i);
 			CustomAAvailableQuantity caq = new CustomAAvailableQuantity();
 			// von heute bis Ende des Monats
 			caq = articleService.getAAvailabityQuantity(id, LocalDateTime.now(),
