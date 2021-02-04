@@ -45,7 +45,7 @@ public class PropertiesEntity {
 	private String manifacturer;
 
 	@JsonIdentityReference(alwaysAsId = true)
-	@OneToOne(mappedBy = "propreties", fetch = FetchType.EAGER)
+	@OneToOne(mappedBy = "properties", fetch = FetchType.EAGER)
 	private ArticleEntity article;
 
 }
