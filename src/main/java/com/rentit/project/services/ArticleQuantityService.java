@@ -56,7 +56,7 @@ public class ArticleQuantityService {
 	}
 
 	//call the function eceryDay at 08AM 
-	@Scheduled(cron = "0 8 * * ?")
+	@Scheduled(cron = "0 8 * * * *")
 	public void checkAllArticlesQuantities() {
 		LocalDateTime date = LocalDateTime.now();
 
