@@ -149,7 +149,6 @@ public class ArticleController {
 				caq.setArticelId(id);
 				caq.setAvailable((long) articleService.getArticle(id).getStockLevel());
 			}
-
 			listQuanntity.add(caq.getAvailable());
 			CustomAAvailableQuantity.add(caq);
 			i++;
