@@ -134,11 +134,12 @@ public class ArticleController {
 		int daysInMonth = YearMonth.of(LocalDateTime.now().getYear(), month).lengthOfMonth();
 
 		int i = 1;
-		if (month == LocalDateTime.now().getMonthValue()) {
-			i = LocalDateTime.now().getDayOfMonth();
-		}
+		//if (month == LocalDateTime.now().getMonthValue()) {
+		//	i = LocalDateTime.now().getDayOfMonth();
+		//}
 
 		while (i <= daysInMonth) {
+			System.out.println(i);
 			CustomAAvailableQuantity caq = new CustomAAvailableQuantity();
 			// von heute bis Ende des Monats
 			caq = articleService.getAAvailabityQuantity(id, LocalDateTime.now(),
