@@ -9,6 +9,8 @@ import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.mail.SimpleMailMessage;
+import org.springframework.mail.javamail.JavaMailSenderImpl;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -20,6 +22,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.rentit.project.config.EmailConfig;
 import com.rentit.project.jwt.JwtUtils;
 import com.rentit.project.models.ERole;
 import com.rentit.project.models.Role;
@@ -37,19 +40,22 @@ import com.rentit.project.services.UserDetailsImpl;
 @RequestMapping("/api/auth")
 public class AuthController {
 	@Autowired
-	AuthenticationManager authenticationManager;
+	private AuthenticationManager authenticationManager;
 
 	@Autowired
-	UserRepository userRepository;
+	private UserRepository userRepository;
 
 	@Autowired
-	RoleRepository roleRepository;
+	private RoleRepository roleRepository;
 
 	@Autowired
-	PasswordEncoder encoder;
+	private PasswordEncoder encoder;
 
 	@Autowired
-	JwtUtils jwtUtils;
+	private JwtUtils jwtUtils;
+
+	@Autowired
+	private EmailConfig email;
 
 	@PostMapping("/signin")
 	public ResponseEntity<?> authenticateUser(@Valid @RequestBody LoginRequest loginRequest) {
@@ -115,6 +121,24 @@ public class AuthController {
 
 		user.setRoles(roles);
 		userRepository.save(user);
+
+		// create mailsender
+		JavaMailSenderImpl mailSender = new JavaMailSenderImpl();
+		mailSender.setHost(email.getHost());
+		mailSender.setPort(email.getPort());
+		mailSender.setUsername(email.getUsername());
+		mailSender.setPassword(email.getPassword());
+
+		// Create emailinstance
+		SimpleMailMessage mailMessage = new SimpleMailMessage();
+		mailMessage.setFrom("noreply@rentit24.tech");
+		mailMessage.setTo(signUpRequest.getEmail());
+		mailMessage.setSubject("Successfully registred !!!");
+		mailMessage.setText("Congratulations!!! \n\n\n Dear " + signUpRequest.getLastname()
+				+ ",\n\n\n the registration was a success! \n\n\n you can click hier to signIn \n\n https://rentit24.tech/#/login  \n\n\n\n Kind Regards\n\n\nBest Team JEE 2021");
+
+		// Send
+		mailSender.send(mailMessage);
 
 		return ResponseEntity.ok(new MessageResponse("User registered successfully!"));
 	}
