@@ -136,21 +136,20 @@ public class ArticleController {
 		// get list of Months
 		ArrayList<String> months = new ArrayList<String>(Arrays.asList(dfs.getMonths()));
 
-		// System.out.println(dfs.getMonths().toString().toString().toString().);
-		// System.out.println(months.size());
 		// Calendar
 		Calendar cal = Calendar.getInstance();
 
 		// current year
 		int year = cal.get(Calendar.YEAR);
+		System.out.println();
 
-		if (months.contains(month)) {
+		if (months.contains(month)) { // sensitive
 			// Get the number of days in that month
-			int monthInInt = months.indexOf(month);
+			int monthInInt = months.indexOf(month) + 1;
 			YearMonth yearMonthObject = YearMonth.of(year, monthInInt);
 			int daysInMonth = yearMonthObject.lengthOfMonth();
 
-			for (int i = 0; 1 < daysInMonth; i++) {
+			for (int i = 0; i < daysInMonth; i++) {
 				CustomAAvailableQuantity.add(
 						articleService.getAAvailabityQuantity(id, LocalDateTime.of(year, monthInInt, (i + 1), 0, 0),
 								LocalDateTime.of(year, monthInInt, (i + 1), 23, 59)));
@@ -161,7 +160,7 @@ public class ArticleController {
 		// int dayOfYear = cal.get(Calendar.DAY_OF_YEAR); // 169
 		// int mjonth = cal.get(Calendar.MONTH); // 5
 
-		return null;
+		return CustomAAvailableQuantity;
 	}
 
 	@PutMapping("{id}")
