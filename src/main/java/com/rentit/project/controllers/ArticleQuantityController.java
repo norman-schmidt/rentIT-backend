@@ -5,7 +5,6 @@ import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -84,7 +83,7 @@ public class ArticleQuantityController {
 		// invoiceEntity
 		InvoiceEntity invoiceEntity = new InvoiceEntity();
 		invoiceEntity.setInvoiceDate(LocalDateTime.now());
-		invoiceEntity.setInvoiceNumber(Integer.parseInt(UUID.randomUUID().toString()));
+		//invoiceEntity.setInvoiceNumber(Integer.parseInt(UUID.randomUUID().toString()));
 		invoiceService.addInvoice(invoiceEntity);
 
 		// rentalEntity
@@ -150,7 +149,7 @@ public class ArticleQuantityController {
 		// invoiceEntity
 		InvoiceEntity invoiceEntity = new InvoiceEntity();
 		invoiceEntity.setInvoiceDate(LocalDateTime.now());
-		invoiceEntity.setInvoiceNumber(Integer.parseInt(UUID.randomUUID().toString()));
+		//invoiceEntity.setInvoiceNumber(Integer.parseInt(UUID.randomUUID().toString()));
 		invoiceService.addInvoice(invoiceEntity);
 
 		ArrayList<Long> ids = data.get("ids");
