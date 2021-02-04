@@ -167,7 +167,7 @@ public class ArticleController {
 		_articleEntity.setStockLevel(articleEntity.getStockLevel());
 		_articleEntity.setPrice(articleEntity.getPrice());
 		_articleEntity.setDescription(articleEntity.getDescription());
-		_articleEntity.setPropreties(propertiesService.updateProperties(_articleEntity.getPropreties()));
+		_articleEntity.setProperties(propertiesService.updateProperties(_articleEntity.getProperties()));
 		_articleEntity.setArticleQuantity(
 				(articleQuatityService.updateArticleQuantities(_articleEntity.getArticleQuantity())));
 		_articleEntity.setCategory(categoryService.updateCategory(_articleEntity.getCategory()));
@@ -187,7 +187,7 @@ public class ArticleController {
 	public ArticleEntity setArticleProperty(@PathVariable long id_article, @PathVariable long id_property) {
 		ArticleEntity art = articleService.getArticle(id_article);
 		PropertiesEntity ent = propertiesService.getProperties(id_property);
-		art.setPropreties(ent);
+		art.setProperties(ent);
 		ent.setArticle(art);
 		articleService.updateArticle(art);
 		propertiesService.updateProperties(ent);

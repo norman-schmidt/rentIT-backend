@@ -76,7 +76,7 @@ public class PropertiesController {
 	public PropertiesEntity setPropertyArticle(@PathVariable long id_property, @PathVariable long id_article) {
 		ArticleEntity art = articleService.getArticle(id_article);
 		PropertiesEntity ent = propertiesService.getProperties(id_property);
-		art.setPropreties(ent);
+		art.setProperties(ent);
 		ent.setArticle(art);
 		articleService.updateArticle(art);
 		propertiesService.updateProperties(ent);
