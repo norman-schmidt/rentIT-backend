@@ -1,4 +1,4 @@
-package com.rentit.project.pojos;
+package com.rentit.project.pojo.query;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

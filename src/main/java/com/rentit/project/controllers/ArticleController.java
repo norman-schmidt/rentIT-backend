@@ -1,6 +1,11 @@
 package com.rentit.project.controllers;
 
+import java.text.DateFormatSymbols;
+import java.time.LocalDateTime;
+import java.time.YearMonth;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -22,8 +27,9 @@ import com.rentit.project.models.ArticleEntity;
 import com.rentit.project.models.CategoryEntity;
 import com.rentit.project.models.ImageEntity;
 import com.rentit.project.models.PropertiesEntity;
+import com.rentit.project.pojo.query.CustomAAvailableQuantity;
+import com.rentit.project.pojo.query.CustomArticle;
 import com.rentit.project.pojo.response.MessageResponse;
-import com.rentit.project.pojos.CustomArticle;
 import com.rentit.project.services.ArticleQuantityService;
 import com.rentit.project.services.ArticleService;
 import com.rentit.project.services.CategoryService;
@@ -75,6 +81,7 @@ public class ArticleController {
 
 	@PostMapping("")
 	public ResponseEntity<MessageResponse> addArticle(@RequestBody ArticleEntity articleEntity) {
+		// CategoryEntity
 		CategoryEntity category = categoryService.getCategory(articleEntity.getCategory().getCategoryId());
 		articleEntity.setCategory(category);
 
@@ -115,6 +122,47 @@ public class ArticleController {
 		articles.addAll(articleService.filterWithNameCategoryPrice(name, category, minPrice, maxPrice));
 
 		return articles;
+	}
+
+	@GetMapping("availableQuantity")
+	List<CustomAAvailableQuantity> availableArticleQuantity(@RequestParam("id") Long id,
+			@RequestParam("month") String month) {
+
+		// new DateFormatSymbols().getMonths()[month-1];
+		List<CustomAAvailableQuantity> CustomAAvailableQuantity = new ArrayList<CustomAAvailableQuantity>();
+
+		// DateFormatSymbols in default Locale
+		final DateFormatSymbols dfs = new DateFormatSymbols();
+
+		// get list of Months
+		ArrayList<String> months = new ArrayList<String>(Arrays.asList(dfs.getMonths()));
+
+		// System.out.println(dfs.getMonths().toString().toString().toString().);
+		// System.out.println(months.size());
+		// Calendar
+		Calendar cal = Calendar.getInstance();
+
+		// current year
+		int year = cal.get(Calendar.YEAR);
+
+		if (months.contains(month)) {
+			// Get the number of days in that month
+			int monthInInt = months.indexOf(month);
+			YearMonth yearMonthObject = YearMonth.of(year, monthInInt);
+			int daysInMonth = yearMonthObject.lengthOfMonth();
+
+			for (int i = 0; 1 < daysInMonth; i++) {
+				CustomAAvailableQuantity.add(
+						articleService.getAAvailabityQuantity(id, LocalDateTime.of(year, monthInInt, (i + 1), 0, 0),
+								LocalDateTime.of(year, monthInInt, (i + 1), 23, 59)));
+			}
+		}
+
+		// int dayOfMonth = cal.get(Calendar.DAY_OF_MONTH); // 17
+		// int dayOfYear = cal.get(Calendar.DAY_OF_YEAR); // 169
+		// int mjonth = cal.get(Calendar.MONTH); // 5
+
+		return null;
 	}
 
 	@PutMapping("{id}")

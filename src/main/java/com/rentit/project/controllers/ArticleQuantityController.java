@@ -8,6 +8,8 @@ import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.mail.SimpleMailMessage;
+import org.springframework.mail.javamail.JavaMailSenderImpl;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -19,12 +21,13 @@ import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.rentit.project.config.EmailConfig;
 import com.rentit.project.models.ArticleQuantityEntity;
 import com.rentit.project.models.InvoiceEntity;
 import com.rentit.project.models.RentalEntity;
 import com.rentit.project.models.UserEntity;
+import com.rentit.project.pojo.query.CustomPojoReturn;
 import com.rentit.project.pojo.response.MessageResponse;
-import com.rentit.project.pojos.CustomPojoReturn;
 import com.rentit.project.services.ArticleQuantityService;
 import com.rentit.project.services.ArticleService;
 import com.rentit.project.services.InvoiceService;
@@ -51,6 +54,9 @@ public class ArticleQuantityController {
 	@Autowired
 	private UserService userService;
 
+	@Autowired
+	private EmailConfig email;
+
 	@GetMapping("")
 	public List<ArticleQuantityEntity> getAllQuantity() {
 		return quantityService.getAllArticleQuantitys();
@@ -70,7 +76,7 @@ public class ArticleQuantityController {
 	@PostMapping("")
 	public ResponseEntity<MessageResponse> addQuantity(@RequestBody List<ArticleQuantityEntity> quantityEntity,
 			@RequestHeader(value = "Authorization") String authHeader) {
-
+		StringBuilder list = new StringBuilder();
 		UserEntity user = userService.getUserFromToken(authHeader);
 
 		double subTotal = 0.0; // subTotal for quantityEntity
@@ -112,6 +118,8 @@ public class ArticleQuantityController {
 
 			// total
 			totalPrice += subTotal;
+
+			list.append("Article Nr " + i + " : " + quantityEntity.get(i).getArticle().getName());
 		}
 
 		rentalEntity.setTotalPrice(totalPrice);
@@ -123,6 +131,26 @@ public class ArticleQuantityController {
 			quantityEntity.get(i).setReturned(false);
 			quantityService.addArticleQuantity(quantityEntity.get(i));
 		}
+
+		// create mailsender
+		JavaMailSenderImpl mailSender = new JavaMailSenderImpl();
+		mailSender.setHost(email.getHost());
+		mailSender.setPort(email.getPort());
+		mailSender.setUsername(email.getUsername());
+		mailSender.setPassword(email.getPassword());
+
+		// Create emailinstance
+		SimpleMailMessage mailMessage = new SimpleMailMessage();
+		mailMessage.setFrom("noreply@rentit24.tech");
+		mailMessage.setTo(user.getEmail());
+		mailMessage.setSubject("Successfully rented!!!");
+		mailMessage.setText("Congratulations!!! \n\n\n Dear " + user.getLastname()
+				+ ",\n\n\n Articles was rented successfully !!! \n\n\n Following articles: \n " + list.toString()
+				+ " \n\n https://rentit24.tech/  \n\n\n\n Kind Regards\n\n\nBest Team JEE 2021");
+
+		// Send
+		mailSender.send(mailMessage);
+
 		return ResponseEntity.ok().body(new MessageResponse("Successfully Added"));
 	}
 

@@ -9,7 +9,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 
 import com.rentit.project.models.ArticleQuantityEntity;
-import com.rentit.project.pojos.CustomPojoReturn;
+import com.rentit.project.pojo.query.CustomPojoReturn;
 import com.rentit.project.repositories.ArticleQuantityRepository;
 
 @Service

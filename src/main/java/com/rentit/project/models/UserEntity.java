@@ -44,8 +44,6 @@ public class UserEntity {
 	@Column(name = "email")
 	private String email;
 
-	@NotBlank
-	@Size(max = 20)
 	private String username;
 
 	@NotBlank
