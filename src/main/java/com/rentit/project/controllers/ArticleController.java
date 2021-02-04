@@ -81,6 +81,7 @@ public class ArticleController {
 
 	@PostMapping("")
 	public ResponseEntity<MessageResponse> addArticle(@RequestBody ArticleEntity articleEntity) {
+		// CategoryEntity
 		CategoryEntity category = categoryService.getCategory(articleEntity.getCategory().getCategoryId());
 		articleEntity.setCategory(category);
 
