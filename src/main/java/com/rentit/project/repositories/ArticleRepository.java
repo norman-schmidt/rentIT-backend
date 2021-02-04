@@ -16,21 +16,22 @@ public interface ArticleRepository extends JpaRepository<ArticleEntity, Long> {
 
 	// Name
 	@Query("SELECT new com.rentit.project.pojo.query.CustomArticle(a.articleId, a.name, a.description, a.stockLevel, a.price, im.imageLink) "
-			+ "FROM ArticleEntity a, ImageEntity im WHERE im.art = a.articleId and im.imageType = 'titel' and a.name like %?1%")
+			+ "FROM ArticleEntity a, ImageEntity im WHERE im.art = a.articleId "
+			+ "and im.imageType = 'titel' and lower(a.name) like lower(concat('%', concat(?1, '%')))")
 	List<CustomArticle> findByName(String name);
 
 	// Price
 	@Query("SELECT new com.rentit.project.pojo.query.CustomArticle(a.articleId, a.name, a.description, a.stockLevel, a.price, im.imageLink) "
 			+ "FROM ArticleEntity a, ImageEntity im WHERE im.art = a.articleId "
-			+ "and im.imageType = 'titel' and a.name like %?1% and a.price between ?2 and ?3")
+			+ "and im.imageType = 'titel' and lower(a.name) like lower(concat('%', concat(?1, '%'))) and a.price between ?2 and ?3")
 	List<CustomArticle> filterWithNamePrice(String name, double min, double max);
 
 	// Name-Category-Price
 	@Query("SELECT new com.rentit.project.pojo.query.CustomArticle(a.articleId, a.name, a.description, a.stockLevel, a.price, im.imageLink) "
 			+ "FROM ArticleEntity a, ImageEntity im ,CategoryEntity ca "
 			+ "WHERE im.art = a.articleId and a.category = ca.categoryId "
-			+ "and im.imageType = 'titel' and a.name like %?1% "
-			+ "and ca.name like %?2% and a.price between ?3 and ?4")
+			+ "and im.imageType = 'titel' and lower(a.name) like lower(concat('%', concat(?1, '%'))) "
+			+ "and lower(ca.name) like lower(concat('%', concat(?2, '%'))) and a.price between ?3 and ?4")
 	List<CustomArticle> filterWithNameCategoryPrice(String name, String category, double min, double max);
 
 	// Ids

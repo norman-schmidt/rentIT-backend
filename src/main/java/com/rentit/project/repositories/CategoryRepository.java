@@ -16,7 +16,7 @@ public interface CategoryRepository extends JpaRepository<CategoryEntity, Long> 
 	@Query("SELECT new com.rentit.project.pojo.query.CustomArticle(a.articleId, a.name, a.description, a.stockLevel, a.price, im.imageLink) "
 			+ "FROM ArticleEntity a, ImageEntity im, CategoryEntity ca "
 			+ "WHERE im.art = a.articleId and a.category = ca.categoryId"
-			+ " and im.imageType = 'titel' and lower(ca.name) like LOWER(concat('%', concat(?1, '%')))")//%?1%")//LOWER(concat('%', concat(?1, '%')))
+			+ " and im.imageType = 'titel' and lower(ca.name) like lower(concat('%', concat(?1, '%')))")
 	List<CustomArticle> findByName(String name);
 
 	// findAllName
