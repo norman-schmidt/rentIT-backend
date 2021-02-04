@@ -22,7 +22,6 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
 
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 
 import lombok.Data;
@@ -45,7 +44,6 @@ public class UserEntity {
 	@Column(name = "email")
 	private String email;
 
-	@JsonIgnore
 	private String username;
 
 	@NotBlank
