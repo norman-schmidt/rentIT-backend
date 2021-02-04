@@ -5,11 +5,10 @@ import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.mail.SimpleMailMessage;
-import org.springframework.mail.javamail.JavaMailSenderImpl;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -21,7 +20,6 @@ import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.rentit.project.config.EmailConfig;
 import com.rentit.project.models.ArticleQuantityEntity;
 import com.rentit.project.models.InvoiceEntity;
 import com.rentit.project.models.RentalEntity;
@@ -31,6 +29,7 @@ import com.rentit.project.pojo.response.MessageResponse;
 import com.rentit.project.services.ArticleQuantityService;
 import com.rentit.project.services.ArticleService;
 import com.rentit.project.services.InvoiceService;
+import com.rentit.project.services.MailService;
 import com.rentit.project.services.RentalService;
 import com.rentit.project.services.UserService;
 
@@ -55,7 +54,7 @@ public class ArticleQuantityController {
 	private UserService userService;
 
 	@Autowired
-	private EmailConfig email;
+	private MailService mailService;
 
 	@GetMapping("")
 	public List<ArticleQuantityEntity> getAllQuantity() {
@@ -85,7 +84,7 @@ public class ArticleQuantityController {
 		// invoiceEntity
 		InvoiceEntity invoiceEntity = new InvoiceEntity();
 		invoiceEntity.setInvoiceDate(LocalDateTime.now());
-		// invoiceEntity.setInvoiceNumber(Integer.parseInt(UUID.randomUUID().toString()));
+		invoiceEntity.setInvoiceNumber(Integer.parseInt(UUID.randomUUID().toString()));
 		invoiceService.addInvoice(invoiceEntity);
 
 		// rentalEntity
@@ -131,39 +130,58 @@ public class ArticleQuantityController {
 			quantityEntity.get(i).setReturned(false);
 			quantityService.addArticleQuantity(quantityEntity.get(i));
 		}
-
-		// create mailsender
-		JavaMailSenderImpl mailSender = new JavaMailSenderImpl();
-		mailSender.setHost(email.getHost());
-		mailSender.setPort(email.getPort());
-		mailSender.setUsername(email.getUsername());
-		mailSender.setPassword(email.getPassword());
-
-		// Create emailinstance
-		SimpleMailMessage mailMessage = new SimpleMailMessage();
-		mailMessage.setFrom("noreply@rentit24.tech");
-		mailMessage.setTo(user.getEmail());
-		mailMessage.setSubject("Successfully rented!!!");
-		mailMessage.setText("Congratulations!!! \n\n\n Dear " + user.getLastname()
+		String text = "Congratulations!!! \n\n\n Dear " + user.getLastname()
 				+ ",\n\n\n Articles was rented successfully !!! \n\n\n Following articles: \n " + list.toString()
-				+ " \n\n https://rentit24.tech/  \n\n\n\n Kind Regards\n\n\nBest Team JEE 2021");
-
-		// Send
-		mailSender.send(mailMessage);
+				+ " \n\n https://rentit24.tech/  \n\n\n\n Kind Regards\n\n\nBest Team JEE 2021";
+		String subject = "Successfully rented!!!";
+		mailService.sendMail(text, user, subject);
 
 		return ResponseEntity.ok().body(new MessageResponse("Successfully Added"));
 	}
 
 	@PostMapping("return")
-	public ResponseEntity<MessageResponse> returnArticle(@RequestBody Map<String, ArrayList<Long>> data) {
+	public ResponseEntity<MessageResponse> returnArticle(@RequestBody Map<String, ArrayList<Long>> data,
+			@RequestHeader(value = "Authorization") String authHeader) {
+
+		UserEntity user = userService.getUserFromToken(authHeader);
+		Boolean toLate = false;
+		double price = 0.0, actuPrice = 0.0;
+
+		// invoiceEntity
+		InvoiceEntity invoiceEntity = new InvoiceEntity();
+		invoiceEntity.setInvoiceDate(LocalDateTime.now());
+		invoiceEntity.setInvoiceNumber(Integer.parseInt(UUID.randomUUID().toString()));
+		invoiceService.addInvoice(invoiceEntity);
 
 		ArrayList<Long> ids = data.get("ids");
-		for (Long id : ids) {
-			ArticleQuantityEntity articleQuantityEntity = quantityService.getArticleQuantity(id);
+		for (Long i = 0L; i < ids.size(); i++) {
+			ArticleQuantityEntity articleQuantityEntity = quantityService.getArticleQuantity(i);
 			articleQuantityEntity.setReturned(true);
+
 			articleQuantityEntity.setReturnedDate(LocalDateTime.now());
+
+			toLate = LocalDateTime.now().isBefore(articleQuantityEntity.getReturnDate());
+
+			if (!toLate) {
+				price = articleQuantityEntity.getSubTotal() * 1.3;
+				actuPrice = price - articleQuantityEntity.getSubTotal();
+				String text = "Warning!!! \n\n\n Dear " + user.getLastname()
+						+ ",\n\n\n Articles was to late returned !!! \n\n\n You must pay in addition: \n " + actuPrice
+						+ " \n\n https://rentit24.tech/  \n\n\n\n Kind Regards\n\n\nBest Team JEE 2021";
+				String subject = "Successfully returned!!!";
+				mailService.sendMail(text, user, subject);
+			} else {
+				String text = "Congratulations!!! \n\n\n Dear " + user.getLastname()
+						+ ",\n\n\n Articles was returned successfully !!! \n\n\n "
+						+ " \n\n https://rentit24.tech/  \n\n\n\n Kind Regards\n\n\nBest Team JEE 2021";
+				String subject = "Successfully returned!!!";
+				mailService.sendMail(text, user, subject);
+			}
+
+			articleQuantityEntity.setSubTotal(price);
 			quantityService.addArticleQuantity(articleQuantityEntity);
 		}
+
 		return ResponseEntity.ok().body(new MessageResponse("Successfully returned"));
 	}
 
