@@ -1,5 +1,6 @@
 package com.rentit.project.services;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,7 +10,8 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 
 import com.rentit.project.models.ArticleEntity;
-import com.rentit.project.pojos.CustomArticle;
+import com.rentit.project.pojo.query.CustomAAvailableQuantity;
+import com.rentit.project.pojo.query.CustomArticle;
 import com.rentit.project.repositories.ArticleRepository;
 
 @Service
@@ -44,6 +46,11 @@ public class ArticleService {
 	@Transactional
 	public List<CustomArticle> filterWithNameCategoryPrice(String name, String category, double min, double max) {
 		return articleRepository.filterWithNameCategoryPrice(name, category, min, max);
+	}
+
+	@Transactional
+	public CustomAAvailableQuantity getAAvailabityQuantity(Long id, LocalDateTime dateBegin, LocalDateTime dateEnd) {
+		return articleRepository.getAvailabityQuantity(id, dateBegin, dateEnd);
 	}
 
 	public List<ArticleEntity> getAllArticles() {
