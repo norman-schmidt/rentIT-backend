@@ -9,6 +9,7 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.Lob;
 //import javax.persistence.JoinColumn;
 import javax.persistence.OneToMany;
 
@@ -33,6 +34,10 @@ public class CategoryEntity {
 
 	@Column(name = "name")
 	private String name;
+
+	@Lob
+	@Column(name = "description")
+	private String description;
 
 	@JsonIdentityReference(alwaysAsId = true)
 	@OneToMany(mappedBy = "category", fetch = FetchType.EAGER)

@@ -59,5 +59,9 @@ public class ArticleQuantityEntity {
 	@Column(name = "ReturnedDate")
 	@DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
 	private LocalDateTime ReturnedDate;
+	
+	@Column(name = "rentalDate")
+	@DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
+	private LocalDateTime rentalDate;
 
 }
