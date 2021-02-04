@@ -7,9 +7,7 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class CustomAAvailableQuantity {
-	
+public class ArticleAvailable {
 	private Long articelId;
-	private Long available;
-
+	private Long [] available;
 }
