@@ -82,7 +82,7 @@ public class ArticleQuantityController {
 		// invoiceEntity
 		InvoiceEntity invoiceEntity = new InvoiceEntity();
 		invoiceEntity.setInvoiceDate(LocalDateTime.now());
-		//invoiceEntity.setInvoiceNumber(Integer.parseInt(UUID.randomUUID().toString()));
+		// invoiceEntity.setInvoiceNumber(Integer.parseInt(UUID.randomUUID().toString()));
 		invoiceService.addInvoice(invoiceEntity);
 
 		// rentalEntity
@@ -149,12 +149,15 @@ public class ArticleQuantityController {
 		// invoiceEntity
 		InvoiceEntity invoiceEntity = new InvoiceEntity();
 		invoiceEntity.setInvoiceDate(LocalDateTime.now());
-		//invoiceEntity.setInvoiceNumber(Integer.parseInt(UUID.randomUUID().toString()));
+		// invoiceEntity.setInvoiceNumber(Integer.parseInt(UUID.randomUUID().toString()));
 		invoiceService.addInvoice(invoiceEntity);
 
 		ArrayList<Long> ids = data.get("ids");
-		for (Long i = 0L; i < ids.size(); i++) {
-			ArticleQuantityEntity articleQuantityEntity = quantityService.getArticleQuantity(i);
+		System.out.println(ids);
+		for (int i = 0; i < ids.size(); i++) {
+
+			ArticleQuantityEntity articleQuantityEntity = quantityService.getArticleQuantity(ids.get(i));
+
 			articleQuantityEntity.setReturned(true);
 
 			articleQuantityEntity.setReturnedDate(LocalDateTime.now());
