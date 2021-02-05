@@ -88,7 +88,6 @@ public class ArticleController {
 			category = "_";
 		}
 		articles.addAll(articleService.filterWithNameCategoryPrice(name, category, minPrice, maxPrice));
-
 		return articles;
 	}
 
