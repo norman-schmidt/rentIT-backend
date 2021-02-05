@@ -78,7 +78,7 @@ public class UserEntity {
 	// @OneToMany(mappedBy = "users", fetch = FetchType.LAZY)
 	// private List<RentalEntity> rental;
 
-	@OneToMany(mappedBy = "users", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+	@OneToMany(mappedBy = "users", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
 	private List<RentalEntity> rental;
 
 	// @OneToOne(mappedBy = "user", cascade = { CascadeType.ALL })
