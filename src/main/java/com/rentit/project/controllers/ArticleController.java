@@ -1,10 +1,8 @@
 package com.rentit.project.controllers;
 
-import java.text.DateFormatSymbols;
 import java.time.LocalDateTime;
 import java.time.YearMonth;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -79,6 +77,56 @@ public class ArticleController {
 		return articleService.filterNamePrice(name, min, max);
 	}
 
+	// search article
+	@GetMapping("search")
+	public List<CustomArticle> filterWithNameCategoryPrice(@RequestParam("name") String name,
+			@RequestParam("category") String category, @RequestParam("minPrice") double minPrice,
+			@RequestParam("maxPrice") double maxPrice) {
+
+		List<CustomArticle> articles = new ArrayList<CustomArticle>();
+		if (category.isEmpty()) {
+			category = "_";
+			articles.addAll(articleService.filterWithNameCategoryPrice(name, category, minPrice, maxPrice));
+		}
+
+		return articles;
+	}
+
+	@GetMapping("availableQuantity")
+	public ArticleAvailable availableArticleQuantity(@RequestParam("id") Long id, @RequestParam("month") int month) {
+
+		ArticleAvailable articleAvailable = new ArticleAvailable();
+		articleAvailable.setArticelId(id);
+		ArrayList<Long> listQuanntity = new ArrayList<>();
+
+		List<CustomAAvailableQuantity> CustomAAvailableQuantity = new ArrayList<CustomAAvailableQuantity>();
+
+		int daysInMonth = YearMonth.of(LocalDateTime.now().getYear(), month).lengthOfMonth();
+
+		int i = 1;
+		// if (month == LocalDateTime.now().getMonthValue()) {
+		// i = LocalDateTime.now().getDayOfMonth();
+		// }
+
+		while (i <= daysInMonth) {
+			CustomAAvailableQuantity caq = new CustomAAvailableQuantity();
+			// von heute bis Ende des Monats
+			caq = articleService.getAAvailabityQuantity(id, LocalDateTime.now(),
+					LocalDateTime.of(LocalDateTime.now().getYear(), month, (i), 23, 59));
+			// wenn noch keinen Ausleih gemacht wurde getStockLevel
+			if (caq == null) {
+				caq = new CustomAAvailableQuantity();
+				caq.setArticelId(id);
+				caq.setAvailable((long) articleService.getArticle(id).getStockLevel());
+			}
+			listQuanntity.add(caq.getAvailable());
+			CustomAAvailableQuantity.add(caq);
+			i++;
+		}
+		articleAvailable.setAvailable(listQuanntity.toArray(new Long[listQuanntity.size()]));
+		return articleAvailable;
+	}
+
 	@PostMapping("")
 	public ResponseEntity<MessageResponse> addArticle(@RequestBody ArticleEntity articleEntity) {
 		// CategoryEntity
@@ -113,67 +161,6 @@ public class ArticleController {
 		return articles;
 	}
 
-	@GetMapping("search")
-	public List<CustomArticle> filterWithNameCategoryPrice(@RequestParam("name") String name,
-			@RequestParam("category") String category, @RequestParam("minPrice") double minPrice,
-			@RequestParam("maxPrice") double maxPrice) {
-
-		List<CustomArticle> articles = new ArrayList<CustomArticle>();
-		articles.addAll(articleService.filterWithNameCategoryPrice(name, category, minPrice, maxPrice));
-
-		return articles;
-	}
-
-	@GetMapping("availableQuantity")
-	public ArticleAvailable availableArticleQuantity(@RequestParam("id") Long id, @RequestParam("month") String month) {
-
-		ArticleAvailable articleAvailable = new ArticleAvailable();
-		articleAvailable.setArticelId(id);
-		ArrayList<Long> listQuanntity = new ArrayList<>();
-
-		List<CustomAAvailableQuantity> CustomAAvailableQuantity = new ArrayList<CustomAAvailableQuantity>();
-
-		// DateFormatSymbols in default Locale
-		final DateFormatSymbols dfs = new DateFormatSymbols();
-
-		// get list of Months
-		ArrayList<String> months = new ArrayList<String>(Arrays.asList(dfs.getMonths()));
-
-		// current year
-		int year = LocalDateTime.now().getYear();
-
-		if (months.contains(month)) {
-			// Get the number of days in that month
-			int monthInInt = months.indexOf(month) + 1;
-			YearMonth yearMonthObject = YearMonth.of(year, monthInInt);
-			int daysInMonth = yearMonthObject.lengthOfMonth();
-
-			int i = 1;
-			if (monthInInt == LocalDateTime.now().getMonthValue()) {
-				i = LocalDateTime.now().getDayOfMonth();
-			}
-
-			while (i <= daysInMonth) {
-				CustomAAvailableQuantity caq = new CustomAAvailableQuantity();
-				// von heute bis Ende des Monats
-				caq = articleService.getAAvailabityQuantity(id, LocalDateTime.now(),
-						LocalDateTime.of(year, monthInInt, (i), 23, 59));
-				// wenn noch keinen Ausleih gemacht wurde
-				if (caq == null) {
-					caq = new CustomAAvailableQuantity();
-					caq.setArticelId(id);
-					caq.setAvailable((long) articleService.getArticle(id).getStockLevel());
-				}
-
-				listQuanntity.add(caq.getAvailable());
-				CustomAAvailableQuantity.add(caq);
-				i++;
-			}
-			articleAvailable.setAvailable(listQuanntity.toArray(new Long[listQuanntity.size()]));
-		}
-		return articleAvailable;
-	}
-
 	@PutMapping("{id}")
 	public ArticleEntity updateArticle(@RequestBody ArticleEntity articleEntity, @PathVariable long id) {
 		ArticleEntity _articleEntity = articleService.getArticle(id);
@@ -183,7 +170,7 @@ public class ArticleController {
 		_articleEntity.setStockLevel(articleEntity.getStockLevel());
 		_articleEntity.setPrice(articleEntity.getPrice());
 		_articleEntity.setDescription(articleEntity.getDescription());
-		_articleEntity.setPropreties(propertiesService.updateProperties(_articleEntity.getPropreties()));
+		_articleEntity.setProperties(propertiesService.updateProperties(_articleEntity.getProperties()));
 		_articleEntity.setArticleQuantity(
 				(articleQuatityService.updateArticleQuantities(_articleEntity.getArticleQuantity())));
 		_articleEntity.setCategory(categoryService.updateCategory(_articleEntity.getCategory()));
@@ -203,7 +190,7 @@ public class ArticleController {
 	public ArticleEntity setArticleProperty(@PathVariable long id_article, @PathVariable long id_property) {
 		ArticleEntity art = articleService.getArticle(id_article);
 		PropertiesEntity ent = propertiesService.getProperties(id_property);
-		art.setPropreties(ent);
+		art.setProperties(ent);
 		ent.setArticle(art);
 		articleService.updateArticle(art);
 		propertiesService.updateProperties(ent);

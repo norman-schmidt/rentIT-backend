@@ -57,8 +57,8 @@ public class ArticleEntity {
 
 	//@JsonIdentityReference(alwaysAsId = true)
 	@OneToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-	@JoinColumn(name = "propreties_id")
-	private PropertiesEntity propreties;
+	@JoinColumn(name = "properties_id")
+	private PropertiesEntity properties;
 
 	@JsonIdentityReference(alwaysAsId = true)
 	@ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
