@@ -77,6 +77,56 @@ public class ArticleController {
 		return articleService.filterNamePrice(name, min, max);
 	}
 
+	// search article
+	@GetMapping("search")
+	public List<CustomArticle> filterWithNameCategoryPrice(@RequestParam("name") String name,
+			@RequestParam("category") String category, @RequestParam("minPrice") double minPrice,
+			@RequestParam("maxPrice") double maxPrice) {
+
+		List<CustomArticle> articles = new ArrayList<CustomArticle>();
+		if (category.isEmpty()) {
+			category = "_";
+			articles.addAll(articleService.filterWithNameCategoryPrice(name, category, minPrice, maxPrice));
+		}
+
+		return articles;
+	}
+
+	@GetMapping("availableQuantity")
+	public ArticleAvailable availableArticleQuantity(@RequestParam("id") Long id, @RequestParam("month") int month) {
+
+		ArticleAvailable articleAvailable = new ArticleAvailable();
+		articleAvailable.setArticelId(id);
+		ArrayList<Long> listQuanntity = new ArrayList<>();
+
+		List<CustomAAvailableQuantity> CustomAAvailableQuantity = new ArrayList<CustomAAvailableQuantity>();
+
+		int daysInMonth = YearMonth.of(LocalDateTime.now().getYear(), month).lengthOfMonth();
+
+		int i = 1;
+		// if (month == LocalDateTime.now().getMonthValue()) {
+		// i = LocalDateTime.now().getDayOfMonth();
+		// }
+
+		while (i <= daysInMonth) {
+			CustomAAvailableQuantity caq = new CustomAAvailableQuantity();
+			// von heute bis Ende des Monats
+			caq = articleService.getAAvailabityQuantity(id, LocalDateTime.now(),
+					LocalDateTime.of(LocalDateTime.now().getYear(), month, (i), 23, 59));
+			// wenn noch keinen Ausleih gemacht wurde getStockLevel
+			if (caq == null) {
+				caq = new CustomAAvailableQuantity();
+				caq.setArticelId(id);
+				caq.setAvailable((long) articleService.getArticle(id).getStockLevel());
+			}
+			listQuanntity.add(caq.getAvailable());
+			CustomAAvailableQuantity.add(caq);
+			i++;
+		}
+		articleAvailable.setAvailable(listQuanntity.toArray(new Long[listQuanntity.size()]));
+		return articleAvailable;
+	}
+
 	@PostMapping("")
 	public ResponseEntity<MessageResponse> addArticle(@RequestBody ArticleEntity articleEntity) {
 		// CategoryEntity
@@ -109,52 +159,6 @@ public class ArticleController {
 			articles.add(articleService.getByIds((Long) id));
 		}
 		return articles;
-	}
-
-	@GetMapping("search")
-	public List<CustomArticle> filterWithNameCategoryPrice(@RequestParam("name") String name,
-			@RequestParam("category") String category, @RequestParam("minPrice") double minPrice,
-			@RequestParam("maxPrice") double maxPrice) {
-
-		List<CustomArticle> articles = new ArrayList<CustomArticle>();
-		articles.addAll(articleService.filterWithNameCategoryPrice(name, category, minPrice, maxPrice));
-
-		return articles;
-	}
-
-	@GetMapping("availableQuantity")
-	public ArticleAvailable availableArticleQuantity(@RequestParam("id") Long id, @RequestParam("month") int month) {
-
-		ArticleAvailable articleAvailable = new ArticleAvailable();
-		articleAvailable.setArticelId(id);
-		ArrayList<Long> listQuanntity = new ArrayList<>();
-
-		List<CustomAAvailableQuantity> CustomAAvailableQuantity = new ArrayList<CustomAAvailableQuantity>();
-
-		int daysInMonth = YearMonth.of(LocalDateTime.now().getYear(), month).lengthOfMonth();
-
-		int i = 1;
-		//if (month == LocalDateTime.now().getMonthValue()) {
-		//	i = LocalDateTime.now().getDayOfMonth();
-		//}
-
-		while (i <= daysInMonth) {
-			CustomAAvailableQuantity caq = new CustomAAvailableQuantity();
-			// von heute bis Ende des Monats
-			caq = articleService.getAAvailabityQuantity(id, LocalDateTime.now(),
-					LocalDateTime.of(LocalDateTime.now().getYear(), month, (i), 23, 59));
-			// wenn noch keinen Ausleih gemacht wurde getStockLevel
-			if (caq == null) {
-				caq = new CustomAAvailableQuantity();
-				caq.setArticelId(id);
-				caq.setAvailable((long) articleService.getArticle(id).getStockLevel());
-			}
-			listQuanntity.add(caq.getAvailable());
-			CustomAAvailableQuantity.add(caq);
-			i++;
-		}
-		articleAvailable.setAvailable(listQuanntity.toArray(new Long[listQuanntity.size()]));
-		return articleAvailable;
 	}
 
 	@PutMapping("{id}")
