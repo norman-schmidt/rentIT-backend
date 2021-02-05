@@ -86,8 +86,8 @@ public class ArticleController {
 		List<CustomArticle> articles = new ArrayList<CustomArticle>();
 		if (category.isEmpty()) {
 			category = "_";
-			articles.addAll(articleService.filterWithNameCategoryPrice(name, category, minPrice, maxPrice));
 		}
+		articles.addAll(articleService.filterWithNameCategoryPrice(name, category, minPrice, maxPrice));
 
 		return articles;
 	}
