@@ -59,7 +59,7 @@ public class UserEntity {
 	@Column(name = "firstname")
 	private String firstname;
 
-	@Size(min = 1, max = 20)
+	@Size(min = 1, max = 40)
 	@Column(name = "street")
 	private String street;
 
