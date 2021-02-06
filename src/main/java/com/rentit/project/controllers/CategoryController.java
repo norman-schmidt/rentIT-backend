@@ -1,5 +1,6 @@
 package com.rentit.project.controllers;
 
+import java.util.HashMap;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -50,7 +51,7 @@ public class CategoryController {
 
 	// List Name of Category
 	@GetMapping("name")
-	public List<String> getAllCategoryName() {
+	public HashMap<String, String> getAllCategoryName() {
 		return categoryService.getAllName();
 	}
 
