@@ -42,7 +42,7 @@ public class JwtResponse {
 		this.plz = plz;
 		this.ort = ort;
 		this.birthday = birthday;
-		this.rental = rental;
+		// this.rental = rental;
 		this.image = image;
 	}
 
