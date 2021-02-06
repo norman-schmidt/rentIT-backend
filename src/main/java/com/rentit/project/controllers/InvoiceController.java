@@ -49,22 +49,16 @@ public class InvoiceController {
 
 	@PutMapping("{id}")
 	public InvoiceEntity updateInvoice(@RequestBody InvoiceEntity invoiceEntity, @PathVariable long id) {
-
 		InvoiceEntity _invoiceEntity = invoiceService.getInvoice(id);
-
 		_invoiceEntity.setInvoiceNumber(invoiceEntity.getInvoiceNumber());
 		_invoiceEntity.setInvoiceDate(invoiceEntity.getInvoiceDate());
-
 		_invoiceEntity.setRental(rentalService.updateRental(_invoiceEntity.getRental()));
-
 		return invoiceService.updateInvoice(_invoiceEntity);
 	}
 
 	@DeleteMapping("{id}")
 	public ResponseEntity<Map<String, Boolean>> removeInvoice(@PathVariable Long id) {
-
 		invoiceService.deleteInvoice(id);
-
 		Map<String, Boolean> response = new HashMap<>();
 		response.put("Successfully deleted", Boolean.TRUE);
 		return ResponseEntity.ok(response);

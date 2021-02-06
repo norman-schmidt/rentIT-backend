@@ -79,7 +79,6 @@ public class ArticleController {
 	public List<CustomArticle> filterWithNameCategoryPrice(@RequestParam("name") String name,
 			@RequestParam("category") String category, @RequestParam("minPrice") double minPrice,
 			@RequestParam("maxPrice") double maxPrice) {
-
 		return articleService.filterArtWithNameCategoryPrice(name, category, minPrice, maxPrice);
 	}
 
@@ -90,24 +89,7 @@ public class ArticleController {
 
 	@PostMapping("")
 	public ResponseEntity<MessageResponse> addArticle(@RequestBody ArticleEntity articleEntity) {
-		// CategoryEntity
-		CategoryEntity category = categoryService.getCategory(articleEntity.getCategory().getCategoryId());
-		articleEntity.setCategory(category);
-
-		// add article with the images (without article in image)
-		articleService.addArticle(articleEntity);
-
-		// get id of new article and set in help article obj
-		ArticleEntity articleEntity_ = new ArticleEntity();
-		articleEntity_.setArticleId(articleEntity.getArticleId());
-
-		// update images with the id of article
-		for (ImageEntity im : articleEntity.getImages()) {
-			im.setArt(articleEntity_);
-			imageService.addImage(im);
-		}
-
-		return ResponseEntity.ok().body(new MessageResponse("Successfully Added"));
+		return articleService.addArticle(articleEntity);
 	}
 
 	// findByIDS

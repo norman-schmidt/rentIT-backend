@@ -8,14 +8,18 @@ import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 
 import com.rentit.project.models.ArticleEntity;
+import com.rentit.project.models.CategoryEntity;
+import com.rentit.project.models.ImageEntity;
 import com.rentit.project.pojo.query.ArticleAvailable;
 import com.rentit.project.pojo.query.CustomAAvailableQuantity;
 import com.rentit.project.pojo.query.CustomArticle;
+import com.rentit.project.pojo.response.MessageResponse;
 import com.rentit.project.repositories.ArticleRepository;
 
 @Service
@@ -24,8 +28,31 @@ public class ArticleService {
 	@Autowired
 	private ArticleRepository articleRepository;
 
-	public ArticleEntity addArticle(ArticleEntity article) {
-		return articleRepository.save(article);
+	@Autowired
+	private CategoryService categoryService;
+
+	@Autowired
+	private ImageService imageService;
+
+	public ResponseEntity<MessageResponse> addArticle(ArticleEntity articleEntity) {
+		// CategoryEntity
+		CategoryEntity category = categoryService.getCategory(articleEntity.getCategory().getCategoryId());
+		articleEntity.setCategory(category);
+
+		// add article with the images (without article in image)
+		articleRepository.save(articleEntity);
+
+		// get id of new article and set in help article obj
+		ArticleEntity articleEntity_ = new ArticleEntity();
+		articleEntity_.setArticleId(articleEntity.getArticleId());
+
+		// update images with the id of article
+		for (ImageEntity im : articleEntity.getImages()) {
+			im.setArt(articleEntity_);
+			imageService.addImage(im);
+		}
+
+		return ResponseEntity.ok().body(new MessageResponse("Successfully Added"));
 	}
 
 	public ArticleEntity getArticle(Long id) {

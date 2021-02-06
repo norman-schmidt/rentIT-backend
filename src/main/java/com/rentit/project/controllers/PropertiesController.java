@@ -49,24 +49,19 @@ public class PropertiesController {
 
 	@PutMapping("{id}")
 	public PropertiesEntity updateProperties(@RequestBody PropertiesEntity propertiesEntity, @PathVariable long id) {
-
 		PropertiesEntity _propertiesEntity = propertiesService.getProperties(id);
-
 		_propertiesEntity.setStorage(propertiesEntity.getStorage());
 		_propertiesEntity.setOperatingSystem(propertiesEntity.getOperatingSystem());
 		_propertiesEntity.setColor(propertiesEntity.getColor());
 		_propertiesEntity.setSpecialFeature(propertiesEntity.getSpecialFeature());
 		_propertiesEntity.setManifacturer(propertiesEntity.getManifacturer());
 		_propertiesEntity.setArticle(articleService.updateArticle(_propertiesEntity.getArticle()));
-
 		return propertiesService.updateProperties(_propertiesEntity);
 	}
 
 	@DeleteMapping("{id}")
 	public ResponseEntity<Map<String, Boolean>> removeProperties(@PathVariable Long id) {
-
 		propertiesService.deleteProperties(id);
-
 		Map<String, Boolean> response = new HashMap<>();
 		response.put("Successfully deleted", Boolean.TRUE);
 		return ResponseEntity.ok(response);
