@@ -76,7 +76,7 @@ public class ArticleQuantityController {
 		_quantityEntity.setArticle(quantityEntity.getArticle());
 		_quantityEntity.setReturnDate(quantityEntity.getReturnDate());
 		_quantityEntity.setReturned(quantityEntity.isReturned());
-		_quantityEntity.setRental(rentalService.updateRental(_quantityEntity.getRental()));
+		_quantityEntity.setRental(rentalService.updateRental(_quantityEntity.getRental(), _quantityEntity.getRental().getRentalId()));
 		return quantityService.updateArticleQuantities(_quantityEntity);
 	}
 

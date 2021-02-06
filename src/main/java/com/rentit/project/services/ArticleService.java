@@ -16,6 +16,7 @@ import org.springframework.web.server.ResponseStatusException;
 import com.rentit.project.models.ArticleEntity;
 import com.rentit.project.models.CategoryEntity;
 import com.rentit.project.models.ImageEntity;
+import com.rentit.project.models.PropertiesEntity;
 import com.rentit.project.pojo.query.ArticleAvailable;
 import com.rentit.project.pojo.query.CustomAAvailableQuantity;
 import com.rentit.project.pojo.query.CustomArticle;
@@ -26,13 +27,22 @@ import com.rentit.project.repositories.ArticleRepository;
 public class ArticleService {
 
 	@Autowired
+	private ArticleService articleService;
+
+	@Autowired
 	private ArticleRepository articleRepository;
 
 	@Autowired
 	private CategoryService categoryService;
+	
+	@Autowired
+	private PropertiesService propertiesService;
 
 	@Autowired
 	private ImageService imageService;
+	
+	@Autowired
+	private ArticleQuantityService articleQuantityService;
 
 	public ResponseEntity<MessageResponse> addArticle(ArticleEntity articleEntity) {
 		// CategoryEntity
@@ -53,6 +63,7 @@ public class ArticleService {
 		}
 
 		return ResponseEntity.ok().body(new MessageResponse("Successfully Added"));
+
 	}
 
 	public ArticleEntity getArticle(Long id) {
@@ -138,12 +149,78 @@ public class ArticleService {
 		articleRepository.delete(article);
 	}
 
-	public ArticleEntity updateArticle(ArticleEntity article) {
-		return articleRepository.save(article);
+	public ArticleEntity updateArticle(ArticleEntity articleEntity, long id) {
+
+		ArticleEntity _articleEntity = getArticle(id);
+		_articleEntity.setName(articleEntity.getName());
+		_articleEntity.setSerialNumber(articleEntity.getSerialNumber());
+		_articleEntity.setModel(articleEntity.getModel());
+		_articleEntity.setStockLevel(articleEntity.getStockLevel());
+		_articleEntity.setPrice(articleEntity.getPrice());
+		_articleEntity.setDescription(articleEntity.getDescription());
+		_articleEntity.setProperties(propertiesService.updateProperties(_articleEntity.getProperties(),
+				_articleEntity.getProperties().getPropertiesId()));
+		_articleEntity.setArticleQuantity(
+				(articleQuantityService.updateArticleQuantities(_articleEntity.getArticleQuantity())));
+		_articleEntity.setCategory(categoryService.updateCategory(_articleEntity.getCategory(),
+				_articleEntity.getCategory().getCategoryId()));
+		_articleEntity.setImages(imageService.updateImage(_articleEntity.getImages()));
+
+		return articleRepository.save(articleEntity);
 	}
 
 	public List<ArticleEntity> updateArticle(List<ArticleEntity> article) {
 		return articleRepository.saveAll(article);
+	}
+
+	public ArticleEntity setArticleProperty(long id_article, long id_property) {
+		ArticleEntity art = articleService.getArticle(id_article);
+		PropertiesEntity ent = propertiesService.getProperties(id_property);
+		art.setProperties(ent);
+		ent.setArticle(art);
+		updateArticle(art, id_article);
+		propertiesService.updateProperties(ent, ent.getPropertiesId());
+		return art;
+	}
+
+	public ArticleEntity addArticleCategory(long id_article, long id_category) {
+		ArticleEntity art = articleService.getArticle(id_article);
+		CategoryEntity cat = categoryService.getCategory(id_category);
+		cat.getArticles().add(art);
+		art.setCategory(cat);
+		articleService.updateArticle(art, id_article);
+		categoryService.updateCategory(cat, cat.getCategoryId());
+		return art;
+	}
+
+	public ArticleEntity removeArticleCategory(long id_article, long id_category) {
+		ArticleEntity art = articleService.getArticle(id_article);
+		CategoryEntity cat = categoryService.getCategory(id_category);
+		art.setCategory(cat);
+		cat.getArticles().remove(art);
+		articleService.updateArticle(art, id_article);
+		categoryService.updateCategory(cat, cat.getCategoryId());
+		return art;
+	}
+
+	public ArticleEntity addArticleImage(long id_article, long id_image) {
+		ArticleEntity art = articleService.getArticle(id_article);
+		ImageEntity image = imageService.getImage(id_image);
+		art.getImages().add(image);
+		image.setArt(art);
+		articleService.updateArticle(art, id_article);
+		imageService.updateImage(image, id_image);
+		return art;
+	}
+
+	public ArticleEntity removeArticleImage(long id_article, long id_image) {
+		ArticleEntity art = articleService.getArticle(id_article);
+		ImageEntity image = imageService.getImage(id_image);
+		art.getImages().remove(image);
+		image.setArt(null);
+		articleService.updateArticle(art, id_article);
+		imageService.updateImage(image, id_image);
+		return art;
 	}
 
 }

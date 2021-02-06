@@ -19,17 +19,10 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.rentit.project.models.ArticleEntity;
-import com.rentit.project.models.CategoryEntity;
-import com.rentit.project.models.ImageEntity;
-import com.rentit.project.models.PropertiesEntity;
 import com.rentit.project.pojo.query.ArticleAvailable;
 import com.rentit.project.pojo.query.CustomArticle;
 import com.rentit.project.pojo.response.MessageResponse;
-import com.rentit.project.services.ArticleQuantityService;
 import com.rentit.project.services.ArticleService;
-import com.rentit.project.services.CategoryService;
-import com.rentit.project.services.ImageService;
-import com.rentit.project.services.PropertiesService;
 
 @RestController
 @RequestMapping("/api/articles/")
@@ -38,18 +31,6 @@ public class ArticleController {
 
 	@Autowired
 	private ArticleService articleService;
-
-	@Autowired
-	private CategoryService categoryService;
-
-	@Autowired
-	private PropertiesService propertiesService;
-
-	@Autowired
-	private ArticleQuantityService articleQuatityService;
-
-	@Autowired
-	private ImageService imageService;
 
 	@GetMapping("")
 	public List<ArticleEntity> getAllArticle() {
@@ -100,19 +81,8 @@ public class ArticleController {
 
 	@PutMapping("{id}")
 	public ArticleEntity updateArticle(@RequestBody ArticleEntity articleEntity, @PathVariable long id) {
-		ArticleEntity _articleEntity = articleService.getArticle(id);
-		_articleEntity.setName(articleEntity.getName());
-		_articleEntity.setSerialNumber(articleEntity.getSerialNumber());
-		_articleEntity.setModel(articleEntity.getModel());
-		_articleEntity.setStockLevel(articleEntity.getStockLevel());
-		_articleEntity.setPrice(articleEntity.getPrice());
-		_articleEntity.setDescription(articleEntity.getDescription());
-		_articleEntity.setProperties(propertiesService.updateProperties(_articleEntity.getProperties()));
-		_articleEntity.setArticleQuantity(
-				(articleQuatityService.updateArticleQuantities(_articleEntity.getArticleQuantity())));
-		_articleEntity.setCategory(categoryService.updateCategory(_articleEntity.getCategory()));
-		_articleEntity.setImages(imageService.updateImage(_articleEntity.getImages()));
-		return articleService.updateArticle(_articleEntity);
+
+		return articleService.updateArticle(articleEntity, id);
 	}
 
 	@DeleteMapping("{id}")
@@ -125,57 +95,36 @@ public class ArticleController {
 
 	@PutMapping("{id_article}/property/{id_property}")
 	public ArticleEntity setArticleProperty(@PathVariable long id_article, @PathVariable long id_property) {
-		ArticleEntity art = articleService.getArticle(id_article);
-		PropertiesEntity ent = propertiesService.getProperties(id_property);
-		art.setProperties(ent);
-		ent.setArticle(art);
-		articleService.updateArticle(art);
-		propertiesService.updateProperties(ent);
-		return art;
+
+		return articleService.setArticleProperty(id_article, id_property);
+
 	}
 
 	@PutMapping("{id_article}/category/{id_category}/add")
 	public ArticleEntity addArticleCategory(@PathVariable long id_article, @PathVariable long id_category) {
-		ArticleEntity art = articleService.getArticle(id_article);
-		CategoryEntity cat = categoryService.getCategory(id_category);
-		cat.getArticles().add(art);
-		art.setCategory(cat);
-		articleService.updateArticle(art);
-		categoryService.updateCategory(cat);
-		return art;
+
+		return articleService.addArticleCategory(id_article, id_category);
 	}
 
 	@PutMapping("{id_article}/category/{id_category}/remove")
 	public ArticleEntity removeArticleCategory(@PathVariable long id_article, @PathVariable long id_category) {
-		ArticleEntity art = articleService.getArticle(id_article);
-		CategoryEntity cat = categoryService.getCategory(id_category);
-		art.setCategory(cat);
-		cat.getArticles().remove(art);
-		articleService.updateArticle(art);
-		categoryService.updateCategory(cat);
-		return art;
+
+		return articleService.removeArticleCategory(id_article, id_category);
+
 	}
 
 	@PutMapping("{id_article}/image/{id_image}/add")
 	public ArticleEntity addArticleImage(@PathVariable long id_article, @PathVariable long id_image) {
-		ArticleEntity art = articleService.getArticle(id_article);
-		ImageEntity image = imageService.getImage(id_image);
-		art.getImages().add(image);
-		image.setArt(art);
-		articleService.updateArticle(art);
-		imageService.updateImage(image);
-		return art;
+
+		return articleService.addArticleImage(id_article, id_image);
+
 	}
 
 	@PutMapping("{id_article}/image/{id_image}/remove")
 	public ArticleEntity removeArticleImage(@PathVariable long id_article, @PathVariable long id_image) {
-		ArticleEntity art = articleService.getArticle(id_article);
-		ImageEntity image = imageService.getImage(id_image);
-		art.getImages().remove(image);
-		image.setArt(null);
-		articleService.updateArticle(art);
-		imageService.updateImage(image);
-		return art;
+
+		return articleService.removeArticleImage(id_article, id_image);
+
 	}
 
 }
