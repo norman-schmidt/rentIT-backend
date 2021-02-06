@@ -15,20 +15,15 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.rentit.project.models.ArticleEntity;
 import com.rentit.project.models.CategoryEntity;
 import com.rentit.project.pojo.query.CustomArticle;
 import com.rentit.project.pojo.response.MessageResponse;
-import com.rentit.project.services.ArticleService;
 import com.rentit.project.services.CategoryService;
 
 @RestController
 @RequestMapping("/api/categories")
 @CrossOrigin(origins = "*")
 public class CategoryController {
-
-	@Autowired
-	private ArticleService articleService;
 
 	@Autowired
 	private CategoryService categoryService;
@@ -63,45 +58,28 @@ public class CategoryController {
 	@PutMapping("{id}")
 	public CategoryEntity updateCategory(@RequestBody CategoryEntity categoryEntity, @PathVariable long id) {
 
-		CategoryEntity _categoryEntity = categoryService.getCategory(id);
-
-		_categoryEntity.setName(categoryEntity.getName());
-		_categoryEntity.setArticles(articleService.updateArticle(_categoryEntity.getArticles()));
-
-		return categoryService.updateCategory(_categoryEntity);
+		return categoryService.updateCategory(categoryEntity, id);
 	}
 
 	@DeleteMapping("{id}")
 	public ResponseEntity<MessageResponse> removeCategory(@PathVariable Long id) {
-		try {
-			categoryService.deleteCategry(id);
-			return ResponseEntity.ok().body(new MessageResponse("Successfully deleted"));
-		} catch (Exception e) {
-			System.out.println(e.getMessage());
-			return ResponseEntity.badRequest().body(new MessageResponse("Error: Can't delete this category"));
-		}
+
+		return categoryService.deleteCategry(id);
+
 	}
 
 	@PutMapping("{id_category}/article/{id_article}/add")
 	public CategoryEntity addCategoryImage(@PathVariable long id_category, @PathVariable long id_article) {
-		ArticleEntity art = articleService.getArticle(id_article);
-		CategoryEntity cat = categoryService.getCategory(id_category);
-		cat.getArticles().add(art);
-		art.setCategory(cat);
-		articleService.updateArticle(art);
-		categoryService.updateCategory(cat);
-		return cat;
+
+		return categoryService.addCategoryImage(id_category, id_article);
+
 	}
 
 	@PutMapping("{id_category}/article/{id_article}/remove")
 	public CategoryEntity removeCategoryImage(@PathVariable long id_category, @PathVariable long id_article) {
-		ArticleEntity art = articleService.getArticle(id_article);
-		CategoryEntity cat = categoryService.getCategory(id_category);
-		cat.getArticles().remove(art);
-		art.setCategory(null);
-		articleService.updateArticle(art);
-		categoryService.updateCategory(cat);
-		return cat;
+
+		return categoryService.removeCategoryImage(id_category, id_article);
+
 	}
 
 }

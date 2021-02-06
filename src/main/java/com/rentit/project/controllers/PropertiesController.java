@@ -16,18 +16,13 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.rentit.project.models.ArticleEntity;
 import com.rentit.project.models.PropertiesEntity;
-import com.rentit.project.services.ArticleService;
 import com.rentit.project.services.PropertiesService;
 
 @RestController
 @RequestMapping("/api/properties")
 @CrossOrigin(origins = "*")
 public class PropertiesController {
-
-	@Autowired
-	private ArticleService articleService;
 
 	@Autowired
 	private PropertiesService propertiesService;
@@ -50,16 +45,7 @@ public class PropertiesController {
 	@PutMapping("{id}")
 	public PropertiesEntity updateProperties(@RequestBody PropertiesEntity propertiesEntity, @PathVariable long id) {
 
-		PropertiesEntity _propertiesEntity = propertiesService.getProperties(id);
-
-		_propertiesEntity.setStorage(propertiesEntity.getStorage());
-		_propertiesEntity.setOperatingSystem(propertiesEntity.getOperatingSystem());
-		_propertiesEntity.setColor(propertiesEntity.getColor());
-		_propertiesEntity.setSpecialFeature(propertiesEntity.getSpecialFeature());
-		_propertiesEntity.setManifacturer(propertiesEntity.getManifacturer());
-		_propertiesEntity.setArticle(articleService.updateArticle(_propertiesEntity.getArticle()));
-
-		return propertiesService.updateProperties(_propertiesEntity);
+		return propertiesService.updateProperties(propertiesEntity, id);
 	}
 
 	@DeleteMapping("{id}")
@@ -74,13 +60,9 @@ public class PropertiesController {
 
 	@PutMapping("{id_property}/article/{id_article}")
 	public PropertiesEntity setPropertyArticle(@PathVariable long id_property, @PathVariable long id_article) {
-		ArticleEntity art = articleService.getArticle(id_article);
-		PropertiesEntity ent = propertiesService.getProperties(id_property);
-		art.setProperties(ent);
-		ent.setArticle(art);
-		articleService.updateArticle(art);
-		propertiesService.updateProperties(ent);
-		return ent;
+
+		return propertiesService.setPropertyArticle(id_property, id_article);
+
 	}
 
 }

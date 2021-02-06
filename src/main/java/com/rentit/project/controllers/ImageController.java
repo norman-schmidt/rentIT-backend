@@ -16,23 +16,13 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.rentit.project.models.ArticleEntity;
 import com.rentit.project.models.ImageEntity;
-import com.rentit.project.models.UserEntity;
-import com.rentit.project.services.ArticleService;
 import com.rentit.project.services.ImageService;
-import com.rentit.project.services.UserService;
 
 @RestController
 @RequestMapping("/api/images")
 @CrossOrigin(origins = "*")
 public class ImageController {
-
-	@Autowired
-	private ArticleService articleService;
-
-	@Autowired
-	private UserService userService;
 
 	@Autowired
 	private ImageService imageService;
@@ -55,14 +45,7 @@ public class ImageController {
 	@PutMapping("{id}")
 	public ImageEntity updateImage(@RequestBody ImageEntity imageEntity, @PathVariable long id) {
 
-		ImageEntity _imageEntity = imageService.getImage(id);
-
-		_imageEntity.setImageLink(imageEntity.getImageLink());
-		_imageEntity.setImageType(imageEntity.getImageType());
-		_imageEntity.setUser(userService.updateUser(_imageEntity.getUser()));
-		_imageEntity.setArt(articleService.updateArticle(_imageEntity.getArt()));
-
-		return imageService.updateImage(_imageEntity);
+		return imageService.updateImage(imageEntity, id);
 	}
 
 	@DeleteMapping("{id}")
@@ -77,35 +60,23 @@ public class ImageController {
 
 	@PutMapping("{id_image}/user/{id_user}")
 	public ImageEntity setImageUser(@PathVariable long id_image, @PathVariable long id_user) {
-		ImageEntity image = imageService.getImage(id_image);
-		UserEntity user = userService.getUser(id_user);
-		image.setUser(user);
-		user.setImage(image);
-		imageService.updateImage(image);
-		userService.updateUser(user);
-		return image;
+
+		return imageService.setImageUser(id_image, id_user);
+
 	}
 
 	@PutMapping("{id_image}/article/{id_article}/add")
 	public ImageEntity addImageArticle(@PathVariable long id_image, @PathVariable long id_article) {
-		ImageEntity image = imageService.getImage(id_image);
-		ArticleEntity article = articleService.getArticle(id_article);
-		image.setArt(article);
-		article.getImages().add(image);
-		imageService.updateImage(image);
-		articleService.updateArticle(article);
-		return image;
+
+		return imageService.addImageArticle(id_image, id_article);
+
 	}
 
 	@PutMapping("{id_image}/article/{id_article}/remove")
 	public ImageEntity removeImageArticle(@PathVariable long id_image, @PathVariable long id_article) {
-		ImageEntity image = imageService.getImage(id_image);
-		ArticleEntity article = articleService.getArticle(id_article);
-		image.setArt(article);
-		article.getImages().remove(image);
-		imageService.updateImage(image);
-		articleService.updateArticle(article);
-		return image;
+
+		return imageService.removeImageArticle(id_image, id_article);
+
 	}
 
 }
