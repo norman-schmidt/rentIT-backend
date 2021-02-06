@@ -1,6 +1,8 @@
 package com.rentit.project.services;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -45,8 +47,13 @@ public class CategoryService {
 	}
 
 	@Transactional
-	public List<String> getAllName() {
-		return categoryRepository.findAllName();
+	public HashMap<String, String> getAllName() {
+		List<Object[]> categoryName = categoryRepository.findAllName();
+		Map<String, String> results = new HashMap<String, String>();
+		for (Object[] element : categoryName) {
+			results.put((String) element[0], (String) element[1]);
+		}
+		return (HashMap<String, String>) results;
 	}
 
 }
