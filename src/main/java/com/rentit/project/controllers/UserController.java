@@ -38,15 +38,12 @@ public class UserController {
 
 	@PutMapping("{id}")
 	public UserEntity updateUser(@RequestBody UserEntity userEntity, @PathVariable long id) {
-
 		return userService.updateUser(userEntity, id);
 	}
 
 	@DeleteMapping("{id}")
 	public ResponseEntity<Map<String, Boolean>> removeCategory(@PathVariable Long id) {
-
 		userService.deleteUser(id);
-
 		Map<String, Boolean> response = new HashMap<>();
 		response.put("Successfully deleted", Boolean.TRUE);
 		return ResponseEntity.ok(response);
@@ -54,19 +51,16 @@ public class UserController {
 
 	@PutMapping("{id_user}/rental/{id_rental}/add")
 	public UserEntity addUserRental(@PathVariable long id_user, @PathVariable long id_rental) {
-
 		return userService.addUserRental(id_user, id_rental);
 	}
 
 	@PutMapping("{id_user}/rental/{id_rental}/remove")
 	public UserEntity removeUserRental(@PathVariable long id_user, @PathVariable long id_rental) {
-
 		return userService.removeUserRental(id_user, id_rental);
 	}
 
 	@PutMapping("{id_user}/image/{id_image}/add")
 	public UserEntity addUserImage(@PathVariable long id_user, @PathVariable long id_image) {
-
 		return userService.addUserImage(id_user, id_image);
 	}
 

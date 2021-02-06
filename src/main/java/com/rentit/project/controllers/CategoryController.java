@@ -63,23 +63,17 @@ public class CategoryController {
 
 	@DeleteMapping("{id}")
 	public ResponseEntity<MessageResponse> removeCategory(@PathVariable Long id) {
-
 		return categoryService.deleteCategry(id);
-
 	}
 
 	@PutMapping("{id_category}/article/{id_article}/add")
 	public CategoryEntity addCategoryImage(@PathVariable long id_category, @PathVariable long id_article) {
-
 		return categoryService.addCategoryImage(id_category, id_article);
-
 	}
 
 	@PutMapping("{id_category}/article/{id_article}/remove")
 	public CategoryEntity removeCategoryImage(@PathVariable long id_category, @PathVariable long id_article) {
-
 		return categoryService.removeCategoryImage(id_category, id_article);
-
 	}
 
 }

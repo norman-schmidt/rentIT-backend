@@ -44,15 +44,12 @@ public class ImageController {
 
 	@PutMapping("{id}")
 	public ImageEntity updateImage(@RequestBody ImageEntity imageEntity, @PathVariable long id) {
-
 		return imageService.updateImage(imageEntity, id);
 	}
 
 	@DeleteMapping("{id}")
 	public ResponseEntity<Map<String, Boolean>> removeImage(@PathVariable Long id) {
-
 		imageService.deleteImage(id);
-
 		Map<String, Boolean> response = new HashMap<>();
 		response.put("Successfully deleted", Boolean.TRUE);
 		return ResponseEntity.ok(response);
@@ -60,23 +57,17 @@ public class ImageController {
 
 	@PutMapping("{id_image}/user/{id_user}")
 	public ImageEntity setImageUser(@PathVariable long id_image, @PathVariable long id_user) {
-
 		return imageService.setImageUser(id_image, id_user);
-
 	}
 
 	@PutMapping("{id_image}/article/{id_article}/add")
 	public ImageEntity addImageArticle(@PathVariable long id_image, @PathVariable long id_article) {
-
 		return imageService.addImageArticle(id_image, id_article);
-
 	}
 
 	@PutMapping("{id_image}/article/{id_article}/remove")
 	public ImageEntity removeImageArticle(@PathVariable long id_image, @PathVariable long id_article) {
-
 		return imageService.removeImageArticle(id_image, id_article);
-
 	}
 
 }

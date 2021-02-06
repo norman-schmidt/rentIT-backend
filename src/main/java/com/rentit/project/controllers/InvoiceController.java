@@ -44,9 +44,7 @@ public class InvoiceController {
 
 	@PutMapping("{id}")
 	public InvoiceEntity updateInvoice(@RequestBody InvoiceEntity invoiceEntity, @PathVariable long id) {
-
 		return invoiceService.updateInvoice(invoiceEntity, id);
-
 	}
 
 	@DeleteMapping("{id}")
@@ -59,9 +57,7 @@ public class InvoiceController {
 
 	@PutMapping("{id_invoice}/rental/{id_rental}")
 	public InvoiceEntity setInvoiceRental(@PathVariable long id_invoice, @PathVariable long id_rental) {
-
 		return invoiceService.setInvoiceRental(id_invoice, id_rental);
-
 	}
 
 }

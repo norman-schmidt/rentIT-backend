@@ -44,7 +44,6 @@ public class PropertiesController {
 
 	@PutMapping("{id}")
 	public PropertiesEntity updateProperties(@RequestBody PropertiesEntity propertiesEntity, @PathVariable long id) {
-
 		return propertiesService.updateProperties(propertiesEntity, id);
 
 	}
@@ -59,7 +58,6 @@ public class PropertiesController {
 
 	@PutMapping("{id_property}/article/{id_article}")
 	public PropertiesEntity setPropertyArticle(@PathVariable long id_property, @PathVariable long id_article) {
-
 		return propertiesService.setPropertyArticle(id_property, id_article);
 
 	}

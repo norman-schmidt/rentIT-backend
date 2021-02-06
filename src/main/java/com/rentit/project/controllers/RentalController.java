@@ -67,15 +67,12 @@ public class RentalController {
 
 	@PutMapping("{id}")
 	public RentalEntity updateRental(@RequestBody RentalEntity rentalEntity, @PathVariable long id) {
-
 		return rentalService.updateRental(rentalEntity, id);
 	}
 
 	@DeleteMapping("{id}")
 	public ResponseEntity<Map<String, Boolean>> removeRental(@PathVariable Long id) {
-
 		rentalService.deleteRental(id);
-
 		Map<String, Boolean> response = new HashMap<>();
 		response.put("Successfully deleted", Boolean.TRUE);
 		return ResponseEntity.ok(response);
@@ -83,20 +80,16 @@ public class RentalController {
 
 	@PutMapping("{id_rental}/user/{id_user}/add")
 	public RentalEntity addRentalUser(@PathVariable long id_rental, @PathVariable long id_user) {
-
 		return rentalService.addRentalUser(id_rental, id_user);
-
 	}
 
 	@PutMapping("{id_rental}/user/{id_user}/remove")
 	public RentalEntity removeRentalUser(@PathVariable long id_rental, @PathVariable long id_user) {
-
 		return rentalService.removeRentalUser(id_rental, id_user);
 	}
 
 	@PutMapping("{id_rental}/invoice/{id_invoice}")
 	public RentalEntity addRentalInvoice(@PathVariable long id_rental, @PathVariable long id_invoice) {
-
 		return rentalService.addRentalInvoice(id_rental, id_invoice);
 
 	}

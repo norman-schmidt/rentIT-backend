@@ -95,36 +95,27 @@ public class ArticleController {
 
 	@PutMapping("{id_article}/property/{id_property}")
 	public ArticleEntity setArticleProperty(@PathVariable long id_article, @PathVariable long id_property) {
-
 		return articleService.setArticleProperty(id_article, id_property);
-
 	}
 
 	@PutMapping("{id_article}/category/{id_category}/add")
 	public ArticleEntity addArticleCategory(@PathVariable long id_article, @PathVariable long id_category) {
-
 		return articleService.addArticleCategory(id_article, id_category);
 	}
 
 	@PutMapping("{id_article}/category/{id_category}/remove")
 	public ArticleEntity removeArticleCategory(@PathVariable long id_article, @PathVariable long id_category) {
-
 		return articleService.removeArticleCategory(id_article, id_category);
-
 	}
 
 	@PutMapping("{id_article}/image/{id_image}/add")
 	public ArticleEntity addArticleImage(@PathVariable long id_article, @PathVariable long id_image) {
-
 		return articleService.addArticleImage(id_article, id_image);
-
 	}
 
 	@PutMapping("{id_article}/image/{id_image}/remove")
 	public ArticleEntity removeArticleImage(@PathVariable long id_article, @PathVariable long id_image) {
-
 		return articleService.removeArticleImage(id_article, id_image);
-
 	}
 
 }
