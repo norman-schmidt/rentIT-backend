@@ -93,7 +93,7 @@ public class ArticleQuantityService {
 			// total
 			totalPrice += subTotal;
 
-			articles.append(i + " : " + articleService.getArticle(quantityEntity.get(i).getArticle().getArticleId()).getName());
+			articles.append(i + " : " + articleService.getArticle(quantityEntity.get(i).getArticle().getArticleId()).getName()+"\n");
 		}
 
 		rentalEntity.setTotalPrice(totalPrice);
@@ -112,7 +112,7 @@ public class ArticleQuantityService {
 				+ "\n\n Date: " + invoiceEntity.getInvoiceDate().format(DateTimeFormatter.ofPattern("yyyy-MM-dd"))
 				+ "\n\n TotalPrice:" + rentalEntity.getTotalPrice() + "\n\n Return Date:"
 				+ rentalEntity.getRentDate().format(DateTimeFormatter.ofPattern("yyyy-MM-dd")) 
-				+ "\n\n Articles:" +articles.toString()		
+				+ "\n\n Articles:\n" +articles.toString()		
 				+ " \n\n https://rentit24.tech/  \n\n\n\n Kind Regards\n\n\nBest Team JEE 2021";
 		String subject = "Successfully rented!!!";
 		mailService.sendMail(text, user, subject);
