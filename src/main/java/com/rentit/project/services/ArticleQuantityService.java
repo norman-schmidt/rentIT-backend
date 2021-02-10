@@ -4,6 +4,7 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Random;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -46,7 +47,6 @@ public class ArticleQuantityService {
 	public ResponseEntity<MessageResponse> addArticleQuantity(List<ArticleQuantityEntity> quantityEntity,
 			String authHeader) {
 
-		StringBuilder list = new StringBuilder();
 		UserEntity user = userService.getUserFromToken(authHeader);
 
 		double subTotal = 0.0; // subTotal for quantityEntity
@@ -55,7 +55,7 @@ public class ArticleQuantityService {
 		// invoiceEntity
 		InvoiceEntity invoiceEntity = new InvoiceEntity();
 		invoiceEntity.setInvoiceDate(LocalDateTime.now());
-		// invoiceEntity.setInvoiceNumber(Integer.parseInt(UUID.randomUUID().toString()));
+		invoiceEntity.setInvoiceNumber(getRandomNumberInRange(100000, 1000000000));
 		invoiceService.addInvoice(invoiceEntity);
 
 		// rentalEntity
@@ -90,7 +90,8 @@ public class ArticleQuantityService {
 			// total
 			totalPrice += subTotal;
 
-			list.append("Article Nr " + i + " : " + quantityEntity.get(i).getArticle().getName());
+			// list.append("Article Nr " + i + " : " +
+			// quantityEntity.get(i).getArticle().getName());
 		}
 
 		rentalEntity.setTotalPrice(totalPrice);
@@ -103,7 +104,9 @@ public class ArticleQuantityService {
 			articleQuantityRepository.save(quantityEntity.get(i));
 		}
 		String text = "Congratulations!!! \n\n\n Dear " + user.getLastname()
-				+ ",\n\n\n Articles was rented successfully !!! \n\n\n Following articles: \n " + list.toString()
+				+ ",\n\n\n Articles was rented successfully !!! " + "\n invoice Nr: " + invoiceEntity.getInvoiceNumber()
+				+ "\n Date: " + invoiceEntity.getInvoiceDate() + "\n TotalPrice:" + rentalEntity.getTotalPrice()
+				+ "\n Return Date:" + rentalEntity.getRentDate() + "\n Articles:" + rentalEntity.getArticleQuantity()
 				+ " \n\n https://rentit24.tech/  \n\n\n\n Kind Regards\n\n\nBest Team JEE 2021";
 		String subject = "Successfully rented!!!";
 		mailService.sendMail(text, user, subject);
@@ -194,7 +197,8 @@ public class ArticleQuantityService {
 				mailService.sendMail(text, user, subject);
 			} else {
 				String text = "Congratulations!!! \n\n\n Dear " + user.getLastname()
-						+ ",\n\n\n Articles was returned successfully !!! \n\n\n "
+						+ ",\n\n\n Articles was returned successfully !!! \n\n\n " + "Articles: "
+						+ articleQuantityEntity.getArticle()
 						+ " \n\n https://rentit24.tech/  \n\n\n\n Kind Regards\n\n\nBest Team JEE 2021";
 				String subject = "Successfully returned!!!";
 				mailService.sendMail(text, user, subject);
@@ -205,6 +209,13 @@ public class ArticleQuantityService {
 		}
 
 		return ResponseEntity.ok().body(new MessageResponse("Successfully returned"));
+	}
+
+	private static int getRandomNumberInRange(int min, int max) {
+
+		Random r = new Random();
+		return r.ints(min, (max + 1)).limit(1).findFirst().getAsInt();
+
 	}
 
 }

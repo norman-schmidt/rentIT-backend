@@ -20,6 +20,13 @@
 	</properties>
 
 	<dependencies>
+		<!-- https://mvnrepository.com/artifact/org.apache.commons/commons-lang3 for Random string utils -->
+		<dependency>
+			<groupId>org.apache.commons</groupId>
+			<artifactId>commons-lang3</artifactId>
+			<version>3.11</version>
+		</dependency>
+
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-mail</artifactId>
