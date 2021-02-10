@@ -175,6 +175,8 @@ public class ArticleQuantityService {
 		UserEntity user = userService.getUserFromToken(authHeader);
 		Boolean toLate = false;
 		double price = 0.0, actuPrice = 0.0;
+		
+		StringBuilder returnArticles = new StringBuilder();
 
 		// invoiceEntity
 		InvoiceEntity invoiceEntity = new InvoiceEntity();
@@ -192,18 +194,22 @@ public class ArticleQuantityService {
 			articleQuantityEntity.setReturnedDate(LocalDateTime.now());
 
 			toLate = LocalDateTime.now().isBefore(articleQuantityEntity.getReturnDate());
+			
+			returnArticles.append(i + " : " + articleService.getArticle(getArticleQuantity(ids.get(i)).getArticle().getArticleId()).getName()+"\n");
 
 			if (!toLate) {
 				price = articleQuantityEntity.getSubTotal() * 1.3;
 				actuPrice = price - articleQuantityEntity.getSubTotal();
 				String text = "Warning!!! \n\n\n Dear " + user.getLastname()
 						+ ",\n\n\n Articles was to late returned !!! \n\n\n You must pay in addition: \n " + actuPrice
+						+ "\n\n Articles: \n"+ returnArticles.toString()
 						+ " \n\n https://rentit24.tech/  \n\n\n\n Kind Regards\n\n\nBest Team JEE 2021";
 				String subject = "Successfully returned!!!";
 				mailService.sendMail(text, user, subject);
 			} else {
 				String text = "Congratulations!!! \n\n\n Dear " + user.getLastname()
 						+ ",\n\n\n Articles was returned successfully !!! \n\n\n "
+						+ "\n\n Articles: \n"+ returnArticles.toString()
 						+ " \n\n https://rentit24.tech/  \n\n\n\n Kind Regards\n\n\nBest Team JEE 2021";
 				String subject = "Successfully returned!!!";
 				mailService.sendMail(text, user, subject);
