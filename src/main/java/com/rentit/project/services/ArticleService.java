@@ -41,8 +41,8 @@ public class ArticleService {
 	@Autowired
 	private ImageService imageService;
 	
-	@Autowired
-	private ArticleQuantityService articleQuantityService;
+//	@Autowired
+//	private ArticleQuantityService articleQuantityService;
 
 	public ResponseEntity<MessageResponse> addArticle(ArticleEntity articleEntity) {
 		// CategoryEntity
@@ -157,14 +157,14 @@ public class ArticleService {
 		_articleEntity.setModel(articleEntity.getModel());
 		_articleEntity.setStockLevel(articleEntity.getStockLevel());
 		_articleEntity.setPrice(articleEntity.getPrice());
-		_articleEntity.setDescription(articleEntity.getDescription());
-		_articleEntity.setProperties(propertiesService.updateProperties(_articleEntity.getProperties(),
-				_articleEntity.getProperties().getPropertiesId()));
-		_articleEntity.setArticleQuantity(
-				(articleQuantityService.updateArticleQuantities(_articleEntity.getArticleQuantity())));
-		_articleEntity.setCategory(categoryService.updateCategory(_articleEntity.getCategory(),
-				_articleEntity.getCategory().getCategoryId()));
-		_articleEntity.setImages(imageService.updateImage(_articleEntity.getImages()));
+//		_articleEntity.setDescription(articleEntity.getDescription());
+//		_articleEntity.setProperties(propertiesService.updateProperties(_articleEntity.getProperties(),
+//				_articleEntity.getProperties().getPropertiesId()));
+//		_articleEntity.setArticleQuantity(
+//				(articleQuantityService.updateArticleQuantities(_articleEntity.getArticleQuantity())));
+//		_articleEntity.setCategory(categoryService.updateCategory(_articleEntity.getCategory(),
+//				_articleEntity.getCategory().getCategoryId()));
+//		_articleEntity.setImages(imageService.updateImage(_articleEntity.getImages()));
 
 		return articleRepository.save(articleEntity);
 	}
