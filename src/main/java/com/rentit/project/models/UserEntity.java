@@ -22,8 +22,7 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
 
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
-import com.fasterxml.jackson.annotation.JsonIdentityReference;
-import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 
 import lombok.Data;
@@ -33,6 +32,7 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "userId")
+@JsonIgnoreProperties({ "rental" })
 public class UserEntity {
 
 	@Id
@@ -80,8 +80,8 @@ public class UserEntity {
 	// @OneToMany(mappedBy = "users", fetch = FetchType.LAZY)
 	// private List<RentalEntity> rental;
 
-	@JsonIgnore
-	@JsonIdentityReference(alwaysAsId = true)
+	// @JsonIgnore
+	// @JsonIdentityReference(alwaysAsId = true)
 	@OneToMany(mappedBy = "users", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
 	private List<RentalEntity> rental;
 
@@ -110,7 +110,7 @@ public class UserEntity {
 		this.plz = plz;
 		this.ort = ort;
 		this.birthday = birthday;
-		// this.rental = rental;
+		this.rental = rental;
 		this.image = image;
 	}
 
