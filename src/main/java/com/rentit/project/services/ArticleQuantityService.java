@@ -113,9 +113,9 @@ public class ArticleQuantityService {
 		String text = "Congratulations!!! \n\n\n Dear " + user.getLastname()
 				+ ",\n\n\n Articles was rented successfully !!! " + "\n\n invoice Nr: " + invoiceEntity.getInvoiceNumber()
 				+ "\n\n Date: " + invoiceEntity.getInvoiceDate().format(DateTimeFormatter.ofPattern("yyyy-MM-dd"))
-				+ "\n\\n TotalPrice:" + rentalEntity.getTotalPrice() + "\n\\n Return Date:"
+				+ "\n\n TotalPrice:" + rentalEntity.getTotalPrice() + "\n\n Return Date:"
 				+ rentalEntity.getRentDate().format(DateTimeFormatter.ofPattern("yyyy-MM-dd")) 
-				+ "\n\\n Articles:" + articles.toString()				
+				+ "\n\n Articles:" + articles.toString()			
 				+ " \n\n https://rentit24.tech/  \n\n\n\n Kind Regards\n\n\nBest Team JEE 2021";
 		String subject = "Successfully rented!!!";
 		mailService.sendMail(text, user, subject);
@@ -206,8 +206,7 @@ public class ArticleQuantityService {
 				mailService.sendMail(text, user, subject);
 			} else {
 				String text = "Congratulations!!! \n\n\n Dear " + user.getLastname()
-						+ ",\n\n\n Articles was returned successfully !!! \n\n\n " + "Articles: "
-						+ articleQuantityEntity.getArticle()
+						+ ",\n\n\n Articles was returned successfully !!! \n\n\n "
 						+ " \n\n https://rentit24.tech/  \n\n\n\n Kind Regards\n\n\nBest Team JEE 2021";
 				String subject = "Successfully returned!!!";
 				mailService.sendMail(text, user, subject);
