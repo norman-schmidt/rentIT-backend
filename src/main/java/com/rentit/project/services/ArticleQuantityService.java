@@ -47,7 +47,9 @@ public class ArticleQuantityService {
 	// Viele Artikel
 	public ResponseEntity<MessageResponse> addArticleQuantity(List<ArticleQuantityEntity> quantityEntity,
 			String authHeader) {
-
+		
+		
+		StringBuilder articles = new StringBuilder();
 		UserEntity user = userService.getUserFromToken(authHeader);
 
 		double subTotal = 0.0; // subTotal for quantityEntity
@@ -91,21 +93,16 @@ public class ArticleQuantityService {
 			// total
 			totalPrice += subTotal;
 
-			// list.append("Article Nr " + i + " : " +
-			// quantityEntity.get(i).getArticle().getName());
+			articles.append(i + " : " + articleService.getArticle(quantityEntity.get(i).getArticle().getArticleId()).getName());
 		}
 
 		rentalEntity.setTotalPrice(totalPrice);
 		rentalService.addRental(rentalEntity);
-		
-		
-		StringBuilder articles = new StringBuilder();
 
 		// update quantityEntity
 		for (int i = 0; i < quantityEntity.size(); i++) {
 			quantityEntity.get(i).setRental(rentalEntity);
 			quantityEntity.get(i).setReturned(false);
-			articles.append(quantityEntity.get(i).getArticle().getName()+"\n");
 			articleQuantityRepository.save(quantityEntity.get(i));
 		}
 
@@ -115,7 +112,7 @@ public class ArticleQuantityService {
 				+ "\n\n Date: " + invoiceEntity.getInvoiceDate().format(DateTimeFormatter.ofPattern("yyyy-MM-dd"))
 				+ "\n\n TotalPrice:" + rentalEntity.getTotalPrice() + "\n\n Return Date:"
 				+ rentalEntity.getRentDate().format(DateTimeFormatter.ofPattern("yyyy-MM-dd")) 
-				+ "\n\n Articles:" + quantityEntity.toString()		
+				+ "\n\n Articles:" +articles.toString()		
 				+ " \n\n https://rentit24.tech/  \n\n\n\n Kind Regards\n\n\nBest Team JEE 2021";
 		String subject = "Successfully rented!!!";
 		mailService.sendMail(text, user, subject);
