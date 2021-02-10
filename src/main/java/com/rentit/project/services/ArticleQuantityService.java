@@ -93,7 +93,7 @@ public class ArticleQuantityService {
 			// total
 			totalPrice += subTotal;
 
-			articles.append(i + " : " + articleService.getArticle(quantityEntity.get(i).getArticle().getArticleId()).getName()+"\n");
+			articles.append(i++ + " : " + articleService.getArticle(quantityEntity.get(i).getArticle().getArticleId()).getName()+"\n");
 		}
 
 		rentalEntity.setTotalPrice(totalPrice);
@@ -195,7 +195,7 @@ public class ArticleQuantityService {
 
 			toLate = LocalDateTime.now().isBefore(articleQuantityEntity.getReturnDate());
 			
-			returnArticles.append(i + " : " + articleService.getArticle(getArticleQuantity(ids.get(i)).getArticle().getArticleId()).getName()+"\n");
+			returnArticles.append(i++ + " : " + articleService.getArticle(getArticleQuantity(ids.get(i)).getArticle().getArticleId()).getName()+"\n");
 
 			if (!toLate) {
 				price = articleQuantityEntity.getSubTotal() * 1.3;
