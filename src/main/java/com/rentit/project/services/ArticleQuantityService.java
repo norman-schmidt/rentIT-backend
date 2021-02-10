@@ -1,6 +1,7 @@
 package com.rentit.project.services;
 
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -96,17 +97,25 @@ public class ArticleQuantityService {
 
 		rentalEntity.setTotalPrice(totalPrice);
 		rentalService.addRental(rentalEntity);
+		
+		
+		StringBuilder articles = new StringBuilder();
 
 		// update quantityEntity
 		for (int i = 0; i < quantityEntity.size(); i++) {
 			quantityEntity.get(i).setRental(rentalEntity);
 			quantityEntity.get(i).setReturned(false);
+			articles.append(quantityEntity.get(i).getArticle().getName()+"\n");
 			articleQuantityRepository.save(quantityEntity.get(i));
 		}
+
+		
 		String text = "Congratulations!!! \n\n\n Dear " + user.getLastname()
-				+ ",\n\n\n Articles was rented successfully !!! " + "\n invoice Nr: " + invoiceEntity.getInvoiceNumber()
-				+ "\n Date: " + invoiceEntity.getInvoiceDate() + "\n TotalPrice:" + rentalEntity.getTotalPrice()
-				+ "\n Return Date:" + rentalEntity.getRentDate() + "\n Articles:" + rentalEntity.getArticleQuantity()
+				+ ",\n\n\n Articles was rented successfully !!! " + "\n\n invoice Nr: " + invoiceEntity.getInvoiceNumber()
+				+ "\n\n Date: " + invoiceEntity.getInvoiceDate().format(DateTimeFormatter.ofPattern("yyyy-MM-dd"))
+				+ "\n\\n TotalPrice:" + rentalEntity.getTotalPrice() + "\n\\n Return Date:"
+				+ rentalEntity.getRentDate().format(DateTimeFormatter.ofPattern("yyyy-MM-dd")) 
+				+ "\n\\n Articles:" + articles.toString()				
 				+ " \n\n https://rentit24.tech/  \n\n\n\n Kind Regards\n\n\nBest Team JEE 2021";
 		String subject = "Successfully rented!!!";
 		mailService.sendMail(text, user, subject);
