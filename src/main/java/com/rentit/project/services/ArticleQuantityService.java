@@ -200,7 +200,7 @@ public class ArticleQuantityService {
 			returnArticles.append(i+1 + " : " + articleService.getArticle(getArticleQuantity(ids.get(i)).getArticle().getArticleId()).getName()
 					+" | Rent Date: "+getArticleQuantity(ids.get(i)).getRentalDate().format(DateTimeFormatter.ofPattern("yyyy-MM-dd"))
 					+" | Return Date: "+getArticleQuantity(ids.get(i)).getReturnDate().format(DateTimeFormatter.ofPattern("yyyy-MM-dd"))
-					+" | Return Date: "+getArticleQuantity(ids.get(i)).getReturnedDate().format(DateTimeFormatter.ofPattern("yyyy-MM-dd"))
+					+" | Returned Date: "+getArticleQuantity(ids.get(i)).getReturnedDate().format(DateTimeFormatter.ofPattern("yyyy-MM-dd"))
 					+" | Quantity: "+getArticleQuantity(ids.get(i)).getQuantity()+"\n");
 
 			if (!toLate) {
