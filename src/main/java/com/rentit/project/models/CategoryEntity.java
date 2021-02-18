@@ -15,6 +15,8 @@ import javax.persistence.OneToMany;
 
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonIdentityReference;
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 
 import lombok.AllArgsConstructor;
@@ -33,6 +35,7 @@ public class CategoryEntity {
 	private long categoryId;
 
 	@Column(name = "name")
+	@JsonInclude(value = Include.NON_NULL, content = Include.NON_NULL)
 	private String name;
 
 	@Lob

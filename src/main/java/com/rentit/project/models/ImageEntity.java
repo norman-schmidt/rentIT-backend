@@ -26,8 +26,10 @@ import lombok.NoArgsConstructor;
 @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "imageId")
 // @JsonIgnoreProperties({ "user", "art", "imageType"})
 @JsonIgnoreProperties(value={ "user", "art", "imageType"}, allowSetters = true) // aufpassen ohne allowSetters die Attributen werden auch beim Erstellen der Objekte ignoriert
+// allowSetters
 // ignoreUnknown
 // allowGetters
+// @JsonIgnore
 public class ImageEntity {
 
 	@Id
