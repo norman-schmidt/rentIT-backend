@@ -25,18 +25,30 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "imageId")
 // @JsonIgnoreProperties({ "user", "art", "imageType"})
-@JsonIgnoreProperties(value={ "user", "art", "imageType"}, allowSetters = true) // aufpassen ohne allowSetters die Attributen werden auch beim Erstellen der Objekte ignoriert
+@JsonIgnoreProperties(value = { "user", "art", "imageType" }, allowSetters = true)
+// aufpassen ohne allowSetters die Attributen werden auch beim Erstellen der Objekte ignoriert
 // allowSetters
 // ignoreUnknown
 // allowGetters
 // @JsonIgnore
 public class ImageEntity {
 
+	/*
+	 * @JsonCreator public ImageEntity(long imageId, @JsonProperty(value = "Link",
+	 * required = true) String Link, String imageType, UserEntity user,
+	 * ArticleEntity art) { }
+	 * 
+	 */
+	// required = true work only in constructor
+
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "imageId")
 	private long imageId;
 
+	// @JsonProperty(value = "Link")
+	// change the name of a field
+	// only in Json In-Out
 	@Column(name = "imageLink")
 	private String imageLink;
 
