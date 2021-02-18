@@ -12,6 +12,7 @@ import javax.persistence.OneToOne;
 
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonIdentityReference;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 
 import lombok.AllArgsConstructor;
@@ -23,7 +24,10 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "imageId")
-//@JsonIgnoreProperties({ "user", "art" }) // aufpassen die Attributen werden auch beim Erstellen der Objekte ignoriert
+// @JsonIgnoreProperties({ "user", "art", "imageType"})
+@JsonIgnoreProperties(value={ "user", "art", "imageType"}, allowSetters = true) // aufpassen ohne allowSetters die Attributen werden auch beim Erstellen der Objekte ignoriert
+// ignoreUnknown
+// allowGetters
 public class ImageEntity {
 
 	@Id
