@@ -184,27 +184,21 @@ public class UserService {
 	public ResponseEntity<MessageResponse> updateUserPwd(long id, Map<String, Object> userEntity) {
 		UserEntity _userEntity = getUser(id);
 
-		userEntity.forEach((element, value) -> {
-			switch (element) {
+		if (encoder.matches((String) userEntity.get("oldPassword"), _userEntity.getPassword())) {
+			_userEntity.setPassword(encoder.encode((String) userEntity.get("password")));
+			Validator validator = Validation.buildDefaultValidatorFactory().getValidator();
+			Set<ConstraintViolation<UserEntity>> violations = validator.validate(_userEntity);// , OnUpdate.class);
 
-			case "password":
-				_userEntity.setPassword(encoder.encode((String) value));
-				break;
+			if (!violations.isEmpty()) {
+				// When invalid
+				return ResponseEntity.badRequest().body(new MessageResponse(violations.toString()));
 			}
-		});
 
-		Validator validator = Validation.buildDefaultValidatorFactory().getValidator();
-		Set<ConstraintViolation<UserEntity>> violations = validator.validate(_userEntity);// , OnUpdate.class);
-
-		if (!violations.isEmpty()) {
-			// When invalid
-			return ResponseEntity.badRequest().body(new MessageResponse(violations.toString()));
+			addUser(_userEntity);
+			return ResponseEntity.ok().body(new MessageResponse("Password successfully changed"));
+		} else {
+			return ResponseEntity.ok().body(new MessageResponse("Old password is Incorrect"));
 		}
-
-		addUser(_userEntity);
-		return ResponseEntity.ok().body(new MessageResponse("Successfully updated"));
 	}
-
-	// change pass boolean matches in encode
 
 }
