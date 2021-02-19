@@ -165,6 +165,7 @@ public class UserService {
 
 				// modify image when existing image else create new
 				if (_userEntity.getImage().equals(null) == false) {
+					// set element from the new image
 					_userEntity.getImage().setImageLink(img.getImageLink());
 					_userEntity.getImage().setImageType(img.getImageType());
 				} else {
