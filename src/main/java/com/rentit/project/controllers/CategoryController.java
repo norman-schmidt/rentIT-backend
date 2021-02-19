@@ -3,12 +3,8 @@ package com.rentit.project.controllers;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
-import javax.validation.ConstraintViolation;
 import javax.validation.Valid;
-import javax.validation.Validation;
-import javax.validation.Validator;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -88,31 +84,7 @@ public class CategoryController {
 	public ResponseEntity<MessageResponse> updatePerson(@Valid @PathVariable("id") long id,
 			@RequestBody Map<String, Object> categoryEntity) {
 
-		CategoryEntity _categoryEntity = categoryService.getCategory(id);
-
-		categoryEntity.forEach((element, value) -> {
-			switch (element) {
-			case "name":
-				_categoryEntity.setName((String) value);
-				// break;
-			case "description":
-				_categoryEntity.setDescription((String) value);
-				break;
-			}
-		});
-
-		Validator validator = Validation.buildDefaultValidatorFactory().getValidator();
-
-		Set<ConstraintViolation<CategoryEntity>> violations = validator.validate(_categoryEntity);// , OnUpdate.class);
-
-		if (!violations.isEmpty()) {
-			// When invalid
-			return ResponseEntity.badRequest().body(new MessageResponse(violations.toString()));
-		}
-
-		categoryService.addCategory(_categoryEntity);
-
-		return ResponseEntity.ok().body(new MessageResponse("Successfully updated"));
+		return categoryService.updateCategryElement(id, categoryEntity);
 	}
 
 }

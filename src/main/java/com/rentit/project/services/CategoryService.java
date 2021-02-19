@@ -3,6 +3,11 @@ package com.rentit.project.services;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
+
+import javax.validation.ConstraintViolation;
+import javax.validation.Validation;
+import javax.validation.Validator;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -38,7 +43,7 @@ public class CategoryService {
 		return categoryRepository.findAll();
 	}
 
-	public ResponseEntity<MessageResponse> deleteCategry(Long id) {
+	public ResponseEntity<MessageResponse> deleteCategry(long id) {
 
 		CategoryEntity category = getCategory(id);
 
@@ -92,6 +97,35 @@ public class CategoryService {
 		articleService.updateArticle(art, id_article);
 		updateCategory(cat, id_category);
 		return cat;
+	}
+
+	public ResponseEntity<MessageResponse> updateCategryElement(long id, Map<String, Object> categoryEntity) {
+		CategoryEntity _categoryEntity = getCategory(id);
+
+		categoryEntity.forEach((element, value) -> {
+			switch (element) {
+			case "name":
+				_categoryEntity.setName((String) value);
+				// break;
+			case "description":
+				_categoryEntity.setDescription((String) value);
+				break;
+			}
+		});
+
+		Validator validator = Validation.buildDefaultValidatorFactory().getValidator();
+
+		Set<ConstraintViolation<CategoryEntity>> violations = validator.validate(_categoryEntity);// , OnUpdate.class);
+
+		if (!violations.isEmpty()) {
+			// When invalid
+			return ResponseEntity.badRequest().body(new MessageResponse(violations.toString()));
+		}
+
+		addCategory(_categoryEntity);
+
+		return ResponseEntity.ok().body(new MessageResponse("Successfully updated"));
+
 	}
 
 }
