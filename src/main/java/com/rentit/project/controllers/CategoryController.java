@@ -81,10 +81,10 @@ public class CategoryController {
 	}
 
 	@PatchMapping("{id}")
-	public ResponseEntity<MessageResponse> updatePerson(@Valid @PathVariable("id") long id,
+	public ResponseEntity<MessageResponse> updateCategoryElement(@Valid @PathVariable("id") long id,
 			@RequestBody Map<String, Object> categoryEntity) {
 
-		return categoryService.updateCategryElement(id, categoryEntity);
+		return categoryService.updateCategoryElement(id, categoryEntity);
 	}
 
 }

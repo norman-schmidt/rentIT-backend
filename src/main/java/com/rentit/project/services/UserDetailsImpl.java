@@ -1,7 +1,7 @@
 package com.rentit.project.services;
 
+import java.time.LocalDateTime;
 import java.util.Collection;
-import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -38,7 +38,7 @@ public class UserDetailsImpl implements UserDetails {
 	private String hausNumber;
 	private int plz;
 	private String ort;
-	private Date birthday;
+	private LocalDateTime birthday;
 	private List<RentalEntity> rental;
 	private ImageEntity image;
 
@@ -46,7 +46,7 @@ public class UserDetailsImpl implements UserDetails {
 
 	public UserDetailsImpl(long id, String username, String email, String lastname, String firstname, String password,
 			Collection<? extends GrantedAuthority> authorities, String street, String hausNumber, int plz, String ort,
-			Date birthday, List<RentalEntity> rental, ImageEntity image) {
+			LocalDateTime birthday, List<RentalEntity> rental, ImageEntity image) {
 		this.id = id;
 		this.username = username;
 		this.email = email;

@@ -99,14 +99,14 @@ public class CategoryService {
 		return cat;
 	}
 
-	public ResponseEntity<MessageResponse> updateCategryElement(long id, Map<String, Object> categoryEntity) {
+	public ResponseEntity<MessageResponse> updateCategoryElement(long id, Map<String, Object> categoryEntity) {
 		CategoryEntity _categoryEntity = getCategory(id);
 
 		categoryEntity.forEach((element, value) -> {
 			switch (element) {
 			case "name":
 				_categoryEntity.setName((String) value);
-				// break;
+				break;
 			case "description":
 				_categoryEntity.setDescription((String) value);
 				break;

@@ -4,11 +4,14 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.validation.Valid;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -16,6 +19,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.rentit.project.models.UserEntity;
+import com.rentit.project.pojo.response.MessageResponse;
 import com.rentit.project.services.UserService;
 
 @RestController
@@ -62,6 +66,20 @@ public class UserController {
 	@PutMapping("{id_user}/image/{id_image}/add")
 	public UserEntity addUserImage(@PathVariable long id_user, @PathVariable long id_image) {
 		return userService.addUserImage(id_user, id_image);
+	}
+	
+	@PatchMapping("{id}") // soll from Token
+	public ResponseEntity<MessageResponse> updateUserElement(@Valid @PathVariable("id") long id,
+			@RequestBody Map<String, Object> userEntity) {
+
+		return userService.updateUserElement(id, userEntity);
+	}
+	
+	@PatchMapping("password/{id}")
+	public ResponseEntity<MessageResponse> updateUserPassword(@Valid @PathVariable("id") long id,
+			@RequestBody Map<String, Object> userEntity) {
+
+		return userService.updateUserPwd(id, userEntity);
 	}
 
 }

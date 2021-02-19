@@ -1,6 +1,6 @@
 package com.rentit.project.pojo.response;
 
-import java.util.Date;
+import java.time.LocalDateTime;
 import java.util.List;
 
 import com.rentit.project.models.ImageEntity;
@@ -23,12 +23,12 @@ public class JwtResponse {
 	private String hausNumber;
 	private int plz;
 	private String ort;
-	private Date birthday;
+	private LocalDateTime birthday;
 	private List<RentalEntity> rental;
 	private ImageEntity image;
 
 	public JwtResponse(String accessToken, long id, String email, String lastname, String firstname, List<String> roles,
-			String street, String hausNumber, int plz, String ort, Date birthday, List<RentalEntity> rental,
+			String street, String hausNumber, int plz, String ort, LocalDateTime birthday, List<RentalEntity> rental,
 			ImageEntity image) {
 		this.token = accessToken;
 		this.id = id;
