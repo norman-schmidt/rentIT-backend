@@ -67,19 +67,26 @@ public class UserController {
 	public UserEntity addUserImage(@PathVariable long id_user, @PathVariable long id_image) {
 		return userService.addUserImage(id_user, id_image);
 	}
-	
+
 	@PatchMapping("{id}") // soll from Token
 	public ResponseEntity<MessageResponse> updateUserElement(@Valid @PathVariable("id") long id,
 			@RequestBody Map<String, Object> userEntity) {
 
 		return userService.updateUserElement(id, userEntity);
 	}
-	
+
 	@PatchMapping("password/{id}")
 	public ResponseEntity<MessageResponse> updateUserPassword(@Valid @PathVariable("id") long id,
 			@RequestBody Map<String, Object> userEntity) {
 
 		return userService.updateUserPwd(id, userEntity);
+	}
+
+	@PatchMapping("passwordForget/{id}")
+	public ResponseEntity<MessageResponse> UserForgetPassword(@Valid @PathVariable("id") long id,
+			@RequestBody Map<String, Object> userEntity) {
+
+		return userService.UserForgetPwd(id, userEntity);
 	}
 
 }
