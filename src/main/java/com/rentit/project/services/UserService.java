@@ -159,15 +159,22 @@ public class UserService {
 				_userEntity.setBirthday(LocalDateTime.parse((String) value, format));
 				break;
 			case "image":
-				ObjectMapper mapper = new ObjectMapper(); // convert in image from Map/Obj
+				// convert in image from Map/Obj
+				ObjectMapper mapper = new ObjectMapper();
 				ImageEntity img = mapper.convertValue(value, ImageEntity.class);
-				_userEntity.setImage(img);
+
+				// modify image when existing image else create new
+				if (_userEntity.getImage().equals(null) == false) {
+					_userEntity.getImage().setImageLink(img.getImageLink());
+					_userEntity.getImage().setImageType(img.getImageType());
+				} else {
+					_userEntity.setImage(img);
+				}
 				break;
-			}// role
+			}// role ?!
 		});
 
 		Validator validator = Validation.buildDefaultValidatorFactory().getValidator();
-
 		Set<ConstraintViolation<UserEntity>> violations = validator.validate(_userEntity);// , OnUpdate.class);
 
 		if (!violations.isEmpty()) {
@@ -176,9 +183,7 @@ public class UserService {
 		}
 
 		addUser(_userEntity);
-
 		return ResponseEntity.ok().body(new MessageResponse("Successfully updated"));
-
 	}
 
 	public ResponseEntity<MessageResponse> updateUserPwd(long id, Map<String, Object> userEntity) {
@@ -206,7 +211,7 @@ public class UserService {
 
 		// get User
 		UserEntity _userEntity = getUser(id);
-		
+
 		// setPwd
 		_userEntity.setPassword(encoder.encode((String) userEntity.get("password")));
 
@@ -219,7 +224,6 @@ public class UserService {
 		}
 		addUser(_userEntity);
 		return ResponseEntity.ok().body(new MessageResponse("Password successfully changed"));
-
 	}
 
 }
