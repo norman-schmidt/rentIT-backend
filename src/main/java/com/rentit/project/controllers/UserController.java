@@ -4,8 +4,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import javax.validation.Valid;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -15,6 +13,7 @@ import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -39,10 +38,10 @@ public class UserController {
 	public UserEntity getUserById(@PathVariable long id) {
 		return userService.getUser(id);
 	}
-
-	@PutMapping("{id}")
-	public UserEntity updateUser(@RequestBody UserEntity userEntity, @PathVariable long id) {
-		return userService.updateUser(userEntity, id);
+	
+	@GetMapping("registredUser")
+	public UserEntity getRegistredUser(@RequestHeader(value = "Authorization") String authHeader) {
+		return userService.getUserFromToken(authHeader);//.getUserId();
 	}
 
 	@DeleteMapping("{id}")
@@ -51,6 +50,11 @@ public class UserController {
 		Map<String, Boolean> response = new HashMap<>();
 		response.put("Successfully deleted", Boolean.TRUE);
 		return ResponseEntity.ok(response);
+	}
+
+	@PutMapping("{id}")
+	public UserEntity updateUser(@RequestBody UserEntity userEntity, @PathVariable long id) {
+		return userService.updateUser(userEntity, id);
 	}
 
 	@PutMapping("{id_user}/rental/{id_rental}/add")
@@ -68,25 +72,25 @@ public class UserController {
 		return userService.addUserImage(id_user, id_image);
 	}
 
-	@PatchMapping("{id}") // soll from Token
-	public ResponseEntity<MessageResponse> updateUserElement(@Valid @PathVariable("id") long id,
+	@PatchMapping("content") // soll from Token
+	public ResponseEntity<MessageResponse> updateUserElement(@RequestHeader(value = "Authorization") String authHeader,
 			@RequestBody Map<String, Object> userEntity) {
-
-		return userService.updateUserElement(id, userEntity);
+		// userId from Token and Body
+		return userService.updateUserElement(userService.getUserFromToken(authHeader).getUserId(), userEntity);
 	}
 
-	@PatchMapping("password/{id}")
-	public ResponseEntity<MessageResponse> updateUserPassword(@Valid @PathVariable("id") long id,
+	@PatchMapping("password")
+	public ResponseEntity<MessageResponse> updateUserPassword(@RequestHeader(value = "Authorization") String authHeader,
 			@RequestBody Map<String, Object> userEntity) {
 
-		return userService.updateUserPwd(id, userEntity);
+		return userService.updateUserPwd(userService.getUserFromToken(authHeader).getUserId(), userEntity);
 	}
 
-	@PatchMapping("passwordForget/{id}")
-	public ResponseEntity<MessageResponse> UserForgetPassword(@Valid @PathVariable("id") long id,
+	@PatchMapping("passwordForget")
+	public ResponseEntity<MessageResponse> UserForgetPassword(@RequestHeader(value = "Authorization") String authHeader,
 			@RequestBody Map<String, Object> userEntity) {
 
-		return userService.UserForgetPwd(id, userEntity);
+		return userService.UserForgetPwd(userService.getUserFromToken(authHeader).getUserId(), userEntity);
 	}
 
 }

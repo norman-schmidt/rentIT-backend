@@ -164,7 +164,7 @@ public class UserService {
 				ImageEntity img = mapper.convertValue(value, ImageEntity.class);
 
 				// modify image when existing image else create new
-				if (_userEntity.getImage().equals(null) == false) {
+				if (_userEntity.getImage() != null) {
 					// set element from the new image
 					_userEntity.getImage().setImageLink(img.getImageLink());
 					_userEntity.getImage().setImageType(img.getImageType());
