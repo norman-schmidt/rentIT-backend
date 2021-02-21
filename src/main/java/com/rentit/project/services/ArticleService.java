@@ -34,13 +34,13 @@ public class ArticleService {
 
 	@Autowired
 	private CategoryService categoryService;
-	
+
 	@Autowired
 	private PropertiesService propertiesService;
 
 	@Autowired
 	private ImageService imageService;
-	
+
 //	@Autowired
 //	private ArticleQuantityService articleQuantityService;
 
@@ -57,9 +57,11 @@ public class ArticleService {
 		articleEntity_.setArticleId(articleEntity.getArticleId());
 
 		// update images with the id of article
-		for (ImageEntity im : articleEntity.getImages()) {
-			im.setArt(articleEntity_);
-			imageService.addImage(im);
+		if (articleEntity.getImages() != null) {
+			for (ImageEntity im : articleEntity.getImages()) {
+				im.setArt(articleEntity_);
+				imageService.addImage(im);
+			}
 		}
 
 		return ResponseEntity.ok().body(new MessageResponse("Successfully Added"));
