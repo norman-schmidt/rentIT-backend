@@ -1,6 +1,6 @@
 package com.rentit.project.pojo.request;
 
-import java.util.Date;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Set;
 
@@ -42,7 +42,7 @@ public class SignupRequest {
 	@Size(min = 1, max = 20)
 	private String ort;
 
-	private Date birthday;
+	private LocalDateTime birthday;
 
 	private List<RentalEntity> rental;
 

@@ -37,8 +37,7 @@ public class ImageService {
 	}
 
 	public void deleteImage(Long id) {
-		ImageEntity image = getImage(id);
-		imageRepository.delete(image);
+		imageRepository.delete(getImage(id));
 	}
 
 	public ImageEntity updateImage(ImageEntity imageEntity, long id) {

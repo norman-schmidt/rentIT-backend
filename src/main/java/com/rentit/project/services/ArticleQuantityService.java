@@ -1,9 +1,12 @@
 package com.rentit.project.services;
 
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Random;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -46,7 +49,7 @@ public class ArticleQuantityService {
 	public ResponseEntity<MessageResponse> addArticleQuantity(List<ArticleQuantityEntity> quantityEntity,
 			String authHeader) {
 
-		StringBuilder list = new StringBuilder();
+		StringBuilder articles = new StringBuilder();
 		UserEntity user = userService.getUserFromToken(authHeader);
 
 		double subTotal = 0.0; // subTotal for quantityEntity
@@ -55,7 +58,7 @@ public class ArticleQuantityService {
 		// invoiceEntity
 		InvoiceEntity invoiceEntity = new InvoiceEntity();
 		invoiceEntity.setInvoiceDate(LocalDateTime.now());
-		// invoiceEntity.setInvoiceNumber(Integer.parseInt(UUID.randomUUID().toString()));
+		invoiceEntity.setInvoiceNumber(getRandomNumberInRange(100000, 1000000000));
 		invoiceService.addInvoice(invoiceEntity);
 
 		// rentalEntity
@@ -68,11 +71,13 @@ public class ArticleQuantityService {
 		// hole article and price
 		// Rechnung totalPrice und subTotal
 		for (int i = 0; i < quantityEntity.size(); i++) {
+			// subTotal
 			// Difference Date-Days
-			// long diffDay = ChronoUnit.DAYS.between(LocalDateTime.now(),
-			// quantityEntity.get(i).getReturnDate());
+			long diffDay = ChronoUnit.DAYS.between(quantityEntity.get(i).getRentalDate(), quantityEntity.get(i).getReturnDate());
+			// Price * Quantity * Difference Date-Days
 			subTotal = quantityEntity.get(i).getQuantity()
-					* articleService.getArticle(quantityEntity.get(i).getArticle().getArticleId()).getPrice();
+					* articleService.getArticle(quantityEntity.get(i).getArticle().getArticleId()).getPrice() * diffDay;
+
 			quantityEntity.get(i).setSubTotal(subTotal);
 
 			// rabatt
@@ -84,13 +89,16 @@ public class ArticleQuantityService {
 			// subTotal -= subTotal * 0.2;
 			// }
 
-			// subTotal
-			quantityEntity.get(i).setSubTotal(subTotal);
-
 			// total
 			totalPrice += subTotal;
 
-			list.append("Article Nr " + i + " : " + quantityEntity.get(i).getArticle().getName());
+			articles.append(i + 1 + " : "
+					+ articleService.getArticle(quantityEntity.get(i).getArticle().getArticleId()).getName()
+					+ " | Rent Date: "
+					+ quantityEntity.get(i).getRentalDate().format(DateTimeFormatter.ofPattern("yyyy-MM-dd"))
+					+ " | Return Date: "
+					+ quantityEntity.get(i).getReturnDate().format(DateTimeFormatter.ofPattern("yyyy-MM-dd"))
+					+ " | Quantity: " + quantityEntity.get(i).getQuantity() + "\n");
 		}
 
 		rentalEntity.setTotalPrice(totalPrice);
@@ -102,8 +110,12 @@ public class ArticleQuantityService {
 			quantityEntity.get(i).setReturned(false);
 			articleQuantityRepository.save(quantityEntity.get(i));
 		}
+
 		String text = "Congratulations!!! \n\n\n Dear " + user.getLastname()
-				+ ",\n\n\n Articles was rented successfully !!! \n\n\n Following articles: \n " + list.toString()
+				+ ",\n\n\n Articles was rented successfully !!! " + "\n\n invoice Nr: "
+				+ invoiceEntity.getInvoiceNumber() + "\n\n Date: "
+				+ invoiceEntity.getInvoiceDate().format(DateTimeFormatter.ofPattern("yyyy-MM-dd")) + "\n\n TotalPrice:"
+				+ rentalEntity.getTotalPrice() + "\n\n Return Date:" + "\n\nArticles:\n" + articles.toString()
 				+ " \n\n https://rentit24.tech/  \n\n\n\n Kind Regards\n\n\nBest Team JEE 2021";
 		String subject = "Successfully rented!!!";
 		mailService.sendMail(text, user, subject);
@@ -167,6 +179,8 @@ public class ArticleQuantityService {
 		Boolean toLate = false;
 		double price = 0.0, actuPrice = 0.0;
 
+		StringBuilder returnArticles = new StringBuilder();
+
 		// invoiceEntity
 		InvoiceEntity invoiceEntity = new InvoiceEntity();
 		invoiceEntity.setInvoiceDate(LocalDateTime.now());
@@ -184,17 +198,29 @@ public class ArticleQuantityService {
 
 			toLate = LocalDateTime.now().isBefore(articleQuantityEntity.getReturnDate());
 
+			returnArticles.append(i + 1 + " : "
+					+ articleService.getArticle(getArticleQuantity(ids.get(i)).getArticle().getArticleId()).getName()
+					+ " | Rent Date: "
+					+ getArticleQuantity(ids.get(i)).getRentalDate().format(DateTimeFormatter.ofPattern("yyyy-MM-dd"))
+					+ " | Return Date: "
+					+ getArticleQuantity(ids.get(i)).getReturnDate().format(DateTimeFormatter.ofPattern("yyyy-MM-dd"))
+					+ " | Returned Date: "
+					+ getArticleQuantity(ids.get(i)).getReturnedDate().format(DateTimeFormatter.ofPattern("yyyy-MM-dd"))
+					+ " | Quantity: " + getArticleQuantity(ids.get(i)).getQuantity() + "\n");
+
 			if (!toLate) {
 				price = articleQuantityEntity.getSubTotal() * 1.3;
 				actuPrice = price - articleQuantityEntity.getSubTotal();
 				String text = "Warning!!! \n\n\n Dear " + user.getLastname()
 						+ ",\n\n\n Articles was to late returned !!! \n\n\n You must pay in addition: \n " + actuPrice
+						+ "\n\n Articles: \n" + returnArticles.toString()
 						+ " \n\n https://rentit24.tech/  \n\n\n\n Kind Regards\n\n\nBest Team JEE 2021";
 				String subject = "Successfully returned!!!";
 				mailService.sendMail(text, user, subject);
 			} else {
 				String text = "Congratulations!!! \n\n\n Dear " + user.getLastname()
-						+ ",\n\n\n Articles was returned successfully !!! \n\n\n "
+						+ ",\n\n\n Articles was returned successfully !!! \n\n\n " + "\n\n Articles: \n"
+						+ returnArticles.toString()
 						+ " \n\n https://rentit24.tech/  \n\n\n\n Kind Regards\n\n\nBest Team JEE 2021";
 				String subject = "Successfully returned!!!";
 				mailService.sendMail(text, user, subject);
@@ -205,6 +231,13 @@ public class ArticleQuantityService {
 		}
 
 		return ResponseEntity.ok().body(new MessageResponse("Successfully returned"));
+	}
+
+	private static int getRandomNumberInRange(int min, int max) {
+
+		Random r = new Random();
+		return r.ints(min, (max + 1)).limit(1).findFirst().getAsInt();
+
 	}
 
 }
