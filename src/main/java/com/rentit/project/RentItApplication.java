@@ -10,20 +10,11 @@ import springfox.documentation.swagger2.annotations.EnableSwagger2;
 @EnableSwagger2
 @EnableScheduling
 public class RentItApplication {
-	
-// public class RentItApplication implements CommandLineRunner { -> pour executer les repositories au demarage
+
+// public class RentItApplication implements CommandLineRunner { 
 
 //	@Autowired
-//	private ArticleRepository articleRepository;
-//
-//	@Autowired
-//	private ImageRepository imageRepository;
-//
-//	@Autowired
-//	private InvoiceRepository invoiceRepository;
-//	
-//	@Autowired
-//	private UserRepository userRepository;
+//	private RoleRepository roleRepository;
 
 	public static void main(String[] args) {
 		SpringApplication.run(RentItApplication.class, args);
@@ -31,19 +22,21 @@ public class RentItApplication {
 
 //	@Override
 //	public void run(String... args) throws Exception {
-//		ArticleEntity art = new ArticleEntity(1, "IPhone x", "DEG542DF", "v12", 12, 900, "Description", null , null, null, null);
-//		articleRepository.save(art);
+//		Role role1 = new Role();
+//		role1.setId(1);
+//		role1.setName(ERole.ROLE_ADMIN);
+//		roleRepository.save(role1);
 //
-//		ImageEntity img = new ImageEntity(1, "image link 1", "image type", null, null);
-//		imageRepository.save(img);
+//		Role role2 = new Role();
+//		role2.setId(2);
+//		role2.setName(ERole.ROLE_MODERATOR);
+//		roleRepository.save(role2);
 //
-//		Date date = new Date();
-//		InvoiceEntity invoice = new InvoiceEntity(1, 2, date, null);
-//		invoiceRepository.save(invoice);
-//		
-//		UserEntity user = new UserEntity(1, "test@test.com", "testPassword", "Jack", "Franck", "Magdeburger Straße 10", date, null, null);
-//		userRepository.save(user);
-//		
+//		Role role3 = new Role();
+//		role3.setId(3);
+//		role3.setName(ERole.ROLE_USER);
+//		roleRepository.save(role3);
+//
 //	}
 
 }

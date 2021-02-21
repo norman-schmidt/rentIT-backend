@@ -9,17 +9,16 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.rentit.project.models.ImageEntity;
-import com.rentit.project.models.RentalEntity;
 import com.rentit.project.models.UserEntity;
-import com.rentit.project.services.ImageService;
-import com.rentit.project.services.RentalService;
+import com.rentit.project.pojo.response.MessageResponse;
 import com.rentit.project.services.UserService;
 
 @RestController
@@ -30,12 +29,6 @@ public class UserController {
 	@Autowired
 	private UserService userService;
 
-	@Autowired
-	private RentalService rentalService;
-
-	@Autowired
-	private ImageService imageService;
-
 	@GetMapping("")
 	public List<UserEntity> getAllUsers() {
 		return userService.getAllUsers();
@@ -45,73 +38,59 @@ public class UserController {
 	public UserEntity getUserById(@PathVariable long id) {
 		return userService.getUser(id);
 	}
-
-//	@PostMapping("")
-//	public UserEntity addUser(@RequestBody UserEntity userEntity) {
-//		return userService.addUser(userEntity);
-//	}
-
-	@PutMapping("{id}")
-	public UserEntity updateUser(@RequestBody UserEntity userEntity, @PathVariable long id) {
-
-		UserEntity _userEntity = userService.getUser(id);
-
-		_userEntity.setEmail(userEntity.getEmail());
-		_userEntity.setLastname(userEntity.getLastname());
-		_userEntity.setPassword(userEntity.getPassword());
-		_userEntity.setFirstname(userEntity.getFirstname());
-		_userEntity.setStreet(userEntity.getStreet());
-		_userEntity.setHausNumber(userEntity.getHausNumber());
-		_userEntity.setPlz(userEntity.getPlz());
-		_userEntity.setOrt(userEntity.getOrt());
-		_userEntity.setBirthday(userEntity.getBirthday());
-		_userEntity.setImage(imageService.updateImage(_userEntity.getImage()));
-
-		return userService.updateUser(_userEntity);
-
+	
+	@GetMapping("registredUser")
+	public UserEntity getRegistredUser(@RequestHeader(value = "Authorization") String authHeader) {
+		return userService.getUserFromToken(authHeader);//.getUserId();
 	}
 
 	@DeleteMapping("{id}")
 	public ResponseEntity<Map<String, Boolean>> removeCategory(@PathVariable Long id) {
-
 		userService.deleteUser(id);
-
 		Map<String, Boolean> response = new HashMap<>();
 		response.put("Successfully deleted", Boolean.TRUE);
 		return ResponseEntity.ok(response);
 	}
 
+	@PutMapping("{id}")
+	public UserEntity updateUser(@RequestBody UserEntity userEntity, @PathVariable long id) {
+		return userService.updateUser(userEntity, id);
+	}
+
 	@PutMapping("{id_user}/rental/{id_rental}/add")
 	public UserEntity addUserRental(@PathVariable long id_user, @PathVariable long id_rental) {
-		UserEntity user = userService.getUser(id_user);
-		RentalEntity rental = rentalService.getRental(id_rental);
-		user.getRental().add(rental);
-		rental.setUsers(user);
-		userService.updateUser(user);
-		rentalService.updateRental(rental);
-		return user;
+		return userService.addUserRental(id_user, id_rental);
 	}
 
 	@PutMapping("{id_user}/rental/{id_rental}/remove")
 	public UserEntity removeUserRental(@PathVariable long id_user, @PathVariable long id_rental) {
-		UserEntity user = userService.getUser(id_user);
-		RentalEntity rental = rentalService.getRental(id_rental);
-		user.getRental().remove(rental);
-		rental.setUsers(user);
-		userService.updateUser(user);
-		rentalService.updateRental(rental);
-		return user;
+		return userService.removeUserRental(id_user, id_rental);
 	}
 
 	@PutMapping("{id_user}/image/{id_image}/add")
 	public UserEntity addUserImage(@PathVariable long id_user, @PathVariable long id_image) {
-		UserEntity user = userService.getUser(id_user);
-		ImageEntity image = imageService.getImage(id_image);
-		user.setImage(image);
-		image.setUser(user);
-		userService.updateUser(user);
-		imageService.updateImage(image);
-		return user;
+		return userService.addUserImage(id_user, id_image);
+	}
+
+	@PatchMapping("content") // soll from Token
+	public ResponseEntity<MessageResponse> updateUserElement(@RequestHeader(value = "Authorization") String authHeader,
+			@RequestBody Map<String, Object> userEntity) {
+		// userId from Token and Body
+		return userService.updateUserElement(userService.getUserFromToken(authHeader).getUserId(), userEntity);
+	}
+
+	@PatchMapping("password")
+	public ResponseEntity<MessageResponse> updateUserPassword(@RequestHeader(value = "Authorization") String authHeader,
+			@RequestBody Map<String, Object> userEntity) {
+
+		return userService.updateUserPwd(userService.getUserFromToken(authHeader).getUserId(), userEntity);
+	}
+
+	@PatchMapping("passwordForget")
+	public ResponseEntity<MessageResponse> UserForgetPassword(@RequestHeader(value = "Authorization") String authHeader,
+			@RequestBody Map<String, Object> userEntity) {
+
+		return userService.UserForgetPwd(userService.getUserFromToken(authHeader).getUserId(), userEntity);
 	}
 
 }

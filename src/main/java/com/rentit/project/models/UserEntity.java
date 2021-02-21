@@ -1,6 +1,6 @@
 package com.rentit.project.models;
 
-import java.util.Date;
+import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -22,6 +22,7 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
 
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 
 import lombok.Data;
@@ -31,6 +32,7 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "userId")
+@JsonIgnoreProperties({ "rental" })
 public class UserEntity {
 
 	@Id
@@ -57,27 +59,29 @@ public class UserEntity {
 	@Column(name = "firstname")
 	private String firstname;
 
-	@Size(min = 1, max = 20)
+	@Size(min = 1, max = 40)
 	@Column(name = "street")
 	private String street;
 
 	@Size(min = 1, max = 20)
 	@Column(name = "hausNumber")
-	private String hausNumber;
+	private String hausNumber; // why String ?
 
 	@Column(name = "plz")
-	private int plz;
+	private int plz; // why not String :D ?
 
 	@Size(min = 1, max = 20)
 	@Column(name = "ort")
 	private String ort;
 
 	@Column(name = "birthday")
-	private Date birthday;
+	private LocalDateTime birthday;
 
 	// @OneToMany(mappedBy = "users", fetch = FetchType.LAZY)
 	// private List<RentalEntity> rental;
 
+	// @JsonIgnore
+	// @JsonIdentityReference(alwaysAsId = true)
 	@OneToMany(mappedBy = "users", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
 	private List<RentalEntity> rental;
 
@@ -93,7 +97,7 @@ public class UserEntity {
 	private Set<Role> roles = new HashSet<>();
 
 	public UserEntity(@NotBlank @Size(max = 50) @Email String email, @NotBlank @Size(max = 120) String password,
-			String lastname, String firstname, String street, String hausNumber, int plz, String ort, Date birthday,
+			String lastname, String firstname, String street, String hausNumber, int plz, String ort, LocalDateTime birthday,
 			List<RentalEntity> rental, ImageEntity image) {
 
 		this.email = email;

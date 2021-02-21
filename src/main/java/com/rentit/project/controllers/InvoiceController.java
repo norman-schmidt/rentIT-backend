@@ -17,17 +17,12 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.rentit.project.models.InvoiceEntity;
-import com.rentit.project.models.RentalEntity;
 import com.rentit.project.services.InvoiceService;
-import com.rentit.project.services.RentalService;
 
 @RestController
 @RequestMapping("/api/invoices")
 @CrossOrigin
 public class InvoiceController {
-
-	@Autowired
-	private RentalService rentalService;
 
 	@Autowired
 	private InvoiceService invoiceService;
@@ -49,22 +44,12 @@ public class InvoiceController {
 
 	@PutMapping("{id}")
 	public InvoiceEntity updateInvoice(@RequestBody InvoiceEntity invoiceEntity, @PathVariable long id) {
-
-		InvoiceEntity _invoiceEntity = invoiceService.getInvoice(id);
-
-		_invoiceEntity.setInvoiceNumber(invoiceEntity.getInvoiceNumber());
-		_invoiceEntity.setInvoiceDate(invoiceEntity.getInvoiceDate());
-
-		_invoiceEntity.setRental(rentalService.updateRental(_invoiceEntity.getRental()));
-
-		return invoiceService.updateInvoice(_invoiceEntity);
+		return invoiceService.updateInvoice(invoiceEntity, id);
 	}
 
 	@DeleteMapping("{id}")
 	public ResponseEntity<Map<String, Boolean>> removeInvoice(@PathVariable Long id) {
-
 		invoiceService.deleteInvoice(id);
-
 		Map<String, Boolean> response = new HashMap<>();
 		response.put("Successfully deleted", Boolean.TRUE);
 		return ResponseEntity.ok(response);
@@ -72,13 +57,7 @@ public class InvoiceController {
 
 	@PutMapping("{id_invoice}/rental/{id_rental}")
 	public InvoiceEntity setInvoiceRental(@PathVariable long id_invoice, @PathVariable long id_rental) {
-		InvoiceEntity invoice = invoiceService.getInvoice(id_invoice);
-		RentalEntity rental = rentalService.getRental(id_rental);
-		invoice.setRental(rental);
-		rental.setInvoice(invoice);
-		invoiceService.updateInvoice(invoice);
-		rentalService.updateRental(rental);
-		return invoice;
+		return invoiceService.setInvoiceRental(id_invoice, id_rental);
 	}
 
 }

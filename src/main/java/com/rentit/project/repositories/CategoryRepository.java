@@ -20,6 +20,7 @@ public interface CategoryRepository extends JpaRepository<CategoryEntity, Long> 
 	List<CustomArticle> findByName(String name);
 
 	// findAllName
-	@Query("SELECT c.name FROM CategoryEntity c")
-	List<String> findAllName();
+	@Query("SELECT c.name, c.description FROM CategoryEntity c")
+	List<Object[]>  findAllName();
+	// List<String> findAllName();
 }

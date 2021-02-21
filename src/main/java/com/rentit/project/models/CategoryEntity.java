@@ -15,6 +15,8 @@ import javax.persistence.OneToMany;
 
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonIdentityReference;
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 
 import lombok.AllArgsConstructor;
@@ -26,6 +28,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "categoryId")
+@JsonInclude(value = Include.NON_NULL, content = Include.NON_NULL) 
 public class CategoryEntity {
 
 	@Id
@@ -33,6 +36,8 @@ public class CategoryEntity {
 	private long categoryId;
 
 	@Column(name = "name")
+	// @JsonInclude(value = Include.NON_NULL, content = Include.NON_NULL) // include has more attribute
+	// in JSON output
 	private String name;
 
 	@Lob
