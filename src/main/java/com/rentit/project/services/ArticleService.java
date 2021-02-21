@@ -2,9 +2,15 @@ package com.rentit.project.services;
 
 import java.time.LocalDateTime;
 import java.time.YearMonth;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
+
+import javax.validation.ConstraintViolation;
+import javax.validation.Validation;
+import javax.validation.Validator;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -13,10 +19,12 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.rentit.project.models.ArticleEntity;
 import com.rentit.project.models.CategoryEntity;
 import com.rentit.project.models.ImageEntity;
 import com.rentit.project.models.PropertiesEntity;
+import com.rentit.project.models.UserEntity;
 import com.rentit.project.pojo.query.ArticleAvailable;
 import com.rentit.project.pojo.query.CustomAAvailableQuantity;
 import com.rentit.project.pojo.query.CustomArticle;
@@ -223,6 +231,72 @@ public class ArticleService {
 		articleService.updateArticle(art, id_article);
 		imageService.updateImage(image, id_image);
 		return art;
+	}
+
+	public ResponseEntity<MessageResponse> updateUserElement(long id, Map<String, Object> articleEntity) {
+		ArticleEntity _articleEntity = getArticle(id);
+
+		articleEntity.forEach((element, value) -> {
+			switch (element) {
+			case "name":
+				_articleEntity.setName((String) value);
+				break;
+			case "description":
+				_articleEntity.setDescription((String) value);
+				break;
+			case "serialNumber":
+				_articleEntity.setSerialNumber((String) value);
+				break;
+			case "model":
+				_articleEntity.setModel((String) value);
+				break;
+			case "stockLevel":
+				_articleEntity.setStockLevel((Integer) value);
+				break;
+			case "price":
+				_articleEntity.setPrice((Double) value);
+				break;
+//			case "properties":
+//				// convert in properties from Map/Obj
+//				ObjectMapper mapper = new ObjectMapper();
+//				PropertiesEntity properties = mapper.convertValue(value, PropertiesEntity.class);
+//
+//				// modify properties when existing properties else create new
+//				if (_articleEntity.getProperties() != null) {
+//					// set element from the new properties
+//					_articleEntity.getImage().setImageLink(img.getImageLink());
+//					_articleEntity.getImage().setImageType(img.getImageType());
+//				} else {
+//					_articleEntity.setProperties(properties);
+//				}
+//				break;
+//			case "image":
+//				// convert in image from Map/Obj
+//				ObjectMapper mapper = new ObjectMapper();
+//				ImageEntity img = mapper.convertValue(value, ImageEntity.class);
+//
+//				// modify image when existing image else create new
+//				if (_articleEntity.getImage() != null) {
+//					// set element from the new image
+//					_articleEntity.getImage().setImageLink(img.getImageLink());
+//					_articleEntity.getImage().setImageType(img.getImageType());
+//				} else {
+//					_articleEntity.setImage(img);
+//				}
+//				break;
+			}// role ?!
+		});
+
+		Validator validator = Validation.buildDefaultValidatorFactory().getValidator();
+		//Set<ConstraintViolation<UserEntity>> violations = validator.validate(_userEntity);// , OnUpdate.class);
+
+//		if (!violations.isEmpty()) {
+//			// When invalid
+//			return ResponseEntity.badRequest().body(new MessageResponse(violations.toString()));
+//		}
+
+		//addUser(_userEntity);
+		return ResponseEntity.ok().body(new MessageResponse("Successfully updated"));
 	}
 
 }

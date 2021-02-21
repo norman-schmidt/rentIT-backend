@@ -165,10 +165,10 @@ public class UserService {
 
 				// modify image when existing image else create new
 				if (_userEntity.getImage() != null) {
-					// set element from the new image
+					// set link
 					_userEntity.getImage().setImageLink(img.getImageLink());
-					_userEntity.getImage().setImageType(img.getImageType());
 				} else {
+					img.setImageType("user");
 					_userEntity.setImage(img);
 				}
 				break;
