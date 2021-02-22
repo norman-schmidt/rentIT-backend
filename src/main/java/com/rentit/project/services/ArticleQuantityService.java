@@ -73,21 +73,13 @@ public class ArticleQuantityService {
 		for (int i = 0; i < quantityEntity.size(); i++) {
 			// subTotal
 			// Difference Date-Days
-			long diffDay = ChronoUnit.DAYS.between(quantityEntity.get(i).getRentalDate(), quantityEntity.get(i).getReturnDate());
+			long diffDay = ChronoUnit.DAYS.between(quantityEntity.get(i).getRentalDate(),
+					quantityEntity.get(i).getReturnDate());
 			// Price * Quantity * Difference Date-Days
 			subTotal = quantityEntity.get(i).getQuantity()
 					* articleService.getArticle(quantityEntity.get(i).getArticle().getArticleId()).getPrice() * diffDay;
 
 			quantityEntity.get(i).setSubTotal(subTotal);
-
-			// rabatt
-			// if (diffDay >= 7) {
-			// subTotal -= subTotal * 0.1;
-			// } else if (diffDay >= 7 && diffDay <= 14) {
-			// subTotal -= subTotal * 0.15;
-			// } else if (diffDay > 14) {
-			// subTotal -= subTotal * 0.2;
-			// }
 
 			// total
 			totalPrice += subTotal;
@@ -123,10 +115,10 @@ public class ArticleQuantityService {
 		return ResponseEntity.ok().body(new MessageResponse("Successfully returned"));
 	}
 
-	// Ein Artikel
+	// One ArticleQuantity
 	public ResponseEntity<MessageResponse> addArticleQuantity(ArticleQuantityEntity quantityEntity) {
 		articleQuantityRepository.save(quantityEntity);
-		return ResponseEntity.ok().body(new MessageResponse("Successfully returned"));
+		return ResponseEntity.ok().body(new MessageResponse("Successfully added"));
 	}
 
 	public ArticleQuantityEntity getArticleQuantity(Long id) {
@@ -138,18 +130,22 @@ public class ArticleQuantityService {
 		return articleQuantityRepository.findAll();
 	}
 
-	public void deleteArticleQuantity(Long id) {
+	public ResponseEntity<MessageResponse> deleteArticleQuantity(Long id) {
 		ArticleQuantityEntity articleQuantity = getArticleQuantity(id);
 		articleQuantityRepository.delete(articleQuantity);
+		return ResponseEntity.ok().body(new MessageResponse("Successfully deleted"));
 	}
 
-	public ArticleQuantityEntity updateArticleQuantities(ArticleQuantityEntity list) {
-		return articleQuantityRepository.save(list);
+	public ArticleQuantityEntity updateArticleQuantities(ArticleQuantityEntity quantityEntity, long id) {
+		ArticleQuantityEntity _quantityEntity = getArticleQuantity(id);
+		_quantityEntity = quantityEntity;
+		return articleQuantityRepository.save(_quantityEntity);
 	}
 
-	public List<ArticleQuantityEntity> updateArticleQuantities(List<ArticleQuantityEntity> list) {
-		return articleQuantityRepository.saveAll(list);
-	}
+	// public List<ArticleQuantityEntity>
+	// updateArticleQuantities(List<ArticleQuantityEntity> list) {
+	// return articleQuantityRepository.saveAll(list);
+	// }
 
 	@Transactional
 	public List<CustomPojoReturn> getListRentalUser(Long userId) {
@@ -234,10 +230,8 @@ public class ArticleQuantityService {
 	}
 
 	private static int getRandomNumberInRange(int min, int max) {
-
 		Random r = new Random();
 		return r.ints(min, (max + 1)).limit(1).findFirst().getAsInt();
-
 	}
 
 }

@@ -22,16 +22,12 @@ import com.rentit.project.models.UserEntity;
 import com.rentit.project.pojo.query.CustomPojoReturn;
 import com.rentit.project.pojo.response.MessageResponse;
 import com.rentit.project.services.ArticleQuantityService;
-import com.rentit.project.services.RentalService;
 import com.rentit.project.services.UserService;
 
 @RestController
 @RequestMapping("/api/quantities")
 @CrossOrigin(origins = "*")
 public class ArticleQuantityController {
-
-	@Autowired
-	private RentalService rentalService;
 
 	@Autowired
 	private ArticleQuantityService quantityService;
@@ -70,20 +66,12 @@ public class ArticleQuantityController {
 	@PutMapping("{id}")
 	public ArticleQuantityEntity updateQuantity(@RequestBody ArticleQuantityEntity quantityEntity,
 			@PathVariable long id) {
-		ArticleQuantityEntity _quantityEntity = quantityService.getArticleQuantity(id);
-		_quantityEntity.setQuantity(quantityEntity.getQuantity());
-		_quantityEntity.setReturnedDate(quantityEntity.getReturnedDate());
-		_quantityEntity.setArticle(quantityEntity.getArticle());
-		_quantityEntity.setReturnDate(quantityEntity.getReturnDate());
-		_quantityEntity.setReturned(quantityEntity.isReturned());
-		_quantityEntity.setRental(rentalService.updateRental(_quantityEntity.getRental(), _quantityEntity.getRental().getRentalId()));
-		return quantityService.updateArticleQuantities(_quantityEntity);
+		return quantityService.updateArticleQuantities(quantityEntity, id);
 	}
 
 	@DeleteMapping("{id}")
 	public ResponseEntity<MessageResponse> removeQuantity(@PathVariable Long id) {
-		quantityService.deleteArticleQuantity(id);
-		return ResponseEntity.ok().body(new MessageResponse("Successfully deleted"));
+		return quantityService.deleteArticleQuantity(id);
 	}
 
 }
