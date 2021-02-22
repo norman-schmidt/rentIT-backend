@@ -35,7 +35,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "userId")
-@JsonIgnoreProperties({ "rental" })
+//@JsonIgnoreProperties({ "rental" })
 public class UserEntity {
 
 	@Id
@@ -85,7 +85,7 @@ public class UserEntity {
 
 	// @JsonIgnore
 	@JsonIdentityReference(alwaysAsId = true)
-	@OneToMany(mappedBy = "users", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+	@OneToMany(mappedBy = "users", fetch = FetchType.EAGER)//, cascade = CascadeType.ALL) // LAZY
 	private List<RentalEntity> rental;
 
 	// @OneToOne(mappedBy = "user", cascade = { CascadeType.ALL })
@@ -101,8 +101,8 @@ public class UserEntity {
 	private Set<Role> roles = new HashSet<>();
 
 	public UserEntity(@NotBlank @Size(max = 50) @Email String email, @NotBlank @Size(max = 120) String password,
-			String lastname, String firstname, String street, String hausNumber, int plz, String ort, LocalDateTime birthday,
-			List<RentalEntity> rental, ImageEntity image) {
+			String lastname, String firstname, String street, String hausNumber, int plz, String ort,
+			LocalDateTime birthday, List<RentalEntity> rental, ImageEntity image) {
 
 		this.email = email;
 		this.username = email;

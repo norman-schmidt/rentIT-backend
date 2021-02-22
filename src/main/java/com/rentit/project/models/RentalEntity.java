@@ -46,7 +46,7 @@ public class RentalEntity {
 	private double totalPrice;
 
 	@JsonIdentityReference(alwaysAsId = true)
-	@ManyToOne(fetch = FetchType.EAGER)
+	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "user_Id")
 	private UserEntity users;
 
@@ -56,7 +56,7 @@ public class RentalEntity {
 	private InvoiceEntity invoice;
 
 	@JsonIdentityReference(alwaysAsId = true)
-	@OneToMany(mappedBy = "rental", fetch = FetchType.EAGER)
+	@OneToMany(mappedBy = "rental", fetch = FetchType.LAZY)
 	private List<ArticleQuantityEntity> articleQuantity;
 
 }
