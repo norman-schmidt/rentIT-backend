@@ -159,7 +159,6 @@ public class ArticleService {
 		return ResponseEntity.ok().body(new MessageResponse("Successfully removed"));
 	}
 
-	// patch article without image
 	public ResponseEntity<MessageResponse> updateArticleElement(long id, Map<String, Object> articleEntity) {
 		ArticleEntity _articleEntity = getArticle(id);
 		ObjectMapper mapper = new ObjectMapper();
@@ -196,18 +195,16 @@ public class ArticleService {
 					PropertiesEntity _properties = propertiesService.getProperties(properties.getPropertiesId());
 					_articleEntity.setProperties(_properties);
 				}
-
 				break;
 			case "images":
 				@SuppressWarnings("unchecked")
 				ArrayList<Object> images = (ArrayList<Object>) value;
-
 				for (Object obj : images) {
 					ImageEntity image = mapper.convertValue(obj, ImageEntity.class);
 					if (image.getImageId() == 0) {
 						image.setArt(_articleEntity);
 						imageService.saveImage(image);
-					} else { // when image exist
+					} else { // when image exist, when we send only id
 						image = imageService.getImage(image.getImageId());
 						image.setArt(getArticle(id));
 					}
@@ -216,7 +213,7 @@ public class ArticleService {
 		});
 
 		Validator validator = Validation.buildDefaultValidatorFactory().getValidator();
-		Set<ConstraintViolation<ArticleEntity>> violations = validator.validate(_articleEntity);// , OnUpdate.class);
+		Set<ConstraintViolation<ArticleEntity>> violations = validator.validate(_articleEntity);
 
 		if (!violations.isEmpty()) {
 			return ResponseEntity.badRequest().body(new MessageResponse(violations.toString()));

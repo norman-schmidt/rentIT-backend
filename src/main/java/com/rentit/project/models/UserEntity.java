@@ -22,15 +22,18 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
 
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonIdentityReference;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Entity
 @Data
 @NoArgsConstructor
+@AllArgsConstructor
 @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "userId")
 @JsonIgnoreProperties({ "rental" })
 public class UserEntity {
@@ -81,13 +84,14 @@ public class UserEntity {
 	// private List<RentalEntity> rental;
 
 	// @JsonIgnore
-	// @JsonIdentityReference(alwaysAsId = true)
+	@JsonIdentityReference(alwaysAsId = true)
 	@OneToMany(mappedBy = "users", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
 	private List<RentalEntity> rental;
 
 	// @OneToOne(mappedBy = "user", cascade = { CascadeType.ALL })
 	// private ImageEntity image;
 
+	@JsonIdentityReference(alwaysAsId = true)
 	@OneToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
 	@JoinColumn(name = "image_Id")
 	private ImageEntity image;

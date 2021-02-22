@@ -47,7 +47,7 @@ public class UserService {
 		return userRepository.save(user);
 	}
 
-	public UserEntity getUser(Long id) {
+	public UserEntity getUser(long id) {
 		return userRepository.findById(id).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
 	}
 
@@ -59,28 +59,16 @@ public class UserService {
 		return userRepository.findAll();
 	}
 
-	public void deleteUser(Long id) {
+	public void deleteUser(long id) {
 		UserEntity user = getUser(id);
 		userRepository.delete(user);
 	}
 
 	// encode Pwd !?
 	public UserEntity updateUser(UserEntity userEntity, long id) {
-
 		UserEntity _userEntity = getUser(id);
-
-		_userEntity.setEmail(userEntity.getEmail());
-		_userEntity.setLastname(userEntity.getLastname());
-		_userEntity.setPassword(userEntity.getPassword());
-		_userEntity.setFirstname(userEntity.getFirstname());
-		_userEntity.setStreet(userEntity.getStreet());
-		_userEntity.setHausNumber(userEntity.getHausNumber());
-		_userEntity.setPlz(userEntity.getPlz());
-		_userEntity.setOrt(userEntity.getOrt());
-		_userEntity.setBirthday(userEntity.getBirthday());
-		_userEntity.setImage(imageService.updateImage(_userEntity.getImage(), _userEntity.getImage().getImageId()));
-
-		return userRepository.save(userEntity);
+		_userEntity = userEntity;
+		return userRepository.save(_userEntity);
 	}
 
 	public UserEntity getUserFromToken(String authHeader) {
