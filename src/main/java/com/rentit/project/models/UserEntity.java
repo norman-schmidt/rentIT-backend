@@ -35,7 +35,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "userId")
-//@JsonIgnoreProperties({ "rental" })
+@JsonIgnoreProperties({ "rental" })
 public class UserEntity {
 
 	@Id

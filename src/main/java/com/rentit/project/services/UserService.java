@@ -20,7 +20,6 @@ import org.springframework.web.server.ResponseStatusException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.rentit.project.jwt.JwtUtils;
 import com.rentit.project.models.ImageEntity;
-import com.rentit.project.models.RentalEntity;
 import com.rentit.project.models.UserEntity;
 import com.rentit.project.pojo.response.MessageResponse;
 import com.rentit.project.repositories.UserRepository;
@@ -30,9 +29,6 @@ public class UserService {
 
 	@Autowired
 	private JwtUtils jwtUtils;
-
-	@Autowired
-	private RentalService rentalService;
 
 	@Autowired
 	private UserRepository userRepository;
@@ -79,26 +75,6 @@ public class UserService {
 			email = jwtUtils.getUserNameFromJwtToken(token);
 		}
 		UserEntity user = findUserByEmail(email);
-		return user;
-	}
-
-	public UserEntity addUserRental(long id_user, long id_rental) {
-		UserEntity user = getUser(id_user);
-		RentalEntity rental = rentalService.getRental(id_rental);
-		user.getRental().add(rental);
-		rental.setUsers(user);
-		updateUser(user, id_user);
-		rentalService.updateRental(rental, id_rental);
-		return user;
-	}
-
-	public UserEntity removeUserRental(long id_user, long id_rental) {
-		UserEntity user = getUser(id_user);
-		RentalEntity rental = rentalService.getRental(id_rental);
-		user.getRental().remove(rental);
-		rental.setUsers(user);
-		updateUser(user, id_user);
-		rentalService.updateRental(rental, id_rental);
 		return user;
 	}
 
@@ -164,7 +140,7 @@ public class UserService {
 		});
 
 		Validator validator = Validation.buildDefaultValidatorFactory().getValidator();
-		Set<ConstraintViolation<UserEntity>> violations = validator.validate(_userEntity);// , OnUpdate.class);
+		Set<ConstraintViolation<UserEntity>> violations = validator.validate(_userEntity);
 
 		if (!violations.isEmpty()) {
 			// When invalid
