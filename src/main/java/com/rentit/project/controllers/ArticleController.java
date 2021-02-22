@@ -93,8 +93,8 @@ public class ArticleController {
 	}
 
 	@PutMapping("{id_article}/removecategory")
-	public ResponseEntity<MessageResponse> removeArticleCategory(@PathVariable long id_article) {
-		return articleService.removeArticleCategory(id_article);
+	public ResponseEntity<MessageResponse> removeCategory(@PathVariable long id_article) {
+		return articleService.removeCategory(id_article);
 	}
 
 	@PutMapping("{id_article}/image/{id_image}/add")

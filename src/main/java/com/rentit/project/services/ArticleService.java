@@ -159,7 +159,7 @@ public class ArticleService {
 	}
 
 	// remove Foreign keys category
-	public ResponseEntity<MessageResponse> removeArticleCategory(long id_article) {
+	public ResponseEntity<MessageResponse> removeCategory(long id_article) {
 		ArticleEntity article = articleService.getArticle(id_article);
 		article.setCategory(null);
 		addArticle(article);
