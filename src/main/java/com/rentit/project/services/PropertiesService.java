@@ -14,8 +14,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.rentit.project.models.ArticleEntity;
 import com.rentit.project.models.PropertiesEntity;
 import com.rentit.project.pojo.response.MessageResponse;
 import com.rentit.project.repositories.PropertiesRepository;

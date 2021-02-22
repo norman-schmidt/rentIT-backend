@@ -44,6 +44,9 @@ public class ArticleService {
 	@Autowired
 	private ImageService imageService;
 
+	@Autowired
+	private PropertiesService propertiesService;
+
 	public ResponseEntity<MessageResponse> addArticle(ArticleEntity articleEntity) {
 		// CategoryEntity
 		if (articleEntity.getCategory() != null) {
@@ -185,12 +188,15 @@ public class ArticleService {
 				CategoryEntity category = mapper.convertValue(value, CategoryEntity.class);
 				_articleEntity.setCategory(category);
 				break;
-			case "properties": // properties must be complete
+			case "properties":
 				PropertiesEntity properties = mapper.convertValue(value, PropertiesEntity.class);
-				// when we send only PropertiesId
-				// PropertiesEntity _properties =
-				// propertiesService.getProperties(properties.getPropertiesId());
-				_articleEntity.setProperties(properties);
+				if (properties.getPropertiesId() == 0) {// properties must be complete
+					_articleEntity.setProperties(properties);
+				} else {// when we send only PropertiesId, when properties exist
+					PropertiesEntity _properties = propertiesService.getProperties(properties.getPropertiesId());
+					_articleEntity.setProperties(_properties);
+				}
+
 				break;
 			case "images":
 				@SuppressWarnings("unchecked")
@@ -201,7 +207,7 @@ public class ArticleService {
 					if (image.getImageId() == 0) {
 						image.setArt(_articleEntity);
 						imageService.saveImage(image);
-					} else {
+					} else { // when image exist
 						image = imageService.getImage(image.getImageId());
 						image.setArt(getArticle(id));
 					}
