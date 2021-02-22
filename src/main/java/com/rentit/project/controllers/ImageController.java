@@ -39,7 +39,7 @@ public class ImageController {
 
 	@PostMapping("")
 	public ImageEntity addImage(@RequestBody ImageEntity imageEntity) {
-		return imageService.addImage(imageEntity);
+		return imageService.saveImage(imageEntity);
 	}
 
 	@PutMapping("{id}")

@@ -24,7 +24,7 @@ public class ImageService {
 	@Autowired
 	private ImageRepository imageRepository;
 
-	public ImageEntity addImage(ImageEntity image) {
+	public ImageEntity saveImage(ImageEntity image) {
 		return imageRepository.save(image);
 	}
 
@@ -40,6 +40,7 @@ public class ImageService {
 		imageRepository.delete(getImage(id));
 	}
 
+	// !?
 	public ImageEntity updateImage(ImageEntity imageEntity, long id) {
 
 		ImageEntity _imageEntity = getImage(id);

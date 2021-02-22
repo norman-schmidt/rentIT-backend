@@ -60,7 +60,7 @@ public class CategoryService {
 	public CategoryEntity updateCategory(CategoryEntity categoryEntity, long id) {
 		CategoryEntity _categoryEntity = getCategory(id);
 		_categoryEntity.setName(categoryEntity.getName());
-		_categoryEntity.setArticles(articleService.updateArticle(_categoryEntity.getArticles()));
+		//_categoryEntity.setArticles(articleService.updateArticle(_categoryEntity.getArticles()));
 		return categoryRepository.save(categoryEntity);
 	}
 

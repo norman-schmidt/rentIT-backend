@@ -20,12 +20,6 @@ public interface ArticleRepository extends JpaRepository<ArticleEntity, Long> {
 			+ "and im.imageType = 'titel' and lower(a.name) like lower(concat('%', concat(?1, '%')))")
 	List<CustomArticle> findByName(String name);
 
-	// Price
-	@Query("SELECT new com.rentit.project.pojo.query.CustomArticle(a.articleId, a.name, a.description, a.stockLevel, a.price, im.imageLink) "
-			+ "FROM ArticleEntity a, ImageEntity im WHERE im.art = a.articleId "
-			+ "and im.imageType = 'titel' and lower(a.name) like lower(concat('%', concat(?1, '%'))) and a.price between ?2 and ?3")
-	List<CustomArticle> filterWithNamePrice(String name, double min, double max);
-
 	// Name-Category-Price
 	@Query("SELECT new com.rentit.project.pojo.query.CustomArticle(a.articleId, a.name, a.description, a.stockLevel, a.price, im.imageLink) "
 			+ "FROM ArticleEntity a, ImageEntity im ,CategoryEntity ca "
