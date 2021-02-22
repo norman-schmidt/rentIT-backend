@@ -1,5 +1,6 @@
 package com.rentit.project.services;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -59,9 +60,8 @@ public class CategoryService {
 
 	public CategoryEntity updateCategory(CategoryEntity categoryEntity, long id) {
 		CategoryEntity _categoryEntity = getCategory(id);
-		_categoryEntity.setName(categoryEntity.getName());
-		//_categoryEntity.setArticles(articleService.updateArticle(_categoryEntity.getArticles()));
-		return categoryRepository.save(categoryEntity);
+		_categoryEntity = categoryEntity;
+		return categoryRepository.save(_categoryEntity);
 	}
 
 	@Transactional
@@ -76,27 +76,21 @@ public class CategoryService {
 		for (Object[] element : categoryName) {
 			results.put((String) element[0], (String) element[1]);
 		}
+		// return name and description
 		return (HashMap<String, String>) results;
 	}
 
-	public CategoryEntity addCategoryImage(long id_category, long id_article) {
-		ArticleEntity art = articleService.getArticle(id_article);
-		CategoryEntity cat = getCategory(id_category);
-		cat.getArticles().add(art);
-		art.setCategory(cat);
-		articleService.updateArticle(art, id_article);
-		updateCategory(cat, id_category);
-		return cat;
-	}
+	public ResponseEntity<MessageResponse> addArticleToCategory(long id_category,
+			Map<String, ArrayList<Long>> id_article) {
+		ArrayList<Long> ids = id_article.get("ids");
+		CategoryEntity category = getCategory(id_category);
 
-	public CategoryEntity removeCategoryImage(long id_category, long id_article) {
-		ArticleEntity art = articleService.getArticle(id_article);
-		CategoryEntity cat = getCategory(id_category);
-		cat.getArticles().remove(art);
-		art.setCategory(null);
-		articleService.updateArticle(art, id_article);
-		updateCategory(cat, id_category);
-		return cat;
+		for (long id : ids) {
+			ArticleEntity article = articleService.getArticle(id);
+			article.setCategory(category);
+			articleService.addArticle(article);
+		}
+		return ResponseEntity.ok().body(new MessageResponse("Successfully added"));
 	}
 
 	public ResponseEntity<MessageResponse> updateCategoryElement(long id, Map<String, Object> categoryEntity) {
@@ -114,7 +108,6 @@ public class CategoryService {
 		});
 
 		Validator validator = Validation.buildDefaultValidatorFactory().getValidator();
-
 		Set<ConstraintViolation<CategoryEntity>> violations = validator.validate(_categoryEntity);// , OnUpdate.class);
 
 		if (!violations.isEmpty()) {
@@ -123,9 +116,7 @@ public class CategoryService {
 		}
 
 		addCategory(_categoryEntity);
-
 		return ResponseEntity.ok().body(new MessageResponse("Successfully updated"));
-
 	}
 
 }

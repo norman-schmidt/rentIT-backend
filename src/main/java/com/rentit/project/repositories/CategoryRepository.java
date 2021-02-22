@@ -22,5 +22,4 @@ public interface CategoryRepository extends JpaRepository<CategoryEntity, Long> 
 	// findAllName
 	@Query("SELECT c.name, c.description FROM CategoryEntity c")
 	List<Object[]>  findAllName();
-	// List<String> findAllName();
 }

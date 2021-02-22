@@ -1,5 +1,6 @@
 package com.rentit.project.controllers;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -61,7 +62,6 @@ public class CategoryController {
 
 	@PutMapping("{id}")
 	public CategoryEntity updateCategory(@RequestBody CategoryEntity categoryEntity, @PathVariable long id) {
-
 		return categoryService.updateCategory(categoryEntity, id);
 	}
 
@@ -70,14 +70,11 @@ public class CategoryController {
 		return categoryService.deleteCategry(id);
 	}
 
-	@PutMapping("{id_category}/article/{id_article}/add")
-	public CategoryEntity addCategoryImage(@PathVariable long id_category, @PathVariable long id_article) {
-		return categoryService.addCategoryImage(id_category, id_article);
-	}
-
-	@PutMapping("{id_category}/article/{id_article}/remove")
-	public CategoryEntity removeCategoryImage(@PathVariable long id_category, @PathVariable long id_article) {
-		return categoryService.removeCategoryImage(id_category, id_article);
+	// list of article
+	@PutMapping("{id_category}/addArticle")
+	public ResponseEntity<MessageResponse> addArticleToCategory(@PathVariable long id_category,
+			@RequestBody Map<String, ArrayList<Long>> id_article) {
+		return categoryService.addArticleToCategory(id_category, id_article);
 	}
 
 	@PatchMapping("{id}")
