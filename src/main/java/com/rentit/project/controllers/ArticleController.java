@@ -86,12 +86,6 @@ public class ArticleController {
 		return ResponseEntity.ok(response);
 	}
 
-	@PutMapping("{id_article}/property/{id_property}")
-	public ResponseEntity<MessageResponse> setArticleProperty(@PathVariable long id_article,
-			@PathVariable long id_property) {
-		return articleService.setArticleProperty(id_article, id_property);
-	}
-
 	@PutMapping("{id_article}/removecategory")
 	public ResponseEntity<MessageResponse> removeCategory(@PathVariable long id_article) {
 		return articleService.removeCategory(id_article);

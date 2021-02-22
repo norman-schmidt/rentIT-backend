@@ -22,6 +22,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.rentit.project.models.ArticleEntity;
 import com.rentit.project.models.CategoryEntity;
 import com.rentit.project.models.ImageEntity;
+import com.rentit.project.models.PropertiesEntity;
 import com.rentit.project.pojo.query.ArticleAvailable;
 import com.rentit.project.pojo.query.CustomAAvailableQuantity;
 import com.rentit.project.pojo.query.CustomArticle;
@@ -41,9 +42,6 @@ public class ArticleService {
 	private CategoryService categoryService;
 
 	@Autowired
-	private PropertiesService propertiesService;
-
-	@Autowired
 	private ImageService imageService;
 
 	public ResponseEntity<MessageResponse> addArticle(ArticleEntity articleEntity) {
@@ -52,10 +50,10 @@ public class ArticleService {
 			CategoryEntity category = categoryService.getCategory(articleEntity.getCategory().getCategoryId());
 			articleEntity.setCategory(category);
 		}
-		
+
 		// add article with the images (without article in image)
 		articleRepository.save(articleEntity);
-		
+
 		// get id of new article and set in help variable article
 		ArticleEntity articleEntity_ = new ArticleEntity();
 		articleEntity_.setArticleId(articleEntity.getArticleId());
@@ -150,14 +148,6 @@ public class ArticleService {
 		return articleRepository.save(_articleEntity);
 	}
 
-	// when we set properties to article later with id
-	public ResponseEntity<MessageResponse> setArticleProperty(long id_article, long id_property) {
-		ArticleEntity article = articleService.getArticle(id_article);
-		article.setProperties(propertiesService.getProperties(id_property));
-		addArticle(article);
-		return ResponseEntity.ok().body(new MessageResponse("Successfully added"));
-	}
-
 	// remove Foreign keys category
 	public ResponseEntity<MessageResponse> removeCategory(long id_article) {
 		ArticleEntity article = articleService.getArticle(id_article);
@@ -174,7 +164,7 @@ public class ArticleService {
 		return ResponseEntity.ok().body(new MessageResponse("Successfully added"));
 	}
 
-	// patch article without image and properties
+	// patch article without image
 	public ResponseEntity<MessageResponse> updateArticleElement(long id, Map<String, Object> articleEntity) {
 		ArticleEntity _articleEntity = getArticle(id);
 		ObjectMapper mapper = new ObjectMapper();
@@ -202,6 +192,13 @@ public class ArticleService {
 			case "category":
 				CategoryEntity category = mapper.convertValue(value, CategoryEntity.class);
 				_articleEntity.setCategory(category);
+				break;
+			case "properties": // properties must be complet
+				PropertiesEntity properties = mapper.convertValue(value, PropertiesEntity.class);
+				// when we send only PropertiesId
+				// PropertiesEntity _properties =
+				// propertiesService.getProperties(properties.getPropertiesId());
+				_articleEntity.setProperties(properties);
 				break;
 			}
 		});

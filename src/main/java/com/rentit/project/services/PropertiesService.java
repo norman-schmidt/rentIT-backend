@@ -1,14 +1,23 @@
 package com.rentit.project.services;
 
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
+
+import javax.validation.ConstraintViolation;
+import javax.validation.Validation;
+import javax.validation.Validator;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.rentit.project.models.ArticleEntity;
 import com.rentit.project.models.PropertiesEntity;
+import com.rentit.project.pojo.response.MessageResponse;
 import com.rentit.project.repositories.PropertiesRepository;
 
 @Service
@@ -16,9 +25,6 @@ public class PropertiesService {
 
 	@Autowired
 	private PropertiesRepository propertiesRepository;
-
-	@Autowired
-	private ArticleService articleService;
 
 	public PropertiesEntity addProperties(PropertiesEntity properties) {
 		return propertiesRepository.save(properties);
@@ -38,28 +44,43 @@ public class PropertiesService {
 	}
 
 	public PropertiesEntity updateProperties(PropertiesEntity propertiesEntity, long id) {
-
 		PropertiesEntity _propertiesEntity = getProperties(id);
-
-		_propertiesEntity.setStorage(propertiesEntity.getStorage());
-		_propertiesEntity.setOperatingSystem(propertiesEntity.getOperatingSystem());
-		_propertiesEntity.setColor(propertiesEntity.getColor());
-		_propertiesEntity.setSpecialFeature(propertiesEntity.getSpecialFeature());
-		_propertiesEntity.setManifacturer(propertiesEntity.getManifacturer());
-		_propertiesEntity.setArticle(articleService.updateArticle(_propertiesEntity.getArticle(),
-				_propertiesEntity.getArticle().getArticleId()));
-
-		return propertiesRepository.save(propertiesEntity);
+		_propertiesEntity = propertiesEntity;
+		return propertiesRepository.save(_propertiesEntity);
 	}
 
-	public PropertiesEntity setPropertyArticle(long id_property, long id_article) {
-		ArticleEntity art = articleService.getArticle(id_article);
-		PropertiesEntity ent = getProperties(id_property);
-		art.setProperties(ent);
-		ent.setArticle(art);
-		articleService.updateArticle(art, art.getArticleId());
-		updateProperties(ent, ent.getPropertiesId());
-		return ent;
+	public ResponseEntity<MessageResponse> updatePropertiesElement(long id, Map<String, Object> propertiesEntity) {
+		PropertiesEntity properties = getProperties(id);
+
+		propertiesEntity.forEach((element, value) -> {
+			switch (element) {
+			case "storage":
+				properties.setStorage((Integer) value);
+				break;
+			case "operatingSystem":
+				properties.setOperatingSystem((String) value);
+				break;
+			case "color":
+				properties.setColor((String) value);
+				break;
+			case "specialFeature":
+				properties.setSpecialFeature((String) value);
+				break;
+			case "manifacturer":
+				properties.setManifacturer((String) value);
+				break;
+			}
+		});
+
+		Validator validator = Validation.buildDefaultValidatorFactory().getValidator();
+		Set<ConstraintViolation<PropertiesEntity>> violations = validator.validate(properties);// , OnUpdate.class);
+
+		if (!violations.isEmpty()) {
+			return ResponseEntity.badRequest().body(new MessageResponse(violations.toString()));
+		}
+
+		addProperties(properties);
+		return ResponseEntity.ok().body(new MessageResponse("Successfully updated"));
 	}
 
 }
