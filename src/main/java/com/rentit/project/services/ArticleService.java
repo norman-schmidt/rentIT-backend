@@ -150,7 +150,7 @@ public class ArticleService {
 		return articleRepository.save(_articleEntity);
 	}
 
-	// when we set properties to article later
+	// when we set properties to article later with id
 	public ResponseEntity<MessageResponse> setArticleProperty(long id_article, long id_property) {
 		ArticleEntity article = articleService.getArticle(id_article);
 		article.setProperties(propertiesService.getProperties(id_property));
@@ -166,7 +166,7 @@ public class ArticleService {
 		return ResponseEntity.ok().body(new MessageResponse("Successfully removed"));
 	}
 
-	// when we set image to article later
+	// when we set image to article later with id
 	public ResponseEntity<MessageResponse> addImageToArticle(long id_article, long id_image) {
 		ImageEntity image = imageService.getImage(id_image);
 		image.setArt(articleService.getArticle(id_article));
