@@ -56,12 +56,12 @@ public class ArticleEntity {
 	private double price;
 
 	//@JsonIdentityReference(alwaysAsId = true)
-	@OneToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+	@OneToOne(cascade = CascadeType.MERGE, fetch = FetchType.EAGER)
 	@JoinColumn(name = "properties_id")
 	private PropertiesEntity properties;
 
 	@JsonIdentityReference(alwaysAsId = true)
-	@ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+	@ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.MERGE)
 	@JoinColumn(name = "category_Id")
 	private CategoryEntity category;
 

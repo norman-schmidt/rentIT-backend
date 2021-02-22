@@ -91,12 +91,6 @@ public class ArticleController {
 		return articleService.removeCategory(id_article);
 	}
 
-	@PutMapping("{id_article}/image/{id_image}/add")
-	public ResponseEntity<MessageResponse> addImageToArticle(@PathVariable long id_article,
-			@PathVariable long id_image) {
-		return articleService.addImageToArticle(id_article, id_image);
-	}
-
 	@PatchMapping("{id}")
 	public ResponseEntity<MessageResponse> updateArticelElement(@PathVariable long id,
 			@RequestBody Map<String, Object> articleEntity) {

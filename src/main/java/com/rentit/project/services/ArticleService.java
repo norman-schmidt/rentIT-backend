@@ -148,20 +148,12 @@ public class ArticleService {
 		return articleRepository.save(_articleEntity);
 	}
 
-	// remove Foreign keys category
+	// remove Foreign keys category // usage??
 	public ResponseEntity<MessageResponse> removeCategory(long id_article) {
 		ArticleEntity article = articleService.getArticle(id_article);
 		article.setCategory(null);
 		addArticle(article);
 		return ResponseEntity.ok().body(new MessageResponse("Successfully removed"));
-	}
-
-	// when we set image to article later with id
-	public ResponseEntity<MessageResponse> addImageToArticle(long id_article, long id_image) {
-		ImageEntity image = imageService.getImage(id_image);
-		image.setArt(articleService.getArticle(id_article));
-		imageService.saveImage(image);
-		return ResponseEntity.ok().body(new MessageResponse("Successfully added"));
 	}
 
 	// patch article without image
@@ -193,13 +185,27 @@ public class ArticleService {
 				CategoryEntity category = mapper.convertValue(value, CategoryEntity.class);
 				_articleEntity.setCategory(category);
 				break;
-			case "properties": // properties must be complet
+			case "properties": // properties must be complete
 				PropertiesEntity properties = mapper.convertValue(value, PropertiesEntity.class);
 				// when we send only PropertiesId
 				// PropertiesEntity _properties =
 				// propertiesService.getProperties(properties.getPropertiesId());
 				_articleEntity.setProperties(properties);
 				break;
+			case "images":
+				@SuppressWarnings("unchecked")
+				ArrayList<Object> images = (ArrayList<Object>) value;
+
+				for (Object obj : images) {
+					ImageEntity image = mapper.convertValue(obj, ImageEntity.class);
+					if (image.getImageId() == 0) {
+						image.setArt(_articleEntity);
+						imageService.saveImage(image);
+					} else {
+						image = imageService.getImage(image.getImageId());
+						image.setArt(getArticle(id));
+					}
+				}
 			}
 		});
 
