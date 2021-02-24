@@ -35,6 +35,7 @@ public class InvoiceService {
 
 	public InvoiceEntity updateInvoice(InvoiceEntity invoiceEntity, long id) {
 		InvoiceEntity _invoiceEntity = getInvoice(id);
+		_invoiceEntity = invoiceEntity;
 		return invoiceRepository.save(_invoiceEntity);
 	}
 

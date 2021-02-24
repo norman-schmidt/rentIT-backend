@@ -39,29 +39,6 @@ public class RentalController {
 
 	@PostMapping("")
 	public RentalEntity addRental(@RequestBody RentalEntity rentalEntity) {
-
-		/*
-		 * RentalEntity rentalEntity_ = rentalEntity;
-		 * rentalEntity_.setArticleQuantity(null);
-		 * rentalService.addRental(rentalEntity_);
-		 * 
-		 * List<ArticleQuantityEntity> quantityEntity =
-		 * rentalEntity.getArticleQuantity();
-		 * quantityService.addArticleQuantity(quantityEntity.get(0));
-		 * 
-		 * rentalEntity_.setArticleQuantity(quantityEntity);
-		 * rentalService.addRental(rentalEntity_);
-		 * 
-		 * Date date = new Date(System.currentTimeMillis()); // invoiceEntity
-		 * InvoiceEntity invoiceEntity = new InvoiceEntity();
-		 * invoiceEntity.setInvoiceDate(date); invoiceEntity.setInvoiceNumber(1);//!?
-		 * invoiceService.addInvoice(invoiceEntity);
-		 * 
-		 * rentalEntity.setInvoice(invoiceEntity); List<ArticleQuantityEntity>
-		 * quantityEntity = rentalEntity.getArticleQuantity();
-		 * quantityService.addArticleQuantity(quantityEntity.get(0));
-		 */
-
 		return rentalService.addRental(rentalEntity);
 	}
 
@@ -78,20 +55,5 @@ public class RentalController {
 		return ResponseEntity.ok(response);
 	}
 
-	@PutMapping("{id_rental}/user/{id_user}/add")
-	public RentalEntity addRentalUser(@PathVariable long id_rental, @PathVariable long id_user) {
-		return rentalService.addRentalUser(id_rental, id_user);
-	}
-
-	@PutMapping("{id_rental}/user/{id_user}/remove")
-	public RentalEntity removeRentalUser(@PathVariable long id_rental, @PathVariable long id_user) {
-		return rentalService.removeRentalUser(id_rental, id_user);
-	}
-
-	@PutMapping("{id_rental}/invoice/{id_invoice}")
-	public RentalEntity addRentalInvoice(@PathVariable long id_rental, @PathVariable long id_invoice) {
-		return rentalService.addRentalInvoice(id_rental, id_invoice);
-
-	}
 
 }
