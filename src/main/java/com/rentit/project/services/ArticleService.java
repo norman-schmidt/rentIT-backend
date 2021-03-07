@@ -189,10 +189,11 @@ public class ArticleService {
 				break;
 			case "properties":
 				PropertiesEntity properties = mapper.convertValue(value, PropertiesEntity.class);
-				if (properties.getPropertiesId() == 0) {// properties must be complete
+				if (properties.getPropertiesId() == 0) {// properties must be complete without id
 					_articleEntity.setProperties(properties);
 				} else {// when we send only PropertiesId, when properties exist
 					PropertiesEntity _properties = propertiesService.getProperties(properties.getPropertiesId());
+					_properties = properties;
 					_articleEntity.setProperties(_properties);
 				}
 				break;
