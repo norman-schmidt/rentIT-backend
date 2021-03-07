@@ -88,6 +88,7 @@ public class UserService {
 		return user;
 	}
 
+	// Without password
 	public ResponseEntity<MessageResponse> updateUserElement(long id, Map<String, Object> userEntity) {
 		UserEntity _userEntity = getUser(id);
 

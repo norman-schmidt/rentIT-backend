@@ -38,10 +38,10 @@ public class UserController {
 	public UserEntity getUserById(@PathVariable long id) {
 		return userService.getUser(id);
 	}
-	
+
 	@GetMapping("registredUser")
 	public UserEntity getRegistredUser(@RequestHeader(value = "Authorization") String authHeader) {
-		return userService.getUserFromToken(authHeader);//.getUserId();
+		return userService.getUserFromToken(authHeader);// .getUserId();
 	}
 
 	@DeleteMapping("{id}")
@@ -62,25 +62,30 @@ public class UserController {
 		return userService.addUserImage(id_user, id_image);
 	}
 
-	@PatchMapping("content") // soll from Token
+	// Patch get the user from Token
+	
+	// without pwd
+	@PatchMapping("content")
 	public ResponseEntity<MessageResponse> updateUserElement(@RequestHeader(value = "Authorization") String authHeader,
 			@RequestBody Map<String, Object> userEntity) {
 		// userId from Token and Body
 		return userService.updateUserElement(userService.getUserFromToken(authHeader).getUserId(), userEntity);
 	}
 
+	// changes pwd (oldPassword -> password)
 	@PatchMapping("password")
 	public ResponseEntity<MessageResponse> updateUserPassword(@RequestHeader(value = "Authorization") String authHeader,
 			@RequestBody Map<String, Object> userEntity) {
-
 		return userService.updateUserPwd(userService.getUserFromToken(authHeader).getUserId(), userEntity);
 	}
 
+	// set pwd
 	@PatchMapping("passwordForget")
 	public ResponseEntity<MessageResponse> UserForgetPassword(@RequestHeader(value = "Authorization") String authHeader,
 			@RequestBody Map<String, Object> userEntity) {
-
 		return userService.UserForgetPwd(userService.getUserFromToken(authHeader).getUserId(), userEntity);
 	}
+
+	// Patch get the user from Token
 
 }
