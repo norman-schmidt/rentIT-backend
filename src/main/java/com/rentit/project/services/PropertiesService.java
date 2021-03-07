@@ -25,7 +25,7 @@ public class PropertiesService {
 
 	@Autowired
 	private PropertiesRepository propertiesRepository;
-	
+
 	@Autowired
 	private ArticleService articleService;
 
@@ -72,15 +72,17 @@ public class PropertiesService {
 			case "manifacturer":
 				properties.setManifacturer((String) value);
 				break;
-			case "article":
+			case "article": // change article
 				ObjectMapper mapper = new ObjectMapper();
 				ArticleEntity _article = mapper.convertValue(value, ArticleEntity.class);
-				
-				_article = articleService.getArticle(_article.getArticleId());
-				
+
+				_article = articleService.getArticle(_article.getArticleId()); // get new article
 				_article.setProperties(properties);
-				
-				//properties.setManifacturer((String) value);
+
+				// old_article
+				ArticleEntity old_article = properties.getArticle();
+				old_article.setProperties(null);
+
 				break;
 			}
 		});
