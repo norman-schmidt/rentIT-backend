@@ -205,7 +205,6 @@ public class ArticleQuantityService {
 					+ getArticleQuantity(ids.get(i)).getReturnedDate().format(DateTimeFormatter.ofPattern("yyyy-MM-dd"))
 					+ " | Quantity: " + getArticleQuantity(ids.get(i)).getQuantity() + "\n");
 
-			System.out.println(toLate);
 			if (!toLate) {
 				price = articleQuantityEntity.getSubTotal() * 1.3;
 				actuPrice = price - articleQuantityEntity.getSubTotal();
