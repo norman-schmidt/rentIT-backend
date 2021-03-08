@@ -88,7 +88,7 @@ public class PropertiesService {
 		});
 
 		Validator validator = Validation.buildDefaultValidatorFactory().getValidator();
-		Set<ConstraintViolation<PropertiesEntity>> violations = validator.validate(properties);// , OnUpdate.class);
+		Set<ConstraintViolation<PropertiesEntity>> violations = validator.validate(properties);
 
 		if (!violations.isEmpty()) {
 			return ResponseEntity.badRequest().body(new MessageResponse(violations.toString()));

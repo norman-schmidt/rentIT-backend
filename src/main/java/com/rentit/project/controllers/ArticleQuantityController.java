@@ -51,6 +51,8 @@ public class ArticleQuantityController {
 		return quantityService.getListRentalUser(user.getUserId());
 	}
 
+	// User from token
+
 	@PostMapping("")
 	public ResponseEntity<MessageResponse> addQuantity(@RequestBody List<ArticleQuantityEntity> quantityEntity,
 			@RequestHeader(value = "Authorization") String authHeader) {
@@ -62,6 +64,8 @@ public class ArticleQuantityController {
 			@RequestHeader(value = "Authorization") String authHeader) {
 		return quantityService.returnArticle(data, authHeader);
 	}
+
+	// User from token
 
 	@PutMapping("{id}")
 	public ArticleQuantityEntity updateQuantity(@RequestBody ArticleQuantityEntity quantityEntity,

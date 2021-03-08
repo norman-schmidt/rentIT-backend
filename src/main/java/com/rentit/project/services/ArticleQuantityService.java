@@ -103,6 +103,7 @@ public class ArticleQuantityService {
 			articleQuantityRepository.save(quantityEntity.get(i));
 		}
 
+		// email
 		String text = "Congratulations!!! \n\n\n Dear " + user.getLastname()
 				+ ",\n\n\n Articles was rented successfully !!! " + "\n\n invoice Nr: "
 				+ invoiceEntity.getInvoiceNumber() + "\n\n Date: "
@@ -204,9 +205,11 @@ public class ArticleQuantityService {
 					+ getArticleQuantity(ids.get(i)).getReturnedDate().format(DateTimeFormatter.ofPattern("yyyy-MM-dd"))
 					+ " | Quantity: " + getArticleQuantity(ids.get(i)).getQuantity() + "\n");
 
+			System.out.println(toLate);
 			if (!toLate) {
 				price = articleQuantityEntity.getSubTotal() * 1.3;
 				actuPrice = price - articleQuantityEntity.getSubTotal();
+				articleQuantityEntity.setSubTotal(price);
 				String text = "Warning!!! \n\n\n Dear " + user.getLastname()
 						+ ",\n\n\n Articles was to late returned !!! \n\n\n You must pay in addition: \n " + actuPrice
 						+ "\n\n Articles: \n" + returnArticles.toString()
@@ -222,7 +225,6 @@ public class ArticleQuantityService {
 				mailService.sendMail(text, user, subject);
 			}
 
-			articleQuantityEntity.setSubTotal(price);
 			addArticleQuantity(articleQuantityEntity);
 		}
 
