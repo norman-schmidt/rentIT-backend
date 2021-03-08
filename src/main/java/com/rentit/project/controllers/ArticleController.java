@@ -10,6 +10,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -48,13 +49,6 @@ public class ArticleController {
 		return articleService.getByName(name);
 	}
 
-	// findByName
-	@GetMapping("{name}/{min}/{max}")
-	public List<CustomArticle> filterMinMaxPrice(@PathVariable("name") String name, @PathVariable("min") double min,
-			@PathVariable("max") double max) {
-		return articleService.filterNamePrice(name, min, max);
-	}
-
 	// search article
 	@GetMapping("search")
 	public List<CustomArticle> filterWithNameCategoryPrice(@RequestParam("name") String name,
@@ -81,7 +75,6 @@ public class ArticleController {
 
 	@PutMapping("{id}")
 	public ArticleEntity updateArticle(@RequestBody ArticleEntity articleEntity, @PathVariable long id) {
-
 		return articleService.updateArticle(articleEntity, id);
 	}
 
@@ -93,29 +86,15 @@ public class ArticleController {
 		return ResponseEntity.ok(response);
 	}
 
-	@PutMapping("{id_article}/property/{id_property}")
-	public ArticleEntity setArticleProperty(@PathVariable long id_article, @PathVariable long id_property) {
-		return articleService.setArticleProperty(id_article, id_property);
+	@PutMapping("{id_article}/removecategory")
+	public ResponseEntity<MessageResponse> removeCategory(@PathVariable long id_article) {
+		return articleService.removeCategory(id_article);
 	}
 
-	@PutMapping("{id_article}/category/{id_category}/add")
-	public ArticleEntity addArticleCategory(@PathVariable long id_article, @PathVariable long id_category) {
-		return articleService.addArticleCategory(id_article, id_category);
-	}
-
-	@PutMapping("{id_article}/category/{id_category}/remove")
-	public ArticleEntity removeArticleCategory(@PathVariable long id_article, @PathVariable long id_category) {
-		return articleService.removeArticleCategory(id_article, id_category);
-	}
-
-	@PutMapping("{id_article}/image/{id_image}/add")
-	public ArticleEntity addArticleImage(@PathVariable long id_article, @PathVariable long id_image) {
-		return articleService.addArticleImage(id_article, id_image);
-	}
-
-	@PutMapping("{id_article}/image/{id_image}/remove")
-	public ArticleEntity removeArticleImage(@PathVariable long id_article, @PathVariable long id_image) {
-		return articleService.removeArticleImage(id_article, id_image);
+	@PatchMapping("{id}")
+	public ResponseEntity<MessageResponse> updateArticelElement(@PathVariable long id,
+			@RequestBody Map<String, Object> articleEntity) {
+		return articleService.updateArticleElement(id, articleEntity);
 	}
 
 }

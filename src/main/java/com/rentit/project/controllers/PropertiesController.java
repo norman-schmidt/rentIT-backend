@@ -9,6 +9,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -17,6 +18,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.rentit.project.models.PropertiesEntity;
+import com.rentit.project.pojo.response.MessageResponse;
 import com.rentit.project.services.PropertiesService;
 
 @RestController
@@ -56,9 +58,10 @@ public class PropertiesController {
 		return ResponseEntity.ok(response);
 	}
 
-	@PutMapping("{id_property}/article/{id_article}")
-	public PropertiesEntity setPropertyArticle(@PathVariable long id_property, @PathVariable long id_article) {
-		return propertiesService.setPropertyArticle(id_property, id_article);
+	@PatchMapping("{id}")
+	public ResponseEntity<MessageResponse> setPropertyArticle(@PathVariable long id,
+			@RequestBody Map<String, Object> propertiesEntity) {
+		return propertiesService.updatePropertiesElement(id, propertiesEntity);
 
 	}
 

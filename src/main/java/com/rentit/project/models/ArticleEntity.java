@@ -61,7 +61,7 @@ public class ArticleEntity {
 	private PropertiesEntity properties;
 
 	@JsonIdentityReference(alwaysAsId = true)
-	@ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+	@ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.MERGE)
 	@JoinColumn(name = "category_Id")
 	private CategoryEntity category;
 

@@ -1,8 +1,6 @@
 package com.rentit.project.controllers;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -17,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.rentit.project.models.InvoiceEntity;
+import com.rentit.project.pojo.response.MessageResponse;
 import com.rentit.project.services.InvoiceService;
 
 @RestController
@@ -48,16 +47,9 @@ public class InvoiceController {
 	}
 
 	@DeleteMapping("{id}")
-	public ResponseEntity<Map<String, Boolean>> removeInvoice(@PathVariable Long id) {
+	public ResponseEntity<MessageResponse> removeInvoice(@PathVariable Long id) {
 		invoiceService.deleteInvoice(id);
-		Map<String, Boolean> response = new HashMap<>();
-		response.put("Successfully deleted", Boolean.TRUE);
-		return ResponseEntity.ok(response);
-	}
-
-	@PutMapping("{id_invoice}/rental/{id_rental}")
-	public InvoiceEntity setInvoiceRental(@PathVariable long id_invoice, @PathVariable long id_rental) {
-		return invoiceService.setInvoiceRental(id_invoice, id_rental);
+		return ResponseEntity.ok().body(new MessageResponse("Successfully deleted"));
 	}
 
 }

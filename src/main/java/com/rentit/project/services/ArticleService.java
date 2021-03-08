@@ -5,6 +5,11 @@ import java.time.YearMonth;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
+
+import javax.validation.ConstraintViolation;
+import javax.validation.Validation;
+import javax.validation.Validator;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -13,6 +18,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.rentit.project.models.ArticleEntity;
 import com.rentit.project.models.CategoryEntity;
 import com.rentit.project.models.ImageEntity;
@@ -36,23 +42,22 @@ public class ArticleService {
 	private CategoryService categoryService;
 
 	@Autowired
-	private PropertiesService propertiesService;
-
-	@Autowired
 	private ImageService imageService;
 
-//	@Autowired
-//	private ArticleQuantityService articleQuantityService;
+	@Autowired
+	private PropertiesService propertiesService;
 
 	public ResponseEntity<MessageResponse> addArticle(ArticleEntity articleEntity) {
 		// CategoryEntity
-		CategoryEntity category = categoryService.getCategory(articleEntity.getCategory().getCategoryId());
-		articleEntity.setCategory(category);
+		if (articleEntity.getCategory() != null) {
+			CategoryEntity category = categoryService.getCategory(articleEntity.getCategory().getCategoryId());
+			articleEntity.setCategory(category);
+		}
 
 		// add article with the images (without article in image)
 		articleRepository.save(articleEntity);
 
-		// get id of new article and set in help article obj
+		// get id of new article and set in help variable article
 		ArticleEntity articleEntity_ = new ArticleEntity();
 		articleEntity_.setArticleId(articleEntity.getArticleId());
 
@@ -60,12 +65,11 @@ public class ArticleService {
 		if (articleEntity.getImages() != null) {
 			for (ImageEntity im : articleEntity.getImages()) {
 				im.setArt(articleEntity_);
-				imageService.addImage(im);
+				imageService.saveImage(im);
 			}
 		}
 
 		return ResponseEntity.ok().body(new MessageResponse("Successfully Added"));
-
 	}
 
 	public ArticleEntity getArticle(Long id) {
@@ -88,13 +92,7 @@ public class ArticleService {
 	}
 
 	@Transactional
-	public List<CustomArticle> filterNamePrice(String name, double min, double max) {
-		return articleRepository.filterWithNamePrice(name, min, max);
-	}
-
-	@Transactional
 	public List<CustomArticle> filterArtWithNameCategoryPrice(String name, String category, double min, double max) {
-
 		List<CustomArticle> articles = new ArrayList<CustomArticle>();
 		if (category.isEmpty()) {
 			category = "_";
@@ -116,16 +114,11 @@ public class ArticleService {
 		List<CustomAAvailableQuantity> CustomAAvailableQuantity = new ArrayList<CustomAAvailableQuantity>();
 
 		int daysInMonth = YearMonth.of(LocalDateTime.now().getYear(), month).lengthOfMonth();
-
 		int i = 1;
-		// ab heute
-		// if (month == LocalDateTime.now().getMonthValue()) {
-		// i = LocalDateTime.now().getDayOfMonth();
-		// }
 
 		while (i <= daysInMonth) {
 			CustomAAvailableQuantity caq = new CustomAAvailableQuantity();
-			// von heute bis Ende des Monats
+			// bis Ende des Monats
 			caq = getAAvailabityQuantity(id, LocalDateTime.now(),
 					LocalDateTime.of(LocalDateTime.now().getYear(), month, (i), 23, 59));
 			// wenn noch keinen Ausleih gemacht wurde getStockLevel
@@ -151,78 +144,84 @@ public class ArticleService {
 		articleRepository.delete(article);
 	}
 
+	// everything will be overwritten
 	public ArticleEntity updateArticle(ArticleEntity articleEntity, long id) {
-
 		ArticleEntity _articleEntity = getArticle(id);
-		_articleEntity.setName(articleEntity.getName());
-		_articleEntity.setSerialNumber(articleEntity.getSerialNumber());
-		_articleEntity.setModel(articleEntity.getModel());
-		_articleEntity.setStockLevel(articleEntity.getStockLevel());
-		_articleEntity.setPrice(articleEntity.getPrice());
-//		_articleEntity.setDescription(articleEntity.getDescription());
-//		_articleEntity.setProperties(propertiesService.updateProperties(_articleEntity.getProperties(),
-//				_articleEntity.getProperties().getPropertiesId()));
-//		_articleEntity.setArticleQuantity(
-//				(articleQuantityService.updateArticleQuantities(_articleEntity.getArticleQuantity())));
-//		_articleEntity.setCategory(categoryService.updateCategory(_articleEntity.getCategory(),
-//				_articleEntity.getCategory().getCategoryId()));
-//		_articleEntity.setImages(imageService.updateImage(_articleEntity.getImages()));
-
-		return articleRepository.save(articleEntity);
+		_articleEntity = articleEntity;
+		return articleRepository.save(_articleEntity);
 	}
 
-	public List<ArticleEntity> updateArticle(List<ArticleEntity> article) {
-		return articleRepository.saveAll(article);
+	// remove Foreign keys category // usage??
+	public ResponseEntity<MessageResponse> removeCategory(long id_article) {
+		ArticleEntity article = articleService.getArticle(id_article);
+		article.setCategory(null);
+		addArticle(article);
+		return ResponseEntity.ok().body(new MessageResponse("Successfully removed"));
 	}
 
-	public ArticleEntity setArticleProperty(long id_article, long id_property) {
-		ArticleEntity art = articleService.getArticle(id_article);
-		PropertiesEntity ent = propertiesService.getProperties(id_property);
-		art.setProperties(ent);
-		ent.setArticle(art);
-		updateArticle(art, id_article);
-		propertiesService.updateProperties(ent, ent.getPropertiesId());
-		return art;
-	}
+	public ResponseEntity<MessageResponse> updateArticleElement(long id, Map<String, Object> articleEntity) {
+		ArticleEntity _articleEntity = getArticle(id);
+		ObjectMapper mapper = new ObjectMapper();
 
-	public ArticleEntity addArticleCategory(long id_article, long id_category) {
-		ArticleEntity art = articleService.getArticle(id_article);
-		CategoryEntity cat = categoryService.getCategory(id_category);
-		cat.getArticles().add(art);
-		art.setCategory(cat);
-		articleService.updateArticle(art, id_article);
-		categoryService.updateCategory(cat, cat.getCategoryId());
-		return art;
-	}
+		articleEntity.forEach((element, value) -> {
+			switch (element) {
+			case "name":
+				_articleEntity.setName((String) value);
+				break;
+			case "description":
+				_articleEntity.setDescription((String) value);
+				break;
+			case "serialNumber":
+				_articleEntity.setSerialNumber((String) value);
+				break;
+			case "model":
+				_articleEntity.setModel((String) value);
+				break;
+			case "stockLevel":
+				_articleEntity.setStockLevel((Integer) value);
+				break;
+			case "price":
+				_articleEntity.setPrice((Double) value);
+				break;
+			case "category":
+				CategoryEntity category = mapper.convertValue(value, CategoryEntity.class);
+				_articleEntity.setCategory(category);
+				break;
+			case "properties":
+				PropertiesEntity properties = mapper.convertValue(value, PropertiesEntity.class);
+				if (properties.getPropertiesId() == 0) {// properties must be complete without id
+					_articleEntity.setProperties(properties);
+				} else {// when we send only PropertiesId, when properties exist
+					PropertiesEntity _properties = propertiesService.getProperties(properties.getPropertiesId());
+					_properties = properties;
+					_articleEntity.setProperties(_properties);
+				}
+				break;
+			case "images":
+				@SuppressWarnings("unchecked")
+				ArrayList<Object> images = (ArrayList<Object>) value;
+				for (Object obj : images) {
+					ImageEntity image = mapper.convertValue(obj, ImageEntity.class);
+					if (image.getImageId() == 0) {
+						image.setArt(_articleEntity);
+						imageService.saveImage(image);
+					} else { // when image exist, when we send only id
+						image = imageService.getImage(image.getImageId());
+						image.setArt(getArticle(id));
+					}
+				}
+			}
+		});
 
-	public ArticleEntity removeArticleCategory(long id_article, long id_category) {
-		ArticleEntity art = articleService.getArticle(id_article);
-		CategoryEntity cat = categoryService.getCategory(id_category);
-		art.setCategory(cat);
-		cat.getArticles().remove(art);
-		articleService.updateArticle(art, id_article);
-		categoryService.updateCategory(cat, cat.getCategoryId());
-		return art;
-	}
+		Validator validator = Validation.buildDefaultValidatorFactory().getValidator();
+		Set<ConstraintViolation<ArticleEntity>> violations = validator.validate(_articleEntity);
 
-	public ArticleEntity addArticleImage(long id_article, long id_image) {
-		ArticleEntity art = articleService.getArticle(id_article);
-		ImageEntity image = imageService.getImage(id_image);
-		art.getImages().add(image);
-		image.setArt(art);
-		articleService.updateArticle(art, id_article);
-		imageService.updateImage(image, id_image);
-		return art;
-	}
+		if (!violations.isEmpty()) {
+			return ResponseEntity.badRequest().body(new MessageResponse(violations.toString()));
+		}
 
-	public ArticleEntity removeArticleImage(long id_article, long id_image) {
-		ArticleEntity art = articleService.getArticle(id_article);
-		ImageEntity image = imageService.getImage(id_image);
-		art.getImages().remove(image);
-		image.setArt(null);
-		articleService.updateArticle(art, id_article);
-		imageService.updateImage(image, id_image);
-		return art;
+		addArticle(_articleEntity);
+		return ResponseEntity.ok().body(new MessageResponse("Successfully updated"));
 	}
 
 }

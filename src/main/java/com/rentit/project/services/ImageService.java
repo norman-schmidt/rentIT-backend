@@ -1,30 +1,32 @@
 package com.rentit.project.services;
 
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
+
+import javax.validation.ConstraintViolation;
+import javax.validation.Validation;
+import javax.validation.Validator;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.rentit.project.models.ArticleEntity;
 import com.rentit.project.models.ImageEntity;
-import com.rentit.project.models.UserEntity;
+import com.rentit.project.pojo.response.MessageResponse;
 import com.rentit.project.repositories.ImageRepository;
 
 @Service
 public class ImageService {
 
 	@Autowired
-	private ArticleService articleService;
-
-	@Autowired
-	private UserService userService;
-
-	@Autowired
 	private ImageRepository imageRepository;
 
-	public ImageEntity addImage(ImageEntity image) {
+	public ImageEntity saveImage(ImageEntity image) {
 		return imageRepository.save(image);
 	}
 
@@ -41,49 +43,47 @@ public class ImageService {
 	}
 
 	public ImageEntity updateImage(ImageEntity imageEntity, long id) {
-
 		ImageEntity _imageEntity = getImage(id);
-
-		_imageEntity.setImageLink(imageEntity.getImageLink());
-		_imageEntity.setImageType(imageEntity.getImageType());
-		_imageEntity.setUser(userService.updateUser(_imageEntity.getUser(), _imageEntity.getUser().getUserId()));
-		_imageEntity.setArt(articleService.updateArticle(_imageEntity.getArt(), _imageEntity.getArt().getArticleId()));
-
-		return imageRepository.save(imageEntity);
+		_imageEntity = imageEntity;
+		return imageRepository.save(_imageEntity);
 	}
 
-	public List<ImageEntity> updateImage(List<ImageEntity> image) {
-		return imageRepository.saveAll(image);
-	}
-
-	public ImageEntity setImageUser(long id_image, long id_user) {
+	// delete foreign keys article
+	public ResponseEntity<MessageResponse> removeArticle(long id_image) {
 		ImageEntity image = getImage(id_image);
-		UserEntity user = userService.getUser(id_user);
-		image.setUser(user);
-		user.setImage(image);
-		updateImage(image, id_image);
-		userService.updateUser(user, id_user);
-		return image;
+		image.setArt(null);
+		saveImage(image);
+		return ResponseEntity.ok().body(new MessageResponse("Successfully deleted"));
 	}
 
-	public ImageEntity addImageArticle(long id_image, long id_article) {
-		ImageEntity image = getImage(id_image);
-		ArticleEntity article = articleService.getArticle(id_article);
-		image.setArt(article);
-		article.getImages().add(image);
-		updateImage(image, id_image);
-		articleService.updateArticle(article, id_article);
-		return image;
-	}
+	public ResponseEntity<MessageResponse> updateImageElement(long id, Map<String, Object> imageEntity) {
+		ImageEntity image = getImage(id);
 
-	public ImageEntity removeImageArticle(long id_image, long id_article) {
-		ImageEntity image = getImage(id_image);
-		ArticleEntity article = articleService.getArticle(id_article);
-		image.setArt(article);
-		article.getImages().remove(image);
-		updateImage(image, id_image);
-		articleService.updateArticle(article, id_article);
-		return image;
+		imageEntity.forEach((element, value) -> {
+			switch (element) {
+			case "imageLink":
+				image.setImageLink((String) value);
+				break;
+			case "imageType":
+				image.setImageType((String) value);
+				break;
+			case "art":
+				ObjectMapper mapper = new ObjectMapper();
+				ArticleEntity article = mapper.convertValue(value, ArticleEntity.class);
+				image.setArt(article);
+				break;
+			}
+		});
+
+		Validator validator = Validation.buildDefaultValidatorFactory().getValidator();
+		Set<ConstraintViolation<ImageEntity>> violations = validator.validate(image);// , OnUpdate.class);
+
+		if (!violations.isEmpty()) {
+			return ResponseEntity.badRequest().body(new MessageResponse(violations.toString()));
+		}
+
+		saveImage(image);
+		return ResponseEntity.ok().body(new MessageResponse("Successfully updated"));
 	}
 
 }

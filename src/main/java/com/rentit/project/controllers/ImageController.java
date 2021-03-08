@@ -9,6 +9,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -17,6 +18,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.rentit.project.models.ImageEntity;
+import com.rentit.project.pojo.response.MessageResponse;
 import com.rentit.project.services.ImageService;
 
 @RestController
@@ -39,7 +41,7 @@ public class ImageController {
 
 	@PostMapping("")
 	public ImageEntity addImage(@RequestBody ImageEntity imageEntity) {
-		return imageService.addImage(imageEntity);
+		return imageService.saveImage(imageEntity);
 	}
 
 	@PutMapping("{id}")
@@ -55,19 +57,14 @@ public class ImageController {
 		return ResponseEntity.ok(response);
 	}
 
-	@PutMapping("{id_image}/user/{id_user}")
-	public ImageEntity setImageUser(@PathVariable long id_image, @PathVariable long id_user) {
-		return imageService.setImageUser(id_image, id_user);
+	@PutMapping("{id_image}/removeArticle")
+	public ResponseEntity<MessageResponse> removeArticle(@PathVariable long id_image) {
+		return imageService.removeArticle(id_image);
 	}
-
-	@PutMapping("{id_image}/article/{id_article}/add")
-	public ImageEntity addImageArticle(@PathVariable long id_image, @PathVariable long id_article) {
-		return imageService.addImageArticle(id_image, id_article);
-	}
-
-	@PutMapping("{id_image}/article/{id_article}/remove")
-	public ImageEntity removeImageArticle(@PathVariable long id_image, @PathVariable long id_article) {
-		return imageService.removeImageArticle(id_image, id_article);
+	
+	@PatchMapping("{id}")
+	public ResponseEntity<MessageResponse> updateImageElement(@PathVariable long id, @RequestBody Map<String, Object> imageEntity) {
+		return imageService.updateImageElement(id, imageEntity);
 	}
 
 }
